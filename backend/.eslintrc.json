@@ -1,0 +1,21 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-console" : "error",
+        "no-extra-parens" : "error",
+        "semi" : [ "error", "always" ],
+        "eqeqeq": [ "error", "always"],
+        "quotes": ["error", "single"],
+        "indent": ["error", 4],
+        "no-var" : "error"
+    }
+}

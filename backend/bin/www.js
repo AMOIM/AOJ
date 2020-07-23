@@ -8,6 +8,8 @@ import app from '../app.js';
 import debugLib from 'debug';
 import http from 'http';
 
+import { logger } from '../config/winston.js';
+
 const debug = debugLib('backend:server');
 
 /**
@@ -36,19 +38,19 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  const port = parseInt(val, 10);
+    const port = parseInt(val, 10);
 
-  if (isNaN(port)) {
+    if (isNaN(port)) {
     // named pipe
-    return val;
-  }
+        return val;
+    }
 
-  if (port >= 0) {
+    if (port >= 0) {
     // port number
-    return port;
-  }
+        return port;
+    }
 
-  return false;
+    return false;
 }
 
 /**
@@ -56,27 +58,27 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
 
-  const bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+    const bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
+        logger.error(bind + ' requires elevated privileges');
+        process.exit(1);
+        break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
+        logger.error(bind + ' is already in use');
+        process.exit(1);
+        break;
     default:
-      throw error;
-  }
+        throw error;
+    }
 }
 
 /**
@@ -84,9 +86,9 @@ function onError(error) {
  */
 
 function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+    const addr = server.address();
+    const bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
 }

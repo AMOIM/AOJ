@@ -1,6 +1,6 @@
 module.exports = {
-    "transpileDependencies": [
-        "vuetify"
+    'transpileDependencies': [
+        'vuetify'
     ],
     devServer: {
         proxy: {
@@ -14,4 +14,4 @@ module.exports = {
         }
     },
     outputDir: '../backend/public',
-}
+};

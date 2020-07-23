@@ -2,8 +2,8 @@
   "name": "AOJ",
   "version": "0.1.0",
   "private": true,
-  "author" : "AMOIM",
-  "license" : "MIT",
+  "author": "AMOIM",
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -41,7 +41,27 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-console": "error",
+      "no-extra-parens": "error",
+      "semi": [
+        "error",
+        "always"
+      ],
+      "eqeqeq": [
+        "error",
+        "always"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "indent": [
+        "error",
+        4
+      ],
+      "no-var": "error"
+    }
   },
   "browserslist": [
     "> 1%",
