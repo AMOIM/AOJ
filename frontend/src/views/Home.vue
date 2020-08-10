@@ -1,34 +1,21 @@
 <template>
   <v-container fluid>
-    <v-row align="center">
-      <v-col class="d-flex" cols="12" sm="6">
-        <v-select
-          :items="items"
-          label="Standard"
-        ></v-select>
+    <v-row justify="center">
+      <v-col cols="6">
+        <v-subheader>문제</v-subheader>
       </v-col>
 
-      <v-col class="d-flex" cols="12" sm="6">
+      <v-col cols="6">
         <v-select
+          v-model="select"
+          :hint="`${select.value}, ${select.ProblemName}`"
           :items="items"
-          filled
-          label="Filled style"
-        ></v-select>
-      </v-col>
-
-      <v-col class="d-flex" cols="12" sm="6">
-        <v-select
-          :items="items"
-          label="Outlined style"
-          outlined
-        ></v-select>
-      </v-col>
-
-      <v-col class="d-flex" cols="12" sm="6">
-        <v-select
-          :items="items"
-          label="Solo field"
-          solo
+          item-text="value"
+          item-value="ProblemName"
+          label="Select"
+          persistent-hint
+          return-object
+          single-line
         ></v-select>
       </v-col>
     </v-row>
@@ -37,8 +24,17 @@
 
 <script>
 export default {
-    data: () => ({
-        items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-    }),
+    data () {
+        return {
+            select: { value: 'Florida', ProblemName: 'FL' },
+            items: [
+                { value: 'Florida', ProblemName: 'FL' },
+                { value: 'Georgia', ProblemName: 'GA' },
+                { value: 'Nebraska', ProblemName: 'NE' },
+                { value: 'California', ProblemName: 'CA' },
+                { value: 'New York', ProblemName: 'NY' },
+            ],
+        };
+    },
 };
 </script>

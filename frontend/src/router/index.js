@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import Notice from '../views/Notice.vue';
+import NoticeCreate from '../views/Notice/NoticeCreate.vue';
 
 Vue.use(VueRouter);
 
@@ -12,9 +12,9 @@ const routes = [
         component: Home
     },
     {
-        path: '/notice',
-        name: Notice,
-        component: Notice
+        path: '/notice/create',
+        name: NoticeCreate,
+        component: NoticeCreate
     }
 ];
 

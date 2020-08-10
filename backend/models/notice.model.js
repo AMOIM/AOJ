@@ -1,35 +1,23 @@
-import mongoose from 'mongoose';
 import { logger } from '../config/winston';
-
-const Schema = mongoose.Schema;
-
-const noticeSchema = new Schema({
-    isQnA: {type: Boolean, required: true},
-    problemNum: {type: Number, required: true, unique: true},
-    competitionNum: {type: Number, required: true},
-    content: {type: String, required: true},
-    date: {type: Date}
-});
-
-const notice = new mongoose.model('notice', noticeSchema);
+import { NoticeSchema } from './schema.model.js';
+import mongoose from 'mongoose';
 
 export class NoticeModel {
-    static createPost = ({competitionNum, isQnA, problemNum, content}) => {
-        const newNotice = new notice({
-            competitionNum : competitionNum,
-            isQnA : isQnA,
-            problemNum : problemNum,
-            content : content
-        });
-        newNotice
-        .save()
-        .then(result => {
-            logger.info(result);
+    static createPost = async ({competitionNum, isQnA, problemNum, content}) => {
+        try {
+            const newNotice = new NoticeSchema({
+                _id : new mongoose.Types.ObjectId(),
+                competitionNum : competitionNum,
+                isQnA : isQnA,
+                problemNum : problemNum,
+                content : content,
+                date: new Date()
+            });
+            await newNotice.save();
             return true;
-        })
-        .catch(err => {
-            logger.info(1);
+        }catch (err) {
+            logger.info('mongo err' + err);
             return false;
-        })
+        }
     }
 }
