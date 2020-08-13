@@ -1,8 +1,20 @@
 import { logger } from '../config/winston';
 import { NoticeSchema } from './schema.model.js';
 import mongoose from 'mongoose';
+import moment from 'moment';
 
 export class NoticeModel {
+    static getNotice = async (req) => {
+        try{
+            if(req.query.key === '0'){
+                return await NoticeSchema.find({'competitionNum' : req.params.competitionNum, 'isQnA' : false});
+            }
+            else
+                return await NoticeSchema.find({competitionNum: req.params.competitionNum, isQnA : false});
+        }catch (err) {
+            return false;
+        }
+    }
     static createPost = async ({competitionNum, isQnA, problemNum, content}) => {
         try {
             const newNotice = new NoticeSchema({
@@ -11,6 +23,7 @@ export class NoticeModel {
                 isQnA : isQnA,
                 problemNum : problemNum,
                 content : content,
+                child : {},
                 date: new Date()
             });
             await newNotice.save();

@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 
 import { logger } from './config/winston.js';
 
-import indexRoutes from './routes/index.js';
+import indexRoutes from './routes/index.route.js';
 
 dotenv.config();
 

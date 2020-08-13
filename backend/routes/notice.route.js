@@ -4,6 +4,7 @@ import { logger } from '../config/winston.js';
 
 const router = Router();
 
+router.get('/:competitionNum', NoticeController.getNotice);
 router.post('/create', NoticeController.createPost);
 
 export default router;

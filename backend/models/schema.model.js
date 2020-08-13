@@ -7,8 +7,8 @@ const noticeSchema = new Schema({
     competitionNum: {type: Number, required: true},
     content: {type: String, required: true},
     child: {
-        content: String,
-        date: Date
+        content: {type: String, default: null},
+        date: {type: Date}
     },
     date: Date
 });
