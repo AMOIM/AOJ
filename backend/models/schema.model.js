@@ -8,9 +8,9 @@ const noticeSchema = new Schema({
     content: {type: String, required: true},
     child: {
         content: {type: String, default: null},
-        date: {type: Date}
+        date: {type: String}
     },
-    date: Date
+    date: {type: String}
 });
 
 const NoticeSchema = new mongoose.model('notice', noticeSchema);

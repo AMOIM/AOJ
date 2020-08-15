@@ -24,10 +24,10 @@ export class NoticeModel {
                 problemNum : problemNum,
                 content : content,
                 child:{
-                    content: '안녕',
-                    date: new Date(),
+                    content: null,
+                    date: null
                 },
-                date: new Date()
+                date: moment().format('YYYY-MM-DD HH:mm:ss')
             });
             await newNotice.save();
             return true;

@@ -13,7 +13,7 @@
           <td>{{ i.date }}</td>
           <td>{{ i.content }}</td>
         </tr>
-        <tr v-if="i.child.content !== 'null'">
+        <tr v-if="i.child.content !== null">
           <td><v-icon class="fa fa-reply fa-rotate-180" aria-hidden="true"></v-icon></td>
           <td>{{ i.child.date }}</td>
           <td>{{ i.child.content }}</td>
