@@ -6,6 +6,7 @@ import { NoticeSchema } from '../models/schema.model.js';
 export class NoticeController{
     static getNotice = async (req, res) => {
         const result = await NoticeService.getNotice(req);
+        logger.info(result);
         if(result !== false)return res.status(200).json(result);
         else return res.status(400).json();
 

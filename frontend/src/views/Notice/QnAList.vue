@@ -1,22 +1,25 @@
 <template>
-  <v-simple-table>
-    <template v-slot:default>
-      <thead>
+  <table>
+      <thead style="text-align:left;">
         <tr>
-          <th class="text-left">시간</th>
-          <th class="text-left">문제</th>
-          <th class="text-left">내용</th>
+          <th style="width:13%">문제</th>
+          <th style="width:23%">시간</th>
+          <th style="width:64%">내용</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="item in notices" :key="item.name">
-          <td>{{ item.date }}</td>
-          <td>{{ item.problemNum }}</td>
-          <td>{{ item.content }}</td>
+      <tbody v-for="i in notices" :key="i.date">
+        <tr>
+          <td>{{ i.problemNum }}</td>
+          <td>{{ i.date }}</td>
+          <td>{{ i.content }}</td>
+        </tr>
+        <tr v-if="i.child.content !== 'null'">
+          <td><v-icon class="fa fa-reply fa-rotate-180" aria-hidden="true"></v-icon></td>
+          <td>{{ i.child.date }}</td>
+          <td>{{ i.child.content }}</td>
         </tr>
       </tbody>
-    </template>
-  </v-simple-table>
+  </table>
 </template>
 
 <script>
@@ -24,7 +27,15 @@ import axios from 'axios';
 export default {
     data () {
         return {
-            notices: [],
+            notices: [{
+                date: '',
+                problemNum: '',
+                content: '',
+                child: [{
+                    content: '',
+                    date: ''
+                }]
+            }],
         };
     },
     created() {
@@ -34,3 +45,10 @@ export default {
     }
 };
 </script>
+
+<style>
+table {
+  border-collapse: separate;
+  border-spacing: 0 17px;
+}
+</style>

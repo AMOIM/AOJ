@@ -23,7 +23,10 @@ export class NoticeModel {
                 isQnA : isQnA,
                 problemNum : problemNum,
                 content : content,
-                child : {},
+                child:{
+                    content: '안녕',
+                    date: new Date(),
+                },
                 date: new Date()
             });
             await newNotice.save();
