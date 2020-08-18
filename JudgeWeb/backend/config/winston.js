@@ -1,4 +1,4 @@
-import winston from 'winston';
+import winston from 'JudgeWeb/backend/config/winston';
 import winstonDaily from 'winston-daily-rotate-file';
 
 const logDir = 'logs';  // logs 디렉토리 하위에 로그 파일 저장

@@ -5,7 +5,10 @@
   "author": "AMOIM",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --exec babel-node bin/www.js"
+    "dev": "npm run lint && nodemon --exec babel-node bin/www.js",
+    "start" : "nodemon --exec babel-node bin/www.js",
+    "lint": "eslint \"**/*.js\"",
+    "fix" : "eslint --fix \"**/*.js\""
   },
   "dependencies": {
     "body-parser": "^1.19.0",
