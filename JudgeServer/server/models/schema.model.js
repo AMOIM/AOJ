@@ -38,13 +38,13 @@ const problemSchema = new mongoose.Schema({
 
 const stateSchema = new mongoose.Schema({
     state: {
-        type: Number,
-        enum: ['Pending', 'AC', 'WA', 'TLE', 'MLE', 'RE', 'PE', 'CE', 'SE'],
-        default: 1
-    },
-    msg: {
         type: String,
+        enum: ['채점 중', '맞았습니다', '틀렸습니다', '시간 초과', '메모리 초과', '런타임 에러', '출력 형식이 잘못되었습니다', '컴파일 에러', '서버 에러'],
         default : '채점 중'
+    },
+    message: {
+        type: String,
+        default : ''
     },
     number: {
         type: Number,
@@ -57,7 +57,6 @@ const stateSchema = new mongoose.Schema({
     },
     code: {
         type: String,
-        required: true
     },
     lang: {
         type: String,

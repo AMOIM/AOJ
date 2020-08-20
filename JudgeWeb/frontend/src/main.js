@@ -1,15 +1,16 @@
 import Vue from 'vue';
-// route level code-splitting
-// this generates a separate chunk (about.[hash].js) for this route
-// which is lazy-loaded when the route is visited.
 import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import router from './router';
+import axios from 'axios';
+import VueLogger from 'vuejs-logger';
 
 Vue.config.productionTip = false;
+Vue.prototype.$http = axios;
 
 new Vue({
     vuetify,
     router,
+    VueLogger,
     render: h => h(App)
 }).$mount('#app');

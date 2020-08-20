@@ -13,30 +13,22 @@ const seccomp_rule = async (lang) => {
     else return 'general';
 };
 
-export class JudgeService {
+export default class JudgeService {
     static run = async () => {
-        let pending;
         try {
-            pending = await PendingModel.front();
-            if(pending === null) return;
+            const pending = await PendingModel.front();
+            let ceStdout;
 
             await Queue.place(async () => {
                 try {
                     const judge = await StateModel.find(pending.number);
-                    if (judge === null) {
-                        Queue.next();
-                        return;
-                    }
-
                     const problem = await ProblemModel.find(judge.problemNum);
-                    if (problem === null) {
-                        Queue.next();
-                        return;
-                    }
 
                     const compile = await Compiler.run(judge.code, judge.lang);
-                    if (compile === null) throw new Error('No Language');
-                    if (compile.success === false) throw new Error('컴파일 에러');
+                    if (compile.success === false) {
+                        ceStdout = compile.stdout;
+                        throw new Error('컴파일 에러');
+                    }
 
                     let maxTime = 0, maxMemory = 0;
 
@@ -79,33 +71,28 @@ export class JudgeService {
                         maxTime = Math.max(maxTime, status.cpu_time);
                         maxMemory = Math.max(maxMemory, status.memory);
                     }
-                    await StateModel.update(pending.number, 2, compile.stdout, maxTime, maxMemory);
+                    await StateModel.update(pending.number, '맞았습니다', compile.stdout, maxTime, maxMemory);
                     Queue.next();
-                } catch (e) {
-                    let stateNum;
-                    if(e.message === undefined) logger.error('Stdout is undefined');
-                    else if(typeof e.message !== 'string') logger.error('Type is not String');
-                    else if(e.message === '컴파일 에러') stateNum = 8;
-                    else if(e.message === '시간 초과') stateNum = 4;
-                    else if(e.message === '메모리 초과') stateNum = 5;
-                    else if(e.message === '런타임 에러') stateNum = 6;
-                    else if(e.message === '출력 형식이 잘못되었습니다') stateNum = 7;
-                    else if(e.message === '틀렸습니다') stateNum = 3;
-                    else if(e.message === '서버 에러') {
-                        stateNum = 9;
-                        logger.error('Judge Server error');
+                } catch (err) {
+                    if(err.message === undefined) throw new Error('Stdout is undefined');
+                    else if(typeof err.message !== 'string') throw new Error('Type is not String');
+                    else if(err.message === '서버 에러') {
+                        await StateModel.update(pending.number, err.message, '', -1, -1);
+                        throw new Error('Judge Server error');
                     }
-
-                    const result = await StateModel.update(pending.number, stateNum, -1, -1);
-                    if(result === false) logger.error('Update state Error');
-
+                    else if(err.message === '컴파일 에러')
+                        await StateModel.update(pending.number, err.message, ceStdout, -1, -1);
+                    else if(err.message === '런타임 에러' || err.message === '틀렸습니다'
+                        || err.message === '시간 초과' || err.message === '메모리 초과' || err.message === '출력 형식이 잘못되었습니다')
+                        await StateModel.update(pending.number, err.message, '', -1, -1);
+                    else throw err;
                     Queue.next();
                 }
             });
-
-            await PendingModel.delete(pending.number);
-        } catch (e) {
-            logger.error('Queue place error');
+            return await PendingModel.delete(pending.number);
+        } catch (err) {
+            err.message = 'Service -> ' + err.message;
+            throw err;
         }
     }
 }

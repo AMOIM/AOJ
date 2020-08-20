@@ -3,13 +3,15 @@ import mongoose from 'mongoose';
 import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 import history from 'connect-history-api-fallback';
+import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
 import { logger } from './config/winston.js';
+import indexRoute from './routes/index.route.js';
 
+global.logger = logger;
 dotenv.config();
 
-const port = process.env.PORT || 3000;
 const app = express();
 
 mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true});
@@ -18,11 +20,15 @@ mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true});
 // app.use(logger('dev'));
 app.use(history());
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // express settings
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+app.use('/api', indexRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -30,14 +36,10 @@ app.use(function (req, res, next) {
 });
 
 // errorHandler
-app.use(function (err, req, res) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+// eslint-disable-next-line no-unused-vars
+app.use(function (err, req, res, next) {
+    logger.error(err.message);
+    return res.status(err.status || 500).json({message : err.message});
 });
 
 mongoose.connect(process.env.MONGO_URI)

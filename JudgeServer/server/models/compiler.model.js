@@ -40,7 +40,7 @@ export default class compiler{
     }
 
     static run = async (code, lang) => {
-        if(compile[lang] === undefined) return null;
+        if(compile[lang] === undefined) throw new Error('No Language');
         return compile[lang](code);
     }
 }
