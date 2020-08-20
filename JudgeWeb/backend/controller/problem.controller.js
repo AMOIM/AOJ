@@ -20,6 +20,5 @@ export default class Problem {
             err.status = 400;
             next(err);
         }
-    };
-
+    }
 }

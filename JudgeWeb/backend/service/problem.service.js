@@ -1,37 +1,19 @@
-import axios from 'axios';
+import { PendingModel, ProblemModel, StateModel } from '../models/judge.model.js';
 
 export default class ProblemService {
     static get = async (id) => {
         try {
-            const result = await axios.post(
-                process.env.JUDGE_SERVER + '/problem',
-                {
-                    id: id
-                });
-            return result.data;
+            return await ProblemModel.find(id);
         } catch (err) {
-            throw new Error('Service -> Problem list axios error');
+            throw new Error('Service -> ' + err.message);
         }
     }
     static submit = async (data) => {
         try {
-            await axios.post(
-                process.env.JUDGE_SERVER + '/problem/submit',
-                {
-                    code: data.code,
-                    lang: data.lang,
-                    problemNum: data.problemNum,
-                    userName: data.userName
-                });
-            axios.get(
-                process.env.JUDGE_SERVER + '/judge'
-            ).then(() => {
-                return;
-            }).catch(err => {
-                throw err;
-            });
+            const result = await StateModel.push(data);
+            await PendingModel.push(result);
         } catch (err) {
-            throw new Error('Service -> Problem submit axios error');
+            throw new Error('Service -> ' + err.message);
         }
     }
 }

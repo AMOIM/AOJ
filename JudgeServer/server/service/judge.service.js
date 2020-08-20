@@ -17,9 +17,10 @@ export default class JudgeService {
     static run = async () => {
         try {
             const pending = await PendingModel.front();
-            let ceStdout;
+            if(typeof pending === 'undefined') return;
 
-            await Queue.place(async () => {
+            Queue.place(async () => {
+                let ceStdout;
                 try {
                     const judge = await StateModel.find(pending.number);
                     const problem = await ProblemModel.find(judge.problemNum);
@@ -60,7 +61,7 @@ export default class JudgeService {
                         const userCmp = userOutput.split('\n');
                         const ansCmp = ansOutput.split('\n');
 
-                        while (userCmp[userCmp.length - 1] && userCmp[userCmp.length - 1].trimEnd() === '') userCmp.pop();
+                        while (userCmp.length > 0 && userCmp[userCmp.length - 1].trimEnd() === '') userCmp.pop();
                         while (ansCmp[ansCmp.length - 1].trimEnd() === '') ansCmp.pop();
 
                         if (userCmp.length !== ansCmp.length) throw new Error('틀렸습니다');

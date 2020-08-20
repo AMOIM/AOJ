@@ -7,27 +7,12 @@ export class PendingModel {
         try {
             const result = await PendingSchema.find()
                 .sort('number').limit(1);
-            if (result.length === 0) throw new Error('No pending');
             return result[0];
         } catch (err) {
-            if (err.message !== 'No pending')
-                err.message = 'Pending front error';
-            err.message = 'Model -> ' + err.message;
+            err.message = 'Model -> Pending front error';
             throw err;
         }
     };
-    static push = async(number) => {
-        try {
-            const newPending = new PendingSchema({
-                number : number
-            });
-
-            await newPending.save();
-        } catch (err) {
-            err.message = 'Model -> Push pending error';
-            throw err;
-        }
-    }
     static delete = async(number) => {
         try {
             await PendingSchema
@@ -57,27 +42,6 @@ export class ProblemModel {
 }
 
 export class StateModel {
-    static push = async (data) => {
-        try {
-            const result = await StateSchema.find()
-                .sort('-number').limit(1);
-
-            const max = result.length !== 0 ? result[0].number + 1 : 1;
-            const newState = new StateSchema({
-                code : data.code,
-                lang : data.lang,
-                problemNum : data.problemNum,
-                userName : data.userName,
-                number : max
-            });
-
-            await newState.save();
-            return newState.number;
-        } catch (err) {
-            throw new Error('Model -> ' + err.message);
-        }
-    }
-
     static find = async (number) => {
         try {
             const result = await StateSchema.findOne()
