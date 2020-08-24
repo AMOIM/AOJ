@@ -33,6 +33,7 @@ export default {
     },
     data: function() {
         return {
+            competitionNum: '',
             notices: [{
                 date: '',
                 problemNum: '',
@@ -61,7 +62,8 @@ export default {
         };
     },
     created() {
-        axios.get('/api/notice/1?key=1').then(res => {
+        this.competitionNum = this.$route.params.id;
+        axios.get(`/api/notice/${this.competitionNum}?key=1`).then(res => {
             this.notices = res.data;
         });
     },
@@ -69,7 +71,7 @@ export default {
         async submitNotice(num) {
             await axios.post('/api/notice/create',
                 {
-                    competitionNum : 1,
+                    competitionNum : this.competitionNum,
                     isQnA: false,
                     problemNum: num.select.value,
                     content: num.content

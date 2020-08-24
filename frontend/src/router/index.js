@@ -13,12 +13,12 @@ const routes = [
         component: Home
     },
     {
-        path: '/contest/qna',
+        path: '/contest/qna/:id',
         name: QnA,
         component: QnA
     },
     {
-        path: '/contest/notice',
+        path: '/contest/notice/:id',
         name: Notice,
         component: Notice
     }

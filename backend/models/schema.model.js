@@ -15,6 +15,27 @@ const noticeSchema = new Schema({
 
 const NoticeSchema = new mongoose.model('notice', noticeSchema);
 
+const contestSchema = new mongoose.Schema({
+    number : {
+        type : Number,
+        required : true,
+        unique : true
+    },
+    problemNum : [ Number ],
+    userList : [ String ],
+    start : {
+        type : Date,
+        required : true
+    },
+    end : {
+        type : Date,
+        required : true
+    }
+});
+
+const ContestShema = new mongoose.model('contest', contestSchema);
+
 export {
-    NoticeSchema
+    NoticeSchema,
+    ContestShema
 };
