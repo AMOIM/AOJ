@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import QnA from '../views/QnA/QnA.vue';
+import Notice from '../views/Notice/Notice.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes = [
         path: '/contest/qna',
         name: QnA,
         component: QnA
+    },
+    {
+        path: '/contest/notice',
+        name: Notice,
+        component: Notice
     }
 ];
 
