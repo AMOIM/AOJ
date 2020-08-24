@@ -1,4 +1,4 @@
-import winston from 'JudgeWeb/backend/config/winston';
+import winston from 'winston';
 import winstonDaily from 'winston-daily-rotate-file';
 
 const logDir = 'logs';  // logs 디렉토리 하위에 로그 파일 저장
@@ -26,7 +26,7 @@ const logger = winston.createLogger({
             level: 'info',
             datePattern: 'YYYY-MM-DD',
             dirname: logDir,
-            filename: `%DATE%.log`,
+            filename: '%DATE%.log',
             maxFiles: 30,  // 30일치 로그 파일 저장
             zippedArchive: true,
         }),
@@ -35,7 +35,7 @@ const logger = winston.createLogger({
             level: 'error',
             datePattern: 'YYYY-MM-DD',
             dirname: logDir + '/error',  // error.log 파일은 /logs/error 하위에 저장
-            filename: `%DATE%.error.log`,
+            filename: '%DATE%.error.log',
             maxFiles: 30,
             zippedArchive: true,
         }),

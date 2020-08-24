@@ -7,12 +7,10 @@ export class PendingModel {
         try {
             const result = await PendingSchema.find()
                 .sort('number').limit(1);
-            if (result.length === 0) throw new Error('No pending');
             return result[0];
-        } catch (e) {
-            if (e.message !== 'No pending')
-                logger.error('Pending front Error');
-            return null;
+        } catch (err) {
+            err.message = 'Model -> Pending front error';
+            throw err;
         }
     };
     static delete = async(number) => {
@@ -20,8 +18,9 @@ export class PendingModel {
             await PendingSchema
                 .deleteOne()
                 .where({'number' : number});
-        } catch (e) {
-            logger.error('Delete pending error');
+        } catch (err) {
+            err.message = 'Model -> Delete pending error';
+            throw err;
         }
     }
 }
@@ -33,11 +32,11 @@ export class ProblemModel {
                 .where({'number': number});
             if(result === null) throw new Error('Not exist problem');
             return result;
-        } catch (e) {
-            if(e.message === 'Not exist problem')
-                logger.error(e.message);
-            else logger.error('Find Problem Error');
-            return null;
+        } catch (err) {
+            if(err.message !== 'Not exist problem')
+                err.message = 'Find Problem Error';
+            err.message = 'Model -> ' + err.message;
+            throw err;
         }
     };
 }
@@ -49,23 +48,21 @@ export class StateModel {
                 .where({'number': number});
             if(result === null) throw new Error('Not found state');
             return result;
-        } catch (e) {
-            if(e.message === 'Not found state')
-                logger.error('Not found state');
-            else logger.error('Find State Error');
-            return null;
+        } catch (err) {
+            if(err.message !== 'Not found state')
+                err.message = 'Find State Error';
+            err.message = 'Model -> ' + err.message;
+            throw err;
         }
     };
     static update = async (number, state, msg, time, memory) => {
         try {
             const result = await StateSchema.updateOne(
                 {'number' : number},
-                {$set : { 'msg' : msg, 'state' : state, 'time' : time, 'memory' : memory }});
+                {$set : { 'message' : msg, 'state' : state, 'time' : time, 'memory' : memory }});
             if(result === null) throw new Error('Update state error');
-            return true;
-        } catch (e) {
-            logger.error(e.message);
-            return false;
+        } catch (err) {
+            throw new Error('Model -> ' + err.message);
         }
     }
 }

@@ -1,7 +1,12 @@
-import { JudgeService } from '../service/judge.service.js';
+import JudgeService from '../service/judge.service.js';
 
-export class JudgeController{
-    static run = () => {
-        JudgeService.run();
+export default class Judge {
+    static run = async () => {
+        try {
+            await JudgeService.run();
+        } catch (err) {
+            err.message = 'Run Judge -> ' + err.message;
+            logger.error(err.message);
+        }
     }
 }

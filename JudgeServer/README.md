@@ -24,15 +24,6 @@ npm start
 ```
 <br/>
 
-#### 채점 주기 변경
-
-<br/>
-
-`server`의 `app.js`
-```javascript
-setInterval(() => {
-    ...
-} , 5000); // ms 단위이다. 원하는 주기로 변경
-```
-
 [server .env 설정](./server/README.md)
+
+.env 설정을 해야 동작한다. 
