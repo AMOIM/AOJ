@@ -11,7 +11,7 @@
       <v-row>
         <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
         <div style="width:20%"><v-col>{{ i.date }}</v-col></div>
-        <div style="width:60%"><v-col>{{ i.content }}</v-col></div>
+        <div style="width:60%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
         <div style="width:8%" v-if="i.child.content==null"><v-col>
             <v-btn class="ma-2" fab dark small color="purple darken-2" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
                 <v-icon>mdi-pencil</v-icon>
@@ -21,7 +21,7 @@
       <v-row v-if="i.child.content !== null">
         <div style="width:12%"><v-col><v-icon class="fa fa-reply fa-rotate-180" aria-hidden="true"></v-icon></v-col></div>
         <div style="width:20%"><v-col>{{ i.child.date }}</v-col></div>
-        <div style="width:60%"><v-col>{{ i.child.content }}</v-col></div>
+        <div style="width:60%; white-space:pre-line;"><v-col>{{ i.child.content }}</v-col></div>
       </v-row>
     </v-col>
   </v-row>
