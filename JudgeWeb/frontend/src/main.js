@@ -8,9 +8,19 @@ import VueLogger from 'vuejs-logger';
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
 
+const options = {
+    isEnabled: true,
+    stringifyArguments : false,
+    showLogLevel : true,
+    showMethodName : true,
+    separator: '|',
+    showConsoleColors: true
+};
+
+Vue.use(VueLogger, options);
+
 new Vue({
     vuetify,
     router,
-    VueLogger,
     render: h => h(App)
 }).$mount('#app');
