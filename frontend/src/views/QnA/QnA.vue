@@ -101,7 +101,6 @@ export default {
             this.addNotice.select = {value: '전체', ProblemName: '전체'};
         },
         async submitReply(num) {
-            this.$log.info(num);
             await axios.post('/api/notice/reply',
                 {
                     _id: num.number,
