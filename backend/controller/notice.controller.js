@@ -15,5 +15,11 @@ export class NoticeController{
         const result = await NoticeService.createPost(req);
         if(result === true) return res.status(200).json({msg: "게시글 업로드를 성공하였습니다!"});
         else return res.status(400).json({msg: "게시글 업로드를 실패하였습니다!"});
-    };
+    }
+    static createReply = async (req, res) => {
+        logger.info('컨트롤러');
+        const result = await NoticeService.createReply(req);
+        if(result === true) return res.status(200).json({msg: "답글 업로드를 성공하였습니다!"});
+        else return res.status(400).json({msg: "답글 업로드를 실패하였습니다!"});    
+    }
 }

@@ -7,7 +7,7 @@ export class NoticeModel {
     static getNotice = async (req) => {
         try{
             if(req.query.key === '0'){
-                return await NoticeSchema.find({'competitionNum' : req.params.competitionNum, 'isQnA' : false});
+                return await NoticeSchema.find({competitionNum : req.params.competitionNum, isQnA : true});
             }
             else
                 return await NoticeSchema.find({competitionNum: req.params.competitionNum, isQnA : false});
@@ -33,6 +33,20 @@ export class NoticeModel {
             return true;
         }catch (err) {
             logger.info('mongo err' + err);
+            return false;
+        }
+    }
+    static createReply = async ({_id, content}) => {
+        try {
+            const Notice = await NoticeSchema.findById(_id);
+            console.log(Notice);
+            if(!Notice)return false;
+            Notice._id = _id;
+            Notice.child.content = content;
+            Notice.child.date = moment().format('YYYY-MM-DD HH:mm:ss');
+            await Notice.save();
+            return true;
+        }catch (err) {
             return false;
         }
     }
