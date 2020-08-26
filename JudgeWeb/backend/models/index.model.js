@@ -2,7 +2,7 @@ import { NoticeSchema } from './schema.model.js';
 import mongoose from 'mongoose';
 import moment from 'moment';
 
-export class IndexModel {
+export class NoticeModel {
     static getNotice = async (req) => {
         try{
             if(req.query.key === '0'){
