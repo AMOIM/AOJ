@@ -1,4 +1,4 @@
-import { PendingModel, ProblemModel, StateModel } from '../models/judge.model.js';
+import { PendingModel, ProblemModel, StatusModel } from '../models/judge.model.js';
 
 export default class ProblemService {
     static get = async (id) => {
@@ -10,7 +10,7 @@ export default class ProblemService {
     }
     static submit = async (data) => {
         try {
-            const result = await StateModel.push(data);
+            const result = await StatusModel.push(data);
             await PendingModel.push(result);
         } catch (err) {
             throw new Error('Service -> ' + err.message);

@@ -1,4 +1,4 @@
-import { PendingSchema, ProblemSchema, StateSchema } from './schema.model.js';
+import { PendingSchema, ProblemSchema, StatusSchema } from './schema.model.js';
 
 export class PendingModel {
     static push = async(number) => {
@@ -31,14 +31,14 @@ export class ProblemModel {
     };
 }
 
-export class StateModel {
+export class StatusModel {
     static push = async (data) => {
         try {
-            const result = await StateSchema.find()
+            const result = await StatusSchema.find()
                 .sort('-number').limit(1);
 
             const max = result.length !== 0 ? result[0].number + 1 : 1;
-            const newState = new StateSchema({
+            const newStatus = new StatusSchema({
                 code : data.code,
                 lang : data.lang,
                 problemNum : data.problemNum,
@@ -46,8 +46,8 @@ export class StateModel {
                 number : max,
             });
 
-            await newState.save();
-            return newState.number;
+            await newStatus.save();
+            return newStatus.number;
         } catch (err) {
             throw new Error('Model -> ' + err.message);
         }

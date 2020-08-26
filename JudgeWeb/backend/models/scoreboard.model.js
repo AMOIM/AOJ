@@ -1,4 +1,4 @@
-import { ContestSchema, StateSchema } from './schema.model.js';
+import { ContestSchema, StatusSchema } from './schema.model.js';
 
 export default class ScoreboardModel {
     static getContest = async (number) => {
@@ -10,16 +10,16 @@ export default class ScoreboardModel {
             throw new Error('Model -> getContest error');
         }
     }
-    static getState = async (user, problem, start, end) => {
+    static getStatus = async (user, problem, start, end) => {
         try {
-            const result = await StateSchema.find()
+            const result = await StatusSchema.find()
                 .where({ 'userName' : user , 'problemNum' : problem})
                 .gte('date', start)
                 .lte('date', end)
                 .sort('date');
             return result;
         } catch (err){
-            throw new Error('Model -> getState error');
+            throw new Error('Model -> getStatus error');
         }
     }
 }

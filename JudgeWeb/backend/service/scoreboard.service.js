@@ -1,9 +1,9 @@
-import ScorebardModel from '../models/scoreboard.model.js';
+import ScoreboardModel from '../models/scoreboard.model.js';
 
 export default class ScoreboardService {
     static get = async (number) => {
         try {
-            const contest = await ScorebardModel.getContest(number);
+            const contest = await ScoreboardModel.getContest(number);
             const users = contest.userList;
             if(users === null) throw new Error('User not found');
 
@@ -26,15 +26,16 @@ export default class ScoreboardService {
                         penalty : 0,
                         accept : false
                     });
-                    const state = await ScorebardModel.getState(users[i], problemList[j], start, end);
-                    if(state === null) continue;
+                    const status = await ScoreboardModel.getStatus(users[i], problemList[j], start, end);
+                    if(status === null) continue;
                     let time = 0;
-                    for(let k = 0; k < state.length; k++) {
-                        if (state[k].state === '맞았습니다') {
+                    for(let k = 0; k < status.length; k++) {
+                        obj.problemList[j].submitCnt++;
+                        if (status[k].status === '맞았습니다') {
                             obj.problemList[j].accept = true;
-                            time = Math.round((state[k].date - start) / 60 / 1000);
+                            time = Math.round((status[k].date - start) / 60 / 1000);
                             break;
-                        } else obj.problemList[j].submitCnt++;
+                        }
                     }
                     obj.problemList[j].penalty = Math.max(0, time + (obj.problemList[j].submitCnt - 1) * 20);
                     obj.penaltySum += obj.problemList[j].penalty;

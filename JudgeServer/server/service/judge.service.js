@@ -3,7 +3,7 @@ import childProcess from 'child_process';
 import path from 'path';
 
 import Compiler from '../models/compiler.model.js';
-import { PendingModel, ProblemModel, StateModel } from '../models/judge.model.js';
+import { PendingModel, ProblemModel, StatusModel } from '../models/judge.model.js';
 
 const execSync = childProcess.execSync;
 const dir = path.join(__dirname, '../../test');
@@ -22,7 +22,7 @@ export default class JudgeService {
             Queue.place(async () => {
                 let ceStdout;
                 try {
-                    const judge = await StateModel.find(pending.number);
+                    const judge = await StatusModel.find(pending.number);
                     const problem = await ProblemModel.find(judge.problemNum);
 
                     const compile = await Compiler.run(judge.code, judge.lang);
@@ -72,20 +72,20 @@ export default class JudgeService {
                         maxTime = Math.max(maxTime, status.cpu_time);
                         maxMemory = Math.max(maxMemory, status.memory);
                     }
-                    await StateModel.update(pending.number, '맞았습니다', compile.stdout, maxTime, maxMemory);
+                    await StatusModel.update(pending.number, '맞았습니다', compile.stdout, maxTime, maxMemory);
                     Queue.next();
                 } catch (err) {
                     if(err.message === undefined) throw new Error('Stdout is undefined');
                     else if(typeof err.message !== 'string') throw new Error('Type is not String');
                     else if(err.message === '서버 에러') {
-                        await StateModel.update(pending.number, err.message, '', -1, -1);
+                        await StatusModel.update(pending.number, err.message, '', -1, -1);
                         throw new Error('Judge Server error');
                     }
                     else if(err.message === '컴파일 에러')
-                        await StateModel.update(pending.number, err.message, ceStdout, -1, -1);
+                        await StatusModel.update(pending.number, err.message, ceStdout, -1, -1);
                     else if(err.message === '런타임 에러' || err.message === '틀렸습니다'
                         || err.message === '시간 초과' || err.message === '메모리 초과' || err.message === '출력 형식이 잘못되었습니다')
-                        await StateModel.update(pending.number, err.message, '', -1, -1);
+                        await StatusModel.update(pending.number, err.message, '', -1, -1);
                     else throw err;
                     Queue.next();
                 }

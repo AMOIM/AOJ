@@ -1,4 +1,4 @@
-import { StateSchema } from './schema.model.js';
+import { StatusSchema } from './schema.model.js';
 import { ProblemSchema } from './schema.model.js';
 import { PendingSchema } from './schema.model.js';
 
@@ -41,26 +41,26 @@ export class ProblemModel {
     };
 }
 
-export class StateModel {
+export class StatusModel {
     static find = async (number) => {
         try {
-            const result = await StateSchema.findOne()
+            const result = await StatusSchema.findOne()
                 .where({'number': number});
-            if(result === null) throw new Error('Not found state');
+            if(result === null) throw new Error('Not found status');
             return result;
         } catch (err) {
-            if(err.message !== 'Not found state')
-                err.message = 'Find State Error';
+            if(err.message !== 'Not found status')
+                err.message = 'Find Status Error';
             err.message = 'Model -> ' + err.message;
             throw err;
         }
     };
-    static update = async (number, state, msg, time, memory) => {
+    static update = async (number, status, msg, time, memory) => {
         try {
-            const result = await StateSchema.updateOne(
+            const result = await StatusSchema.updateOne(
                 {'number' : number},
-                {$set : { 'message' : msg, 'state' : state, 'time' : time, 'memory' : memory }});
-            if(result === null) throw new Error('Update state error');
+                {$set : { 'message' : msg, 'status' : status, 'time' : time, 'memory' : memory }});
+            if(result === null) throw new Error('Update status error');
         } catch (err) {
             throw new Error('Model -> ' + err.message);
         }

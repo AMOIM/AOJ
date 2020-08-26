@@ -36,8 +36,8 @@ const problemSchema = new mongoose.Schema({
     ],
 });
 
-const stateSchema = new mongoose.Schema({
-    state: {
+const statusSchema = new mongoose.Schema({
+    status: {
         type: String,
         enum: ['채점 중', '맞았습니다', '틀렸습니다', '시간 초과', '메모리 초과', '런타임 에러', '출력 형식이 잘못되었습니다', '컴파일 에러', '서버 에러'],
         default : '채점 중'
@@ -82,11 +82,11 @@ const pendingSchema = new mongoose.Schema({
 });
 
 const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
-const StateSchema = new mongoose.model('StateSchema', stateSchema);
+const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
 
 export {
     ProblemSchema,
-    StateSchema,
+    StatusSchema,
     PendingSchema
 };
