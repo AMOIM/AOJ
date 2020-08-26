@@ -43,7 +43,7 @@ export class StateModel {
                 lang : data.lang,
                 problemNum : data.problemNum,
                 userName : data.userName,
-                number : max
+                number : max,
             });
 
             await newState.save();

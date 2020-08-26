@@ -6,8 +6,13 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: '/problem/:id?',
-        name: 'problem',
+        name: 'Problem',
         component: () => import('../views/problem.vue')
+    },
+    {
+        path : '/contest/scoreboard/:id?',
+        name : 'Scoreboard',
+        component: () => import('../views/scoreboard.vue')
     }
 ];
 

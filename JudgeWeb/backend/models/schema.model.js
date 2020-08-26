@@ -81,12 +81,32 @@ const pendingSchema = new mongoose.Schema({
     }
 });
 
+const contestSchema = new mongoose.Schema({
+    number : {
+        type : Number,
+        required : true,
+        unique : true
+    },
+    problemNum : [ Number ],
+    userList : [ String ],
+    start : {
+        type : Date,
+        required : true
+    },
+    end : {
+        type : Date,
+        required : true
+    }
+});
+
 const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
 const StateSchema = new mongoose.model('StateSchema', stateSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
+const ContestSchema = new mongoose.model('ContestSchema', contestSchema);
 
 export {
     ProblemSchema,
     StateSchema,
-    PendingSchema
+    PendingSchema,
+    ContestSchema
 };
