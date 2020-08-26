@@ -84,13 +84,13 @@ export default {
     },
     created() {
         this.competitionNum = this.$route.params.id;
-        this.$http.get(`/api/notice/${this.competitionNum}?key=0`).then(res => {
+        this.$http.get(`/api/contest/notice/${this.competitionNum}?key=0`).then(res => {
             this.notices = res.data;
         });
     },
     methods: {
         async submitNotice(num) {
-            await this.$http.post('/api/notice/post',
+            await this.$http.post('/api/contest/notice/post',
                 {
                     competitionNum : this.competitionNum,
                     isQnA: true,
@@ -103,7 +103,7 @@ export default {
             this.addNotice.select = {value: '전체', ProblemName: '전체'};
         },
         async submitReply(num) {
-            await this.$http.post('/api/notice/reply',
+            await this.$http.post('/api/contest/notice/reply',
                 {
                     _id: num.number,
                     content: num.content

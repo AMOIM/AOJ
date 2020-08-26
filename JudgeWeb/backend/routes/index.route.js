@@ -1,8 +1,10 @@
 import express from 'express';
-import notice from './notice.route.js';
+
+import contestRoute from './contest.route.js';
 
 const app = express();
 
-app.use('/notice', notice);
+
+app.use('/contest', contestRoute);
 
 export default app;

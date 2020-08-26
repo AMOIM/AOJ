@@ -63,13 +63,13 @@ export default {
     },
     created() {
         this.competitionNum = this.$route.params.id;
-        this.$http.get(`/api/notice/${this.competitionNum}?key=1`).then(res => {
+        this.$http.get(`/api/contest/notice/${this.competitionNum}?key=1`).then(res => {
             this.notices = res.data;
         });
     },
     methods: {
         async submitNotice(num) {
-            await this.$http.post('/api/notice/post',
+            await this.$http.post('/api/contest/notice/post',
                 {
                     competitionNum : this.competitionNum,
                     isQnA: false,

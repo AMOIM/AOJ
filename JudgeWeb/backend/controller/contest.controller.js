@@ -1,6 +1,6 @@
 import { NoticeService } from '../service/notice.service.js';
 
-export class NoticeController {
+export default class Contest {
     static getNotice = async (req, res, next) => {
         try {
             const result = await NoticeService.getNotice(req);
