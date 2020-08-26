@@ -12,6 +12,16 @@
         <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
         <div style="width:20%"><v-col>{{ i.date }}</v-col></div>
         <div style="width:60%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
+        <div style="width:8%" v-if="i.child.content==null"><v-col>
+            <v-btn class="ma-2" fab dark small color="purple darken-2" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
+                <v-icon>mdi-pencil</v-icon>
+            </v-btn></v-col>
+        </div>
+      </v-row>
+      <v-row v-if="i.child.content !== null">
+        <div style="width:12%"><v-col><v-icon class="fa fa-reply fa-rotate-180" aria-hidden="true"></v-icon></v-col></div>
+        <div style="width:20%"><v-col>{{ i.child.date }}</v-col></div>
+        <div style="width:60%; white-space:pre-line;"><v-col>{{ i.child.content }}</v-col></div>
       </v-row>
     </v-col>
   </v-row>
@@ -20,16 +30,18 @@
         <v-icon dark>mdi-plus</v-icon>
 </v-btn>
 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
+<componentReplyCreate :addReply="addReply" @submitReply="submitReply"></componentReplyCreate>
 </v-container>
 </template>
 
 <script>
 import componentNoticeCreate from '../../components/Notice/NoticeCreate';
-import axios from 'axios';
+import componentReplyCreate from '../../components/Notice/ReplyCreate';
 
 export default {
     components: {
-        componentNoticeCreate
+        componentNoticeCreate,
+        componentReplyCreate
     },
     data: function() {
         return {
@@ -42,7 +54,7 @@ export default {
                     content: '',
                     date: ''
                 }],
-                _id: ''
+                _id: '',
             }],
             addNotice: {
                 select: {value: '전체', ProblemName: '전체'},
@@ -55,24 +67,33 @@ export default {
                 ],
                 content: null,
                 contentRules: [
-                    v => !!v || '공지사항 입력 부탁드립니다!'
+                    v => !!v || '질문내용 입력 부탁드립니다!'
                 ],
                 addNoticeFlag: false,
+                type: '질문',
+            },
+            addReply: {
+                addReplyFlag: false,
+                content: null,
+                number: '',
+                contentRules: [
+                    v => !!v || '답글내용 입력 부탁드립니다!'
+                ],
             }
         };
     },
     created() {
         this.competitionNum = this.$route.params.id;
-        axios.get(`/api/notice/${this.competitionNum}?key=1`).then(res => {
+        this.$http.get(`/api/notice/${this.competitionNum}?key=0`).then(res => {
             this.notices = res.data;
         });
     },
     methods: {
         async submitNotice(num) {
-            await axios.post('/api/notice/create',
+            await this.$http.post('/api/notice/post',
                 {
                     competitionNum : this.competitionNum,
-                    isQnA: false,
+                    isQnA: true,
                     problemNum: num.select.value,
                     content: num.content
                 });
@@ -80,6 +101,16 @@ export default {
             this.addNotice.addNoticeFlag = false;
             this.addNotice.content = null;
             this.addNotice.select = {value: '전체', ProblemName: '전체'};
+        },
+        async submitReply(num) {
+            await this.$http.post('/api/notice/reply',
+                {
+                    _id: num.number,
+                    content: num.content
+                });
+            window.location.reload(true);
+            this.addReply.addReplyFlag = false;
+            this.addReply.content = null;
         }
     }
 };

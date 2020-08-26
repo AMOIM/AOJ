@@ -7,7 +7,7 @@
         class="mx-auto"
         justify="center">
         <v-card-title>
-          <span class="headline">QnA</span>
+          <span class="headline">{{notice.type}}</span>
         </v-card-title>
         <v-card-text>
           <v-container>

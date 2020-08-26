@@ -1,26 +1,23 @@
 import Vue from 'vue';
-// route level code-splitting
-// this generates a separate chunk (about.[hash].js) for this route
-// which is lazy-loaded when the route is visited.
 import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import router from './router';
+import axios from 'axios';
 import VueLogger from 'vuejs-logger';
-const isProduction = process.env.NODE_ENV === 'production';
- 
+
+Vue.config.productionTip = false;
+Vue.prototype.$http = axios;
+
 const options = {
     isEnabled: true,
-    logLevel : isProduction ? 'error' : 'debug',
     stringifyArguments : false,
     showLogLevel : true,
     showMethodName : true,
     separator: '|',
     showConsoleColors: true
 };
- 
-Vue.use(VueLogger, options);
 
-Vue.config.productionTip = false;
+Vue.use(VueLogger, options);
 
 new Vue({
     vuetify,

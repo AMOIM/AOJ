@@ -13,8 +13,6 @@ const noticeSchema = new Schema({
     date: {type: String}
 });
 
-const NoticeSchema = new mongoose.model('notice', noticeSchema);
-
 const contestSchema = new mongoose.Schema({
     number : {
         type : Number,
@@ -33,6 +31,7 @@ const contestSchema = new mongoose.Schema({
     }
 });
 
+const NoticeSchema = new mongoose.model('notice', noticeSchema);
 const ContestShema = new mongoose.model('contest', contestSchema);
 
 export {
