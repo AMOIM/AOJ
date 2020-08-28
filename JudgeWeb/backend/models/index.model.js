@@ -1,4 +1,4 @@
-import { PendingSchema, ProblemSchema, StatusSchema } from './schema.model.js';
+import {ContestSchema, PendingSchema, ProblemSchema, StatusSchema} from './schema.model.js';
 
 export class PendingModel {
     static push = async(number) => {
@@ -6,7 +6,6 @@ export class PendingModel {
             const newPending = new PendingSchema({
                 number : number
             });
-
             await newPending.save();
         } catch (err) {
             err.message = 'Model -> Push pending error';
@@ -50,6 +49,30 @@ export class StatusModel {
             return newStatus.number;
         } catch (err) {
             throw new Error('Model -> ' + err.message);
+        }
+    }
+    static get = async (user, problem, start, end) => {
+        try {
+            const result = await StatusSchema.find()
+                .where({ 'userName' : user , 'problemNum' : problem})
+                .gte('date', start)
+                .lte('date', end)
+                .sort('date');
+            return result;
+        } catch (err){
+            throw new Error('Model -> getStatus error');
+        }
+    }
+}
+
+export class ContestModel {
+    static get = async (number) => {
+        try {
+            const result = await ContestSchema.findOne()
+                .where({'number': number});
+            return result;
+        } catch (err) {
+            throw new Error('Model -> getContest error');
         }
     }
 }

@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 import { logger } from './config/winston.js';
 import syncQueue from 'sync-queue';
-import Judge from './controller/judge.controller.js';
+import Judge from './controller/index.controller.js';
 
 global.logger = logger;
 global.Queue = new syncQueue();

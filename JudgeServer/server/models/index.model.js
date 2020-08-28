@@ -1,6 +1,4 @@
-import { StatusSchema } from './schema.model.js';
-import { ProblemSchema } from './schema.model.js';
-import { PendingSchema } from './schema.model.js';
+import { StatusSchema, ProblemSchema, PendingSchema } from './schema.model.js';
 
 export class PendingModel {
     static front = async () => {

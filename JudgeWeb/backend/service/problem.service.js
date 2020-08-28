@@ -1,4 +1,4 @@
-import { PendingModel, ProblemModel, StatusModel } from '../models/judge.model.js';
+import { PendingModel, ProblemModel, StatusModel } from '../models/index.model.js';
 
 export default class ProblemService {
     static get = async (id) => {

@@ -13,6 +13,11 @@ const routes = [
         path : '/contest/scoreboard/:id?',
         name : 'Scoreboard',
         component: () => import('../views/scoreboard.vue')
+    },
+    {
+        path : '/contest/status/:id?',
+        name : 'status',
+        component: () => import('../views/status.vue')
     }
 ];
 

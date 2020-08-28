@@ -44,7 +44,6 @@ export default {
         this.$http.get(`/api/contest/scoreboard/${id}`)
             .then(result => {
                 const list = result.data;
-                this.$log.info(list);
                 for(let i = 0; i < list.length; i++) {
                     const obj = {
                         rank : 0,
