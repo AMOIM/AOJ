@@ -1,9 +1,9 @@
-import ScoreboardModel from '../models/scoreboard.model.js';
+import { ContestModel, StatusModel } from '../models/index.model.js';
 
 export default class ScoreboardService {
     static get = async (number) => {
         try {
-            const contest = await ScoreboardModel.getContest(number);
+            const contest = await ContestModel.get(number);
             const users = contest.userList;
             if(users === null) throw new Error('User not found');
 
@@ -26,7 +26,7 @@ export default class ScoreboardService {
                         penalty : 0,
                         accept : false
                     });
-                    const status = await ScoreboardModel.getStatus(users[i], problemList[j], start, end);
+                    const status = await StatusModel.get(users[i], problemList[j], start, end);
                     if(status === null) continue;
                     let time = 0;
                     for(let k = 0; k < status.length; k++) {

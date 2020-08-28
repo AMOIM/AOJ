@@ -3,7 +3,7 @@ import childProcess from 'child_process';
 import path from 'path';
 
 import Compiler from '../models/compiler.model.js';
-import { PendingModel, ProblemModel, StatusModel } from '../models/judge.model.js';
+import { PendingModel, ProblemModel, StatusModel } from '../models/index.model.js';
 
 const execSync = childProcess.execSync;
 const dir = path.join(__dirname, '../../test');
@@ -13,7 +13,7 @@ const seccomp_rule = async (lang) => {
     else return 'general';
 };
 
-export default class JudgeService {
+export default class IndexService {
     static run = async () => {
         try {
             const pending = await PendingModel.front();
