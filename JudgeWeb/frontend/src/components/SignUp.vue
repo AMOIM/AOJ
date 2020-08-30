@@ -25,18 +25,18 @@ export default {
                 user: this.user
             })
                 .then((response) => {
-                    if (response.data.result === 3) {
-                        alert('Error, please, try again');
+                    if(response.data.result === 4) {
+                        alert('로그인 후 이용가능합니다.');
+                    }
+                    else if (response.data.result === 3) {
+                        alert('다시 시도해주십시오.');
                     }
                     else if (response.data.result === 2) {
-                        alert('Existed ID, try again');
+                        alert('이미 존재하는 아이디입니다.');
                     }
                     else if (response.data.result === 1) {
-                        alert('Success');
+                        alert('회원가입이 성공적으로 완료되었습니다.');
                         this.$router.push('/'); 
-                    }
-                    else {
-                        alert(response.data.result);
                     }
                 })
                 .catch(function (error) {

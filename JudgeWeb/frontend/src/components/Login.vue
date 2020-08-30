@@ -4,7 +4,7 @@
     <input v-model="user.id" placeholder="ID"> <br/>
     <input v-model="user.password" type="password"  placeholder="password">
     <button v-on:click="login" >login</button>
-    <a v-bind:href="url.signUpUrl"> Sign up </a>
+    <a v-bind:href="url.signUpUrl">Sign up </a>
   </div>
 </template>
 

@@ -37,10 +37,5 @@ export class UserService {
         else if (result ===2) return 2;
         else return 1;
     }
-
-    static checklogin = async(token) => {
-        const result = await UserModel.checklogin(token);
-        return result;
-    }
 }
 

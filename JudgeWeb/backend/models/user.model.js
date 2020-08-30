@@ -37,9 +37,4 @@ export class UserModel {
       });
       return token;
   }
-
-  static checklogin = async(token) => {
-      const result = jwt.verify(token,process.env.SECRET_KEY);
-      return result;
-  }
 }
