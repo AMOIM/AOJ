@@ -11,8 +11,7 @@
         "sourceType": "module"
     },
     "globals": {
-        "logger": false,
-        "Queue" : false
+        "logger": false
     },
     "rules": {
         "no-console" : "error",
