@@ -1,5 +1,17 @@
 import mongoose from 'mongoose';
 
+const noticeSchema = new mongoose.Schema({
+    isQnA: {type: Boolean, required: true},
+    problemNum: {type: String, required: true},
+    competitionNum: {type: Number, required: true},
+    content: {type: String, required: true},
+    child: {
+        content: {type: String, default: null},
+        date: {type: String}
+    },
+    date: {type: String}
+});
+
 const problemSchema = new mongoose.Schema({
     number: {
         type: Number,
@@ -99,12 +111,16 @@ const contestSchema = new mongoose.Schema({
     }
 });
 
+const NoticeSchema = new mongoose.model('notice', noticeSchema);
+const ContestShema = new mongoose.model('contest', contestSchema);
 const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
 const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
 const ContestSchema = new mongoose.model('ContestSchema', contestSchema);
 
 export {
+    NoticeSchema,
+    ContestShema,
     ProblemSchema,
     StatusSchema,
     PendingSchema,
