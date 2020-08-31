@@ -1,26 +1,18 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import QnA from '../views/QnA/QnA.vue';
-import Notice from '../views/Notice/Notice.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
     {
-        path: '/',
-        name: 'Home',
-        component: Home
-    },
-    {
         path: '/contest/qna/:id',
-        name: QnA,
-        component: QnA
+        name: 'QnA',
+        component: () => import('../views/QnA/QnA.vue');
     },
     {
         path: '/contest/notice/:id',
-        name: Notice,
-        component: Notice
+        name: 'Notice',
+        component: () => import('../views/Notice/Notice.vue');
     }
 ];
 
