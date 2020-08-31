@@ -25,7 +25,10 @@ export default {
                 user: this.user
             })
                 .then((response) => {
-                    if(response.data.result === 4) {
+                    if(response.data.result === 5) {
+                        alert('재로그인 후 이용가능합니다.');
+                    }
+                    else if(response.data.result === 4) {
                         alert('로그인 후 이용가능합니다.');
                     }
                     else if (response.data.result === 3) {

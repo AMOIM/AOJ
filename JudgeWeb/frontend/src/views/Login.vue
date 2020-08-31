@@ -31,12 +31,11 @@ export default {
                         if(response.data.token) {
                             this.$log.info(1);
                             await this.$store.dispatch('login', response.data.token);
-                            alert('success login');
                             this.$router.push('/');
                         }
                         else {
                             this.$log.info(2);
-                            alert('fail login');
+                            alert('로그인이 실패하였습니다.');
                         }
                     },
                     (error) => { 

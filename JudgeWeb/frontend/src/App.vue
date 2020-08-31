@@ -13,6 +13,14 @@
 
 <script>
 export default {
+    async created() {
+        const token = localStorage.getItem('token');
+        localStorage.removeItem('token');
+        localStorage.removeItem('name');
+        if(token) {
+            await this.$store.dispatch('login', token);
+        }
+    },
     methods: {
         logout () {
             this.$store.dispatch('logout');
