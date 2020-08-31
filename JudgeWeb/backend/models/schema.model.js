@@ -17,4 +17,4 @@ const UserSchema = new mongoose.model('user', userSchema);
 
 export {
     UserSchema
-} 
+}; 
