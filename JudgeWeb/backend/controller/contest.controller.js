@@ -23,7 +23,7 @@ export default class Contest {
             next(err);
         }
     }
-    static createReply = async (req, res) => {
+    static createReply = async (req, res, next) => {
         try {
             await NoticeService.createReply(req);
             return res.status(200).send(true);

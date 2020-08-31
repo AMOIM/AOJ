@@ -1,5 +1,17 @@
 import mongoose from 'mongoose';
 
+const userSchema = new mongoose.Schema({
+    name: {
+        type : String,
+        unique : true
+    },
+    id: {
+        type : String,
+        unique : true
+    },
+    password: String
+});
+
 const noticeSchema = new mongoose.Schema({
     isQnA: {type: Boolean, required: true},
     problemNum: {type: String, required: true},
@@ -117,6 +129,7 @@ const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
 const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
 const ContestSchema = new mongoose.model('ContestSchema', contestSchema);
+const UserSchema = new mongoose.model('user', userSchema);
 
 export {
     NoticeSchema,
@@ -124,5 +137,6 @@ export {
     ProblemSchema,
     StatusSchema,
     PendingSchema,
-    ContestSchema
+    ContestSchema,
+    UserSchema
 };
