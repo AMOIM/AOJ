@@ -5,7 +5,10 @@
   "author": "AMOIM",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --exec babel-node bin/www.js"
+    "dev": "npm run lint && nodemon --exec babel-node bin/www.js",
+    "start": "nodemon --exec babel-node bin/www.js",
+    "lint": "eslint \"**/*.js\"",
+    "fix": "eslint --fix \"**/*.js\""
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -32,9 +35,7 @@
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.5.0",
-    "eslint-config-rallycoding": "^3.2.0",
-    "eslint-plugin-must-use-await": "^1.1.2"
+    "eslint": "^7.7.0"
   },
   "babel": {
     "presets": [
