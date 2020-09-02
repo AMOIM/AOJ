@@ -1,4 +1,4 @@
-import { UserModel } from '../models/user.model.js';
+import { UserModel } from '../models/index.model.js';
 import crypto from 'crypto';
 
 
