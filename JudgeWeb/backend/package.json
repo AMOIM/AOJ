@@ -24,6 +24,7 @@
     "module_name": "^1.0.0",
     "moment-timezone": "^0.5.31",
     "mongoose": "^5.9.21",
+    "mongoose-auto-increment": "^5.0.1",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.4",
     "optionator": "^0.9.1",
