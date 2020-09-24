@@ -35,6 +35,11 @@ const routes = [
         component: () => import('../components/File/FileUpload.vue')
     },
     {
+        path: '/problem/create',
+        name: 'ProblemCreate',
+        component: () => import('../views/CreateProblem.vue')
+    },
+    {
         path: '/problem/:id?',
         name: 'Problem',
         component: () => import('../views/problem.vue')
