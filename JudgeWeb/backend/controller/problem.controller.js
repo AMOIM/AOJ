@@ -21,4 +21,14 @@ export default class Problem {
             next(err);
         }
     }
+    static create = async (req, res, next) => {
+        try {
+            const result = await ProblemService.create({...req.body});
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'POST /problem/create\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
 }

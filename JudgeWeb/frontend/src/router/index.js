@@ -30,11 +30,6 @@ const routes = [
         component: () => import('../views/Notice/Notice.vue')
     },
     {
-        path: '/problem',
-        name: 'ProblemForm',
-        component: () => import('../components/File/FileUpload.vue')
-    },
-    {
         path: '/problem/create',
         name: 'ProblemCreate',
         component: () => import('../views/CreateProblem.vue')

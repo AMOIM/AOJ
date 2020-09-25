@@ -31,7 +31,7 @@ const problemSchema = new mongoose.Schema({
         unique: true
     },
     title: {
-        type: Number,
+        type: String,
         required: true
     },
     description: {
@@ -48,13 +48,11 @@ const problemSchema = new mongoose.Schema({
     },
     inputList: [
         {
-            _id: Number,
             txt: String
         },
     ],
     outputList: [
         {
-            _id: Number,
             txt: String
         }
     ],

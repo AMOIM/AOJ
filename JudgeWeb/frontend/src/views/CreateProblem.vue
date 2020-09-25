@@ -13,13 +13,12 @@
       required
     ></v-text-field>
 
-    <v-select
+    <v-text-field
       v-model="problemTime"
-      :items="items"
-      :rules="[v => !!v || '시간을 선택해주세요! 초 단위입니다!']"
+      :rules="timeRules"
       label="시간 (초)"
       required
-    ></v-select>
+    ></v-text-field>
 
    <v-text-field
       v-model="problemMemory"
@@ -102,6 +101,14 @@
       <v-icon right dark>mdi-cloud-upload</v-icon>
     </v-btn>
   </v-form>
+  <v-alert
+      dense
+      text
+      v-if="msgFlag==true"
+      type="success"
+    >
+      {{msg}}
+    </v-alert>
 </v-container>
 </template>
 
@@ -114,18 +121,9 @@ export default {
             titleRules: [
                 v => !!v || '문제 제목을 입력해주세요!',
             ],
-            problemTime: null,
-            items: [
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                '10'
+            problemTime: '',
+            timeRules: [
+                v => !!v || '시간을 입력해주세요! 단위는 초입니다!'
             ],
             problemMemory: '',
             memoryRules: [
@@ -138,7 +136,9 @@ export default {
             inputFiles: [],
             inputFilesString: [],
             outputFiles: [],
-            outputFilesString: []
+            outputFilesString: [],
+            msg: '',
+            msgFlag: false
         };
     },
 
@@ -167,23 +167,40 @@ export default {
         removeOutputFile( key ){
             this.outputFiles.splice( key, 1 );
         },
-        submitFiles(){
+        async submitFiles(){
             for(let fileInput of this.inputFiles){
                 let reader = new FileReader();
                 reader.readAsText(fileInput);
-                reader.onload = () => {
-                    this.inputFilesString.push(reader.result);
-                };
+                const result = await new Promise((resolve) => {
+                    reader.onload = function() {
+                        resolve(reader.result);
+                    };
+                });
+                this.inputFilesString.push({'txt' : result});
             }
 
             for(let fileInput of this.outputFiles){
                 let reader = new FileReader();
                 reader.readAsText(fileInput);
-                reader.onload = () => {
-                    this.outputFilesString.push(reader.result);
-                };
+                const result = await new Promise((resolve) => {
+                    reader.onload = function() {
+                        resolve(reader.result);
+                    };
+                });
+                this.outputFilesString.push({'txt' : result});
             }
-            
+
+            await this.$http.post('/api/problem/create', {
+                problemTitle : this.problemTitle,
+                problemContent : this.problemContent,
+                problemTime : this.problemTime * 1000,
+                problemMemory : this.problemMemory * 1000000,
+                inputFilesString : this.inputFilesString,
+                outputFilesString : this.outputFilesString
+            }).then(res => {
+                this.msg = res.data + '번 문제가 생성되었습니다!';
+                this.msgFlag = true;
+            });
         },
     },
 };

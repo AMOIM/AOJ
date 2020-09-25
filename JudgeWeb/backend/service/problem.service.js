@@ -16,4 +16,11 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
+    static create = async (data) => {
+        try {
+            return await ProblemModel.create(data);
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
 }
