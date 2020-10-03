@@ -48,6 +48,11 @@ const routes = [
         path : '/contest/status/:id?',
         name : 'status',
         component: () => import('../views/status.vue')
+    },
+    {
+        path : '/contest/:id',
+        name : 'Contest Main',
+        component: () => import('../views/ContestMain.vue')
     }
 ];
 

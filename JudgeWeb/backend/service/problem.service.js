@@ -1,4 +1,4 @@
-import { PendingModel, ProblemModel, StatusModel } from '../models/index.model.js';
+import { PendingModel, ProblemModel, StatusModel, ContestModel } from '../models/index.model.js';
 
 export default class ProblemService {
     static get = async (id) => {
@@ -19,6 +19,13 @@ export default class ProblemService {
     static create = async (data) => {
         try {
             return await ProblemModel.create(data);
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+    static getProblemList = async (competitionNum) => {
+        try {
+            return await ContestModel.getProblemList(competitionNum);
         } catch (err) {
             throw new Error('Service -> ' + err.message);
         }

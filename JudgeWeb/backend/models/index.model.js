@@ -149,4 +149,21 @@ export class ContestModel {
             throw new Error('Model -> getContest error');
         }
     }
+    static getProblemList = async (competitionNum) => {
+        try {
+            const result = await ContestSchema.findOne()
+                .where({'number': competitionNum});
+            const problemNumList = result.problemNum;
+            const problems = [];
+            let cnt = 65;
+            for (let i of problemNumList) {
+                const problem = await ProblemModel.find(i);
+                problems.push({"alphabet" : String.fromCharCode(cnt), "number" : problem.number, "title" : problem.title});
+                cnt++;
+            }
+            return problems;
+        } catch (err) {
+            throw new Error('Model -> getProblemList error');
+        }
+    }
 }
