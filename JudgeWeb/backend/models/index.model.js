@@ -81,6 +81,28 @@ export class ProblemModel {
             throw err;
         }
     };
+    static create = async (data) => {
+        try {
+            const result = await ProblemSchema.find()
+                .sort('-number').limit(1);
+
+            const max = result.length !== 0 ? result[0].number + 1 : 1;
+            const newProblem = new ProblemSchema({
+                number: max,
+                title: data.problemTitle,
+                description: data.problemContent,
+                timeLimit: data.problemTime,
+                memoryLimit: data.problemMemory,
+                inputList: data.inputFilesString,
+                outputList: data.outputFilesString
+            });
+
+            await newProblem.save();
+            return newProblem.number;
+        } catch (err) {
+            throw new Error('Model -> ' + err.message);
+        }
+    };
 }
 
 export class StatusModel {
@@ -128,6 +150,24 @@ export class ContestModel {
             throw new Error('Model -> getContest error');
         }
     }
+    static getProblemList = async (competitionNum) => {
+        try {
+            const result = await ContestSchema.findOne()
+                .where({'number': competitionNum});
+            const problemNumList = result.problemNum;
+            const problems = [];
+            let cnt = 65;
+            for (let i of problemNumList) {
+                const problem = await ProblemModel.find(i);
+                problems.push({"alphabet" : String.fromCharCode(cnt), "number" : problem.number, "title" : problem.title});
+                cnt++;
+            }
+            return problems;
+        } catch (err) {
+            throw new Error('Model -> getProblemList error');
+        }
+    }
+}
 }
 
 export class UserModel {
