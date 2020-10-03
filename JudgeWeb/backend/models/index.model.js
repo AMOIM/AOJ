@@ -174,5 +174,5 @@ export class UserModel {
             throw err;
         }
     }
-  }
+}
   
