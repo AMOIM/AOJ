@@ -22,13 +22,28 @@ const cmd = (script) => {
 
 const compile = {
     'c': (code) => {
-        fs.writeFileSync(`${dir}/test.c`, code, 'utf8');
-        const script = `gcc ${dir}/test.c -o ${dir}/test.o -Wall -O2 -lm -static -std=c99 -DONLINE_JUDGE -DBOJ`;
+        fs.writeFileSync(`${dir}/Main.c`, code, 'utf8');
+        const script = `/usr/bin/gcc -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c99 ${dir}/Main.c -static -lm -o ${dir}/Main.o`;
         return cmd(script);
     },
     'cpp': (code) => {
-        fs.writeFileSync(`${dir}/test.cc`, code, 'utf8');
-        const script = `g++ ${dir}/test.cc -o ${dir}/test.o -Wall -O2 -lm -static -std=gnu++17 -DONLINE_JUDGE -DBOJ`;
+        fs.writeFileSync(`${dir}/Main.cc`, code, 'utf8');
+        const script = `/usr/bin/g++ -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c++17 ${dir}/Main.cc -static -lm -o ${dir}/Main.o`;
+        return cmd(script);
+    },
+    'java' : (code) => {
+        fs.writeFileSync(`${dir}/Main.java`, code, 'utf8');
+        const script = `/usr/bin/javac ${dir}/Main.java -d ${dir} -encoding UTF8`;
+        return cmd(script);
+    },
+    'python2' : (code) => {
+        fs.writeFileSync(`${dir}/Main.py`, code, 'utf8');
+        const script = `/usr/bin/python2.7 -m py_compile ${dir}/Main.py`;
+        return cmd(script);
+    },
+    'python3' : (code) => {
+        fs.writeFileSync(`${dir}/Main.py`, code, 'utf8');
+        const script = `/usr/bin/python3 -m py_compile ${dir}/Main.py`;
         return cmd(script);
     }
 };

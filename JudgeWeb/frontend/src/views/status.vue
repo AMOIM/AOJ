@@ -33,10 +33,11 @@ export default {
     data : () => {
         return {
             list : [],
-            userName : 'kimcoding' // temp
+            userName : ''
         };
     },
     mounted() {
+        this.userName = this.$store.state.name;
         const id = this.$route.params.id;
         if (id === undefined)
             this.$router.go(-1);
