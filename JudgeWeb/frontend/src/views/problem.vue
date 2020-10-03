@@ -55,7 +55,7 @@ export default {
         return {
             problem: {},
             code : '',
-            language: ['c', 'cpp'],
+            language: ['c', 'cpp', 'java', 'python2', 'python3'],
             lang : 'c',
             userName : 'kimcoding' // Mock
         };
