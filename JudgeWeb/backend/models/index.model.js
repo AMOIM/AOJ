@@ -168,7 +168,6 @@ export class ContestModel {
         }
     }
 }
-}
 
 export class UserModel {
     static login = async(id, pw) => {
@@ -177,7 +176,7 @@ export class UserModel {
             if(user === null) return false;
             else return user.name;
         } catch(err) {
-            err.message = 'Model -> login err';
+            err.message = 'Model -> login err';s
             throw err;
         }
     };
