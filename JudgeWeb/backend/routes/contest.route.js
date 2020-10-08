@@ -10,4 +10,6 @@ router.post('/notice/reply', Contest.createReply);
 router.get('/scoreboard/:id', Contest.getScoreboard);
 router.post('/status/:id', Contest.getStatus);
 
+router.post('/create', Contest.createContest);
+
 export default router;

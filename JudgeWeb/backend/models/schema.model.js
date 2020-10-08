@@ -107,7 +107,12 @@ const pendingSchema = new mongoose.Schema({
     }
 });
 
-const contestSchema = new mongoose.Schema({
+const contestSchema = new mongoose.Schema({ // 수정했어유
+    title : { 
+        type : String,
+        required : true,
+        unique : true
+    },
     number : {
         type : Number,
         required : true,
@@ -126,7 +131,6 @@ const contestSchema = new mongoose.Schema({
 });
 
 const NoticeSchema = new mongoose.model('notice', noticeSchema);
-const ContestShema = new mongoose.model('contest', contestSchema);
 const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
 const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
@@ -135,10 +139,9 @@ const UserSchema = new mongoose.model('user', userSchema);
 
 export {
     NoticeSchema,
-    ContestShema,
+    ContestSchema,
     ProblemSchema,
     StatusSchema,
     PendingSchema,
-    ContestSchema,
     UserSchema
 };

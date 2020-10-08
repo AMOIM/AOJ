@@ -1,6 +1,7 @@
-import { NoticeService } from '../service/notice.service.js';
-import ScoreboardService from '../service/scoreboard.service.js';
+import { NoticeService } from '../service/notice.service';
+import ScoreboardService from '../service/scoreboard.service';
 import StatusService from '../service/status.service';
+import ContestService from '../service/contest.service';
 
 export default class Contest {
     static getNotice = async (req, res, next) => {
@@ -52,6 +53,17 @@ export default class Contest {
             return res.status(200).json(result);
         } catch (err) {
             err.message = 'POST /contest/status\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static createContest = async (req, res, next) => {
+        try {
+            const result = await ContestService.Save(req);
+            if(result === true) return res.status(200).json({result : 1});
+            else return res.status(200).json({result : 2});
+        } catch(err) {
+            err.message = 'POST /contest/create\nController -> ' + err.message;
             err.status = 400;
             next(err);
         }
