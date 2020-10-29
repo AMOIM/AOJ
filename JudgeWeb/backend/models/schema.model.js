@@ -33,7 +33,7 @@ const problemSchema = new mongoose.Schema({
         unique: true
     },
     title: {
-        type: Number,
+        type: String,
         required: true
     },
     description: {
@@ -50,13 +50,11 @@ const problemSchema = new mongoose.Schema({
     },
     inputList: [
         {
-            _id: Number,
             txt: String
         },
     ],
     outputList: [
         {
-            _id: Number,
             txt: String
         }
     ],
@@ -130,12 +128,13 @@ const contestSchema = new mongoose.Schema({ // 수정했어유
     }
 });
 
-const NoticeSchema = new mongoose.model('notice', noticeSchema);
+
+const NoticeSchema = new mongoose.model('NoticeSchema', noticeSchema);
 const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
 const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
 const ContestSchema = new mongoose.model('ContestSchema', contestSchema);
-const UserSchema = new mongoose.model('user', userSchema);
+const UserSchema = new mongoose.model('UserSchema', userSchema);
 
 export {
     NoticeSchema,

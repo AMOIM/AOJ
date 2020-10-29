@@ -40,6 +40,11 @@ const routes = [
         component: () => import('../views/Notice/Notice.vue')
     },
     {
+        path: '/problem/create',
+        name: 'ProblemCreate',
+        component: () => import('../views/CreateProblem.vue')
+    },
+    {
         path: '/problem/:id?',
         name: 'Problem',
         component: () => import('../views/problem.vue')
@@ -53,6 +58,11 @@ const routes = [
         path : '/contest/status/:id?',
         name : 'status',
         component: () => import('../views/status.vue')
+    },
+    {
+        path : '/contest/:id',
+        name : 'Contest Main',
+        component: () => import('../views/ContestMain.vue')
     }
 ];
 

@@ -44,6 +44,9 @@ export default {
         this.$http.get(`/api/contest/scoreboard/${id}`)
             .then(result => {
                 const list = result.data;
+                for(let i = 0; i < list[0].problemList.length; i++)
+                    this.headers.push({text : `${String.fromCharCode(i + 65)}`, value : 'problem[' + i + ']'});
+                this.headers.push({text : 'total', value : 'total'});
                 for(let i = 0; i < list.length; i++) {
                     const obj = {
                         rank : 0,
@@ -51,7 +54,10 @@ export default {
                         problem : [],
                         total : ''
                     };
-                    obj.rank = i + 1;
+                    if(i && list[i - 1].acceptCnt === list[i].acceptCnt && list[i-1].penaltySum === list[i].penaltySum)
+                        obj.rank = '-';
+                    else obj.rank = i + 1;
+
                     obj.userName = list[i].userName;
                     obj.total = `${list[i].acceptCnt} / ${list[i].penaltySum}`;
                     for(let j = 0;j < list[i].problemList.length ; j++) {
@@ -59,9 +65,7 @@ export default {
                         this.$log.info(problem.accept);
                         const penalty = problem.accept === false ? '-' : problem.penalty;
                         obj.problem.push(`${problem.submitCnt} / ${penalty}`);
-                        this.headers.push({text : `${String.fromCharCode(j + 65)}`, value : 'problem[' + j + ']'});
                     }
-                    this.headers.push({text : 'total', value : 'total'});
                     this.list.push(obj);
                 }
             })

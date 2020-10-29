@@ -1,18 +1,18 @@
 <template>
   <v-app>
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-      | <router-link to="/signUp">SignUp</router-link> 
-      <div v-if="$store.state.name === null">| <router-link to="/login">Login</router-link> </div>
-      <div v-if="$store.state.name !== null"><button v-on:click="logout">Logout</button></div> <br>
-      <div v-if="$store.state.name !== null"> {{$store.state.name}}님</div>
-    </div>
+    <Header/>
     <router-view/>
+    <Footer/>
   </v-app>
 </template>
 
 <script>
+
 export default {
+    components: {
+        Header: () => import('./components/Header'),
+        Footer: () => import('./components/Footer')
+    },
     async created() {
         const token = localStorage.getItem('token');
         localStorage.removeItem('token');
@@ -21,12 +21,6 @@ export default {
             await this.$store.dispatch('login', token);
         }
     },
-    methods: {
-        logout () {
-            this.$store.dispatch('logout');
-            this.$router.push('/');
-        }
-    }
 };
 </script>>
 <style lang="scss">

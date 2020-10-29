@@ -6,5 +6,6 @@ const router = Router();
 
 router.post('/', Problem.get);
 router.post('/submit', Problem.submit);
+router.post('/create', Problem.create);
 
 export default router;
