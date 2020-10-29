@@ -75,6 +75,8 @@ export default class Contest {
             return res.status(200).json(result);
         } catch(err) {
             err.message = 'GET /contest/list\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
         }
     }
     static getProblemList = async (req, res, next) => {

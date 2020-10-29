@@ -21,7 +21,7 @@
       <template v-slot:extension>
         <v-tabs align-with-title>
           <v-tab href="/">홈</v-tab>
-          <v-tab>대회</v-tab>
+          <v-tab href="/contest/list">대회</v-tab>
           <v-tab>채점환경</v-tab>
         </v-tabs>
       </template>

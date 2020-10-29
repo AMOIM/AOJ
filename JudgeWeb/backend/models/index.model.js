@@ -187,7 +187,6 @@ export class ContestModel {
         try {
             const result = await ContestSchema.findOne()
                 .where({'number': competitionNum});
-            logger.info(1);
             const problemNumList = result.problemNum;
             const problems = [];
             let cnt = 65;
