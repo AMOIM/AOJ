@@ -1,4 +1,21 @@
 <template>
+  <!--<v-app>
+  <v-card>
+    <v-tabs
+      dark
+      background-color="teal darken-3"
+      show-arrows
+    >
+      <v-tab>
+        <router-link to='/'>HOME</router-link>
+      </v-tab>
+      <v-tab>
+        <router-link to='/contest'>CONTEST</router-link>
+      </v-tab>
+    </v-tabs>
+  </v-card>
+  </v-app>
+<v-container>-->
   <v-app>
     <div id="nav">
       <router-link to="/">Home</router-link>
@@ -13,6 +30,12 @@
 
 <script>
 export default {
+    data : () => {
+        [
+            {name: 'HOME', href: '/'},
+            {name: 'CONTEST', href: ''} 
+        ];
+    },
     async created() {
         const token = localStorage.getItem('token');
         localStorage.removeItem('token');

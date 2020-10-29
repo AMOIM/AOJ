@@ -34,9 +34,11 @@ export default {
     data () {
         return {
             problems: [],
+            //competitionNum: '',
         };
     },
     async created () {
+        //this.competitionNum = 
         this.$http.get('/api/contest/1').then(res => {
             this.problems = res.data;
         });

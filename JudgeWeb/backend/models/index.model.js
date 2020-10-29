@@ -176,7 +176,7 @@ export class UserModel {
             if(user === null) return false;
             else return user.name;
         } catch(err) {
-            err.message = 'Model -> login err';s
+            err.message = 'Model -> login err';
             throw err;
         }
     };
