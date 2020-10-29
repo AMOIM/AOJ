@@ -154,12 +154,13 @@ export class ContestModel {
         try {
             const result = await ContestSchema.findOne()
                 .where({'number': competitionNum});
+            logger.info(1);
             const problemNumList = result.problemNum;
             const problems = [];
             let cnt = 65;
             for (let i of problemNumList) {
                 const problem = await ProblemModel.find(i);
-                problems.push({"alphabet" : String.fromCharCode(cnt), "number" : problem.number, "title" : problem.title});
+                problems.push({'alphabet' : String.fromCharCode(cnt), 'number' : problem.number, 'title' : problem.title});
                 cnt++;
             }
             return problems;
@@ -176,7 +177,7 @@ export class UserModel {
             if(user === null) return false;
             else return user.name;
         } catch(err) {
-            err.message = 'Model -> login err';s
+            err.message = 'Model -> login err';
             throw err;
         }
     };
