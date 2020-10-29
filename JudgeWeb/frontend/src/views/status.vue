@@ -45,7 +45,6 @@ export default {
             user : this.userName
         })
             .then(result => {
-                this.$log.info(result.data);
                 this.list = result.data;
             })
             .catch(err => {
