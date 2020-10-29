@@ -11,5 +11,6 @@ router.get('/scoreboard/:id', Contest.getScoreboard);
 router.post('/status/:id', Contest.getStatus);
 
 router.post('/create', Contest.createContest);
+router.get('/list', Contest.getContest);
 
 export default router;

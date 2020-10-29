@@ -6,6 +6,7 @@ import router from './router';
 import VueLogger from 'vuejs-logger';
 import Vuex from 'vuex';
 import store from './store/auth';
+import vueMoment from 'vue-moment';
 
 const isProduction = process.env.NODE_ENV === 'production';
  
@@ -21,6 +22,7 @@ const options = {
 
 Vue.use(Vuex);
 Vue.use(VueLogger, options);
+Vue.use(vueMoment);
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;

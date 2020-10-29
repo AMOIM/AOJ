@@ -125,6 +125,16 @@ export class ContestModel {
                 .where({'number': number});
             return result;
         } catch (err) {
+            throw new Error('Model -> getContestNum error');
+        }
+    }
+
+    static GetContest = async() => {
+        try {
+            const result = await ContestSchema.find()
+            .sort('-start');
+            return result;
+        } catch(err) {
             throw new Error('Model -> getContest error');
         }
     }

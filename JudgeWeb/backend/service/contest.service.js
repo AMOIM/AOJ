@@ -11,6 +11,16 @@ export default class ContestService {
             err.message = 'Service -> contestsave err';
             throw err;
         }
+    } 
+
+    static Get = async() => {
+        try{
+            const result = await ContestModel.GetContest();
+            return result;
+        } catch(err) {
+            err.message = 'Service -> contestget err';
+            throw err;
+        }
     }
 }
 

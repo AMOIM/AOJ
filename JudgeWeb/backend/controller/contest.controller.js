@@ -57,6 +57,7 @@ export default class Contest {
             next(err);
         }
     }
+
     static createContest = async (req, res, next) => {
         try {
             const result = await ContestService.Save(req);
@@ -64,6 +65,16 @@ export default class Contest {
             else return res.status(200).json({result : 2});
         } catch(err) {
             err.message = 'POST /contest/create\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static getContest = async(req, res, next) => {
+        try {
+            const result = await ContestService.Get();
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /contest/list\nController -> ' + err.message;
             err.status = 400;
             next(err);
         }
