@@ -2,6 +2,7 @@
   <v-app>
     <Header/>
     <router-view/>
+    <Footer/>
   </v-app>
 </template>
 
@@ -9,7 +10,8 @@
 
 export default {
     components: {
-        Header: () => import('./components/Header')
+        Header: () => import('./components/Header'),
+        Footer: () => import('./components/Footer')
     }
 };
 </script>>
