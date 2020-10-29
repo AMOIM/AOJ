@@ -1,54 +1,15 @@
 <template>
-  <!--<v-app>
-  <v-card>
-    <v-tabs
-      dark
-      background-color="teal darken-3"
-      show-arrows
-    >
-      <v-tab>
-        <router-link to='/'>HOME</router-link>
-      </v-tab>
-      <v-tab>
-        <router-link to='/contest'>CONTEST</router-link>
-      </v-tab>
-    </v-tabs>
-  </v-card>
-  </v-app>
-<v-container>-->
   <v-app>
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-      | <router-link to="/signUp">SignUp</router-link> 
-      <div v-if="$store.state.name === null">| <router-link to="/login">Login</router-link> </div>
-      <div v-if="$store.state.name !== null"><button v-on:click="logout">Logout</button></div> <br>
-      <div v-if="$store.state.name !== null"> {{$store.state.name}}님</div>
-    </div>
+    <Header/>
     <router-view/>
   </v-app>
 </template>
 
 <script>
+
 export default {
-    data : () => {
-        [
-            {name: 'HOME', href: '/'},
-            {name: 'CONTEST', href: ''} 
-        ];
-    },
-    async created() {
-        const token = localStorage.getItem('token');
-        localStorage.removeItem('token');
-        localStorage.removeItem('name');
-        if(token) {
-            await this.$store.dispatch('login', token);
-        }
-    },
-    methods: {
-        logout () {
-            this.$store.dispatch('logout');
-            this.$router.push('/');
-        }
+    components: {
+        Header: () => import('./components/Header')
     }
 };
 </script>>
