@@ -134,7 +134,7 @@ export class StatusModel {
                 .lte('date', end)
                 .sort('date');
             return result;
-        } catch (err){
+        } catch (err) {
             throw new Error('Model -> getStatus error');
         }
     }
@@ -147,7 +147,40 @@ export class ContestModel {
                 .where({'number': number});
             return result;
         } catch (err) {
+            throw new Error('Model -> getContestNum error');
+        }
+    }
+
+    static GetContest = async() => {
+        try {
+            const result = await ContestSchema.find()
+            .sort('-start');
+            return result;
+        } catch(err) {
             throw new Error('Model -> getContest error');
+        }
+    }
+    static Save = async(req) => { 
+        logger.info('abcd'); 
+        try {
+            const result = await ContestSchema.find()
+                .sort('-number').limit(1);
+            const max = result.length !== 0 ? result[0].number + 1 : 1;
+            const stime = await req.body.contest.start.split('.');
+            const etime = await req.body.contest.end.split('.');
+            const newContest = new ContestSchema({
+                title : req.body.contest.title, 
+                number : max, 
+                problemNum : req.body.contest.problems, 
+                userList : req.body.contest.users, 
+                start : new Date(stime[0],stime[1]-1,stime[2],stime[3],stime[4]), 
+                end : new Date(etime[0],etime[1]-1,etime[2],etime[3],etime[4])
+            });
+            await newContest.save();
+            return true;
+        } catch(err) {
+            err.message = 'Model -> contestsave';
+            throw err;
         }
     }
     static getProblemList = async (competitionNum) => {
@@ -215,4 +248,3 @@ export class UserModel {
         }
     }
 }
-  

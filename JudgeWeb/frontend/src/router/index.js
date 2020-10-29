@@ -20,6 +20,16 @@ const routes = [
         component: () => import('../views/Login.vue')
     },
     {
+        path: '/contest/create',
+        name: 'CreateContest',
+        component: () => import('../views/CreateContest.vue')
+    },
+    {
+        path: '/contest/list',
+        name: 'Contestlist',
+        component: () => import('../views/Contestlist.vue')
+    },
+    {
         path: '/contest/qna/:id',
         name: 'QnA',
         component: () => import('../views/QnA/QnA.vue')
