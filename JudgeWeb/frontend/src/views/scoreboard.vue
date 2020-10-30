@@ -1,28 +1,41 @@
 <template>
-  <v-card>
-    <v-card-title>
-      Scoreboard
-      <v-spacer></v-spacer>
-      <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-      ></v-text-field>
-    </v-card-title>
-    <v-data-table
-        :headers="headers"
-        :items="list"
-        :search="search"
-        hide-default-footer
-    ></v-data-table>
-  </v-card>
+<v-row>
+    <v-col style="max-width: 350px;">
+        <sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>
+    </v-col>
+    <v-col>
+        <v-card
+            outlined>
+            <v-card-title>
+                Scoreboard
+                <v-spacer></v-spacer>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                ></v-text-field>
+            </v-card-title>
+            <v-data-table
+                :headers="headers"
+                :items="list"
+                :search="search"
+                hide-default-footer
+            ></v-data-table>
+        </v-card>
+    </v-col>
+</v-row>
 </template>
 
 <script>
+import sidebarComponent from '../components/SideBar';
+
 export default {
     name: 'scoreboard.vue',
+    components: {
+        sidebarComponent
+    },
     data: () => {
         return {
             list : [],
@@ -34,7 +47,8 @@ export default {
                     align : 'rank'
                 },
                 { text : 'name', value : 'userName'}
-            ]
+            ],
+            model: 1,
         };
     },
     mounted() {

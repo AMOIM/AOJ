@@ -1,5 +1,9 @@
 <template>
-<v-container>
+<v-row>
+<v-col style="max-width: 350px;">
+    <sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>
+</v-col>
+<v-col style="max-width: 700px;">
 <v-container>
   <v-row>
       <div style="width:12%; font-weight:bold;"><v-col>문제</v-col></div>
@@ -31,17 +35,20 @@
 </v-btn>
 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
 <componentReplyCreate :addReply="addReply" @submitReply="submitReply"></componentReplyCreate>
-</v-container>
+</v-col>
+</v-row>
 </template>
 
 <script>
 import componentNoticeCreate from '../../components/Notice/NoticeCreate';
 import componentReplyCreate from '../../components/Notice/ReplyCreate';
+import sidebarComponent from '../../components/SideBar';
 
 export default {
     components: {
         componentNoticeCreate,
-        componentReplyCreate
+        componentReplyCreate,
+        sidebarComponent
     },
     data: function() {
         return {
@@ -79,7 +86,8 @@ export default {
                 contentRules: [
                     v => !!v || '답글내용 입력 부탁드립니다!'
                 ],
-            }
+            },
+            model: 4,
         };
     },
     created() {

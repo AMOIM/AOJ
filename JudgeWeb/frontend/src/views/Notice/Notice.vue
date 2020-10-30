@@ -1,5 +1,9 @@
 <template>
-<v-container>
+<v-row>
+<v-col style="max-width: 350px;">
+<sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>
+</v-col>
+<v-col style="max-width: 700px;">
 <v-container>
   <v-row>
       <div style="width:12%; font-weight:bold;"><v-col>문제</v-col></div>
@@ -20,15 +24,18 @@
         <v-icon dark>mdi-plus</v-icon>
 </v-btn>
 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
-</v-container>
+</v-col>
+</v-row>
 </template>
 
 <script>
 import componentNoticeCreate from '../../components/Notice/NoticeCreate';
+import sidebarComponent from '../../components/SideBar';
 
 export default {
     components: {
-        componentNoticeCreate
+        componentNoticeCreate,
+        sidebarComponent
     },
     data: function() {
         return {
@@ -58,7 +65,8 @@ export default {
                 ],
                 addNoticeFlag: false,
                 type: '공지사항',
-            }
+            },
+            model: 3,
         };
     },
     created() {
