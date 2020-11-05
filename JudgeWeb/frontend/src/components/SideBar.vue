@@ -13,11 +13,10 @@
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
+          :to="item.path + competitionNum"
         >
           <v-list-item-content>
-            <router-link :to="{ path: item.path + competitionNum}">
-              <v-list-item-title style='color: #311B92;' v-text="item.text"></v-list-item-title>
-            </router-link>
+            <v-list-item-title style='color: #311B92;' v-text="item.text"></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -36,14 +35,13 @@
         <v-list-item
           v-for="(item, i) in problems.problem"
           :key="i"
+          :to="problems.path + item.number"
         >
           <v-list-item-content style="padding: 0;">
-            <router-link :to="{ path: problems.path + item.number}">
               <v-row>
                   <v-col style='color: #311B92;'>{{item.alphabet}}</v-col>
                   <v-col><v-list-item-title v-text="item.title" style='color: #9575CD;'></v-list-item-title></v-col>
               </v-row>
-            </router-link>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
