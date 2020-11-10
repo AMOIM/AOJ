@@ -1,10 +1,11 @@
 <template>
-  <div id="login">
-    <div> Login </div>
-    <input v-model="user.id" placeholder="ID"> <br/>
-    <input v-model="user.password" type="password"  placeholder="password">
-    <button v-on:click="login" >login</button>
-    <a v-bind:href="url.signUpUrl">Sign up </a>
+  <div id="login"><br>
+    <div> <h1>Login</h1> </div>
+     <v-card-text>
+      <v-col cols="12" sm="6" md="4"><v-text-field v-model="user.id" type="text" label="아이디"/></v-col>
+      <v-col cols="12" sm="6" md="4"><v-text-field v-model="user.password" type="password"  label="패스워드"/></v-col>
+      <v-btn class="deep-purple darken-3 white--text" elevation="10" v-on:click="login" >login</v-btn>
+      </v-card-text>
   </div>
 </template>
 
@@ -15,9 +16,6 @@ export default {
             user: {
                 id: '',
                 password: ''
-            },
-            url: {
-                signUpUrl: '/signup'
             }
         };
     },
