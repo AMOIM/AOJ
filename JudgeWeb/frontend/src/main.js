@@ -26,6 +26,7 @@ Vue.use(vueMoment);
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
+
 new Vue({
     el : '#app',
     template: '<App/>',
