@@ -154,7 +154,7 @@ export class ContestModel {
     static GetContest = async() => {
         try {
             const result = await ContestSchema.find()
-            .sort('-start');
+                .sort('-start');
             return result;
         } catch(err) {
             throw new Error('Model -> getContest error');
