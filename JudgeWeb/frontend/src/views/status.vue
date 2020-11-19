@@ -1,4 +1,5 @@
 <template>
+<v-card v-if="this.chk">
   <v-simple-table>
   <template v-slot:default>
     <thead>
@@ -25,18 +26,24 @@
     </tbody>
   </template>
   </v-simple-table>
+</v-card>
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
+
 export default {
     name: 'status.vue',
+    mixins:[checklogin],
     data : () => {
         return {
+            chk: false,
             list : [],
             userName : ''
         };
     },
-    mounted() {
+    async mounted() {
+        this.chk = await this.check();
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
         if (id === undefined)

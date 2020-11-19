@@ -1,4 +1,5 @@
 <template>
+<v-card v-if="this.chk">
 <v-row>
 <v-col style="max-width: 350px;">
     <sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>
@@ -37,14 +38,17 @@
 <componentReplyCreate :addReply="addReply" @submitReply="submitReply"></componentReplyCreate>
 </v-col>
 </v-row>
+</v-card>
 </template>
 
 <script>
 import componentNoticeCreate from '../../components/Notice/NoticeCreate';
 import componentReplyCreate from '../../components/Notice/ReplyCreate';
 import sidebarComponent from '../../components/SideBar';
+import {checklogin} from '../../components/mixins/checklogin.js';
 
 export default {
+    mixins:[checklogin],
     components: {
         componentNoticeCreate,
         componentReplyCreate,
@@ -52,6 +56,7 @@ export default {
     },
     data: function() {
         return {
+            chk : false,
             competitionNum: '',
             notices: [{
                 date: '',
@@ -89,6 +94,9 @@ export default {
             },
             model: 4,
         };
+    },
+    async mounted() {
+        this.chk = await this.check();
     },
     created() {
         this.competitionNum = this.$route.params.id;

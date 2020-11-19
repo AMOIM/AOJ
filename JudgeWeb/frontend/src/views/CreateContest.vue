@@ -1,5 +1,5 @@
 <template>
-  <div id="contest">
+  <v-card v-if="this.chk" id="contest">
     <div> <h2>Create Contest</h2> </div>
     <div> 대회 제목 : <input v-model="contest.title" placeholder="대회 제목을 입력하세요."> </div>
     <div> 대회 시작 시각 : <input v-model="contest.start" placeholder="ex) 2020.09.09.17.00"></div>
@@ -17,13 +17,17 @@
     v-on:keyup.enter="createuser(name)">
     <button v-on:click="createuser(name)"> 참가자 등록</button> <br/>
     <button v-on:click="createcontest()" >대회 생성</button>
-  </div>
+  </v-card>
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
+
 export default {
+    mixins:[checklogin],
     data: function () {
         return {
+            chk: false,
             name : '',
             number : '',
             contest: {
@@ -34,6 +38,9 @@ export default {
                 users: []
             }
         };
+    },
+    async mounted() {
+        this.chk = await this.check();
     },
     methods: {
         deleteproblem(index) {
@@ -60,27 +67,24 @@ export default {
             this.name='';
         },
         createcontest() {
-            //this.contest.problems.shift();
-            //this.contest.users.shift();
             this.$http.post('/api/contest/create', {
                 contest: this.contest
             })
-                .then(
-                    async(response) => {
-                        if(response.data.result === 1) {
-                            this.$log.info(1);
-                            alert('대회가 개최되었습니다.');
-                            this.$router.push('/');
-                        }
-                        else {
-                            this.$log.info(2);
-                            alert('대회 개최가 실패하였습니다.');
-                        }
-                    },
-                    (error) => { 
-                        this.$log.info(3);
-                        alert('에러1' + error.response.data.error);
+                .then((response) => {
+                    if(response.data.result === 1) {
+                        this.$log.info(1);
+                        alert('대회가 개최되었습니다.');
+                        this.$router.push('/');
                     }
+                    else {
+                        this.$log.info(2);
+                        alert('대회 개최가 실패하였습니다.');
+                    }
+                },
+                (error) => { 
+                    this.$log.info(3);
+                    alert('에러1' + error.response.data.error);
+                }
                 )
                 .catch(error => {
                     this.$log.info(4);

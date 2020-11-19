@@ -1,4 +1,5 @@
 <template>
+<v-card v-if="this.chk">
 <v-row>
     <v-col style="max-width: 350px;">
         <sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>
@@ -26,18 +27,22 @@
         </v-card>
     </v-col>
 </v-row>
+</v-card>
 </template>
 
 <script>
 import sidebarComponent from '../components/SideBar';
+import {checklogin} from '../components/mixins/checklogin.js';
 
 export default {
+    mixins:[checklogin],
     name: 'scoreboard.vue',
     components: {
         sidebarComponent
     },
     data: () => {
         return {
+            chk: false,
             list : [],
             search: '',
             headers : [
@@ -51,7 +56,8 @@ export default {
             model: 1,
         };
     },
-    mounted() {
+    async mounted() {
+        this.chk = await this.check();
         const id = this.$route.params.id;
         if (id === undefined)
             this.$router.go(-1);

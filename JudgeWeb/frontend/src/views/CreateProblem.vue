@@ -1,4 +1,5 @@
 <template>
+<v-card v-if="this.chk" id="contest">
 <v-container>
   <v-form
     ref="form"
@@ -110,12 +111,17 @@
       {{msg}}
     </v-alert>
 </v-container>
+</v-card>
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
+
 export default {
+    mixins:[checklogin],
     data: function(){
         return {
+            chk: false,
             problemTitle: '',
             valid: true,
             titleRules: [
@@ -141,7 +147,9 @@ export default {
             msgFlag: false
         };
     },
-
+    async mounted() {
+        this.chk = await this.check();
+    },
     methods: {
         addInputFiles(){
             this.$refs.inputFiles.click();
