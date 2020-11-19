@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Header/>
-    <router-view/>
+    <router-view class="main-center"/>
     <Footer/>
   </v-app>
 </template>
@@ -44,5 +44,11 @@ export default {
       color: #ad993c;
     }
   }
+}
+
+.main-center {
+  margin : 3% auto;
+  width : 80%;
+  min-height : 72%;
 }
 </style>

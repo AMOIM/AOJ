@@ -19,12 +19,22 @@
       <div v-if="$store.state.name !== null" class="margin_right"><button v-on:click="logout">로그아웃</button> </div>
 
       <template v-slot:extension>
-        <v-tabs align-with-title>
-          <v-tab href="/">홈</v-tab>
-          <v-tab href="/contest/list">대회</v-tab>
-          <v-tab>채점환경</v-tab>
-        </v-tabs>
+        <v-row
+            align="center"
+            color="white"
+        >
+          <v-btn class="link_block" text href="/">
+            홈
+          </v-btn>
+          <v-btn class="link_block" text href="/contest/list">
+            대회
+          </v-btn>
+          <v-btn class="link_block" text>
+            채점 환경
+          </v-btn>
+        </v-row>
       </template>
+
     </v-app-bar>
   </v-card>
 </template>
@@ -51,5 +61,8 @@ export default {
   .link_white {
     color : white;
     text-decoration: none;
+  }
+  .link_block {
+    margin-left : 3%;
   }
 </style>
