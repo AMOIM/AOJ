@@ -1,4 +1,5 @@
 <template>
+<v-card v-if="this.chk">
   <v-row>
     <v-col style="max-width: 350px;">
       <sidebarComponent style="max-width: 200px;"></sidebarComponent>
@@ -52,11 +53,14 @@
       </div>
     </v-col>
   </v-row>
+</v-card>
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
 
 export default {
+    mixins:[checklogin],
     name: 'status.vue',
     components: {
         CodeView: () => import('../components/CodeView'),
@@ -64,6 +68,7 @@ export default {
     },
     data() {
         return {
+            chk: false,
             list: [],
             userName: '',
             myCode: {
@@ -96,6 +101,7 @@ export default {
         },
     },
     async mounted() {
+        this.chk = await this.check();
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
         if (id === undefined)
