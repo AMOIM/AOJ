@@ -93,6 +93,8 @@ export class ProblemModel {
                 description: data.problemContent,
                 timeLimit: data.problemTime,
                 memoryLimit: data.problemMemory,
+                inputDescription: data.inputDescription,
+                outputDescription: data.outputDescription,
                 inputList: data.inputFilesString,
                 outputList: data.outputFilesString
             });

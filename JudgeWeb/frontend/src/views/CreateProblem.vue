@@ -1,5 +1,6 @@
 <template>
 <v-container>
+  <div><h2>문제 생성</h2></div>
   <v-form
     ref="form"
     v-model="valid"
@@ -33,6 +34,22 @@
       label="문제 내용"
       v-model="problemContent"
       :rules="contentRules"
+    ></v-textarea>
+
+    <v-textarea
+      rows="3"
+      name="inputDescription"
+      label="문제 입력"
+      v-model="inputDescription"
+      :rules="inputDescriptionRules"
+    ></v-textarea>
+
+    <v-textarea
+      rows="3"
+      name="outputDescription"
+      label="문제 출력"
+      v-model="outputDescription"
+      :rules="outputDescriptionRules"
     ></v-textarea>
 
     <v-card outlined>
@@ -94,10 +111,10 @@
     </v-card>
 
     <v-btn
-      color="blue-grey"
+      color="deep-purple darken-2"
       class="ma-2 white--text"
       @click="submitFiles()"
-    >Upload
+    >문제 생성
       <v-icon right dark>mdi-cloud-upload</v-icon>
     </v-btn>
   </v-form>
@@ -132,6 +149,14 @@ export default {
             problemContent: '',
             contentRules: [
                 v => !!v || '문제 내용을 입력해주세요!'
+            ],
+            inputDescription: '',
+            inputDescriptionRules: [
+                v => !!v || '문제 입력에 대한 설명을 작성해주세요!'
+            ],
+            outputDescription: '',
+            outputDescriptionRules: [
+                v => !!v || '문제 출력에 대한 설명을 작성해주세요!'
             ],
             inputFiles: [],
             inputFilesString: [],
@@ -195,6 +220,8 @@ export default {
                 problemContent : this.problemContent,
                 problemTime : this.problemTime * 1000,
                 problemMemory : this.problemMemory * 1000000,
+                inputDescription : this.inputDescription,
+                outputDescription : this.outputDescription,
                 inputFilesString : this.inputFilesString,
                 outputFilesString : this.outputFilesString
             }).then(res => {
