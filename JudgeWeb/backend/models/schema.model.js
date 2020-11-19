@@ -48,6 +48,14 @@ const problemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    inputDescription: {
+        type: String,
+        required: true
+    },
+    outputDescription: {
+        type: String,
+        required: true
+    },
     inputList: [
         {
             txt: String
