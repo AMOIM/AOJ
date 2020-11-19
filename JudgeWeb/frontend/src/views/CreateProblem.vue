@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="this.chk" id="contest">
+<v-card v-if="this.chk && this.isadmin" id="contest">
 <v-container>
   <div><h2>문제 생성</h2></div>
   <v-form
@@ -138,6 +138,7 @@ export default {
     mixins:[checklogin],
     data: function(){
         return {
+            isadmin: false,
             chk: false,
             problemTitle: '',
             valid: true,
@@ -174,6 +175,11 @@ export default {
     },
     async mounted() {
         this.chk = await this.check();
+        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
+        if(this.chk && this.$store.state.name !== 'admin') {
+            this.$router.push('/');
+            alert('관리자만 접근이 가능합니다.');
+        }
     },
     methods: {
         addInputFiles(){

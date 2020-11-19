@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="this.chk" id="contest">
+  <v-card v-if="this.chk && this.isadmin" id="contest">
     <div> <h2>Create Contest</h2> </div>
     <div> 대회 제목 : <input v-model="contest.title" placeholder="대회 제목을 입력하세요."> </div>
     <div> 대회 시작 시각 : <input v-model="contest.start" placeholder="ex) 2020.09.09.17.00"></div>
@@ -28,6 +28,7 @@ export default {
     data: function () {
         return {
             chk: false,
+            isadmin: false,
             name : '',
             number : '',
             contest: {
@@ -41,6 +42,11 @@ export default {
     },
     async mounted() {
         this.chk = await this.check();
+        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
+        if(this.chk && this.$store.state.name !== 'admin') {
+            this.$router.push('/');
+            alert('관리자만 접근이 가능합니다.');
+        }
     },
     methods: {
         deleteproblem(index) {
