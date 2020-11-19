@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 const authMiddleware = async(req, res, next) => {
+    logger.info('auth');
     if(req.headers && req.headers.authorization) {
         const token = await req.headers.authorization.split(' ');
         logger.info(token[0]);
@@ -10,7 +11,7 @@ const authMiddleware = async(req, res, next) => {
                 if(!err) {
                     logger.info(1);
                     logger.info(JSON.stringify(decoded));
-                    next();
+                    return res.status(200).json({result : 6});
                 }
                 else {
                     logger.info(2);
@@ -25,7 +26,7 @@ const authMiddleware = async(req, res, next) => {
     }
 };
 
-module.exports = authMiddleware;
+export default authMiddleware;
 
 //로그인시 access와 refresh 둘다 발급(refresh token 서버에 저장?)
 //local에 refresh저장 헤더에는 access저장?

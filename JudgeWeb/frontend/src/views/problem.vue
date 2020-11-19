@@ -116,11 +116,14 @@
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
 
 export default {
+    mixins:[checklogin],
     name: 'problem.vue',
     data: () => {
         return {
+            chk: false,
             problem: {},
             code : '',
             language: ['c', 'cpp', 'java', 'python2', 'python3'],
@@ -144,6 +147,9 @@ export default {
                     this.$log.error(err);
                 });
         }
+    },
+    async mounted() {
+        this.chk = await this.check();
     },
     created() {
         this.userName = this.$store.state.name;
