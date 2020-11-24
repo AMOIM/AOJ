@@ -31,4 +31,14 @@ export default class Problem {
             next(err);
         }
     }
+    static getAll = async (req, res, next) => {
+        try {
+            const result = await ProblemService.getAll();
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'POST /problem/list\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
 }

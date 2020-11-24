@@ -30,4 +30,11 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
+    static getAll = async () => {
+        try {
+            return await ProblemModel.allFind();
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
 }

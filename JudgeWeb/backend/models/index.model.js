@@ -78,11 +78,23 @@ export class ProblemModel {
             throw err;
         }
     };
+    static allFind = async () => {
+        try {
+            const result = await ProblemSchema.find()
+                .sort('-number');
+            if(result === null) throw new Error('Not exist problem');
+            return result;
+        } catch (err) {
+            if(err.message !== 'Not exist problem')
+                err.message = 'Find Problem Error';
+            err.message = 'Model -> ' + err.message;
+            throw err;
+        }
+    };
     static create = async (data) => {
         try {
             const result = await ProblemSchema.find()
                 .sort('-number').limit(1);
-
             const max = result.length !== 0 ? result[0].number + 1 : 1;
             const newProblem = new ProblemSchema({
                 number: max,
