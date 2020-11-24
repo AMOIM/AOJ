@@ -87,6 +87,10 @@ export default {
         })
             .then(result => {
                 this.problem = result.data;
+                if(this.problem === null){
+                    alert('존재하지 않는 문제입니다.');
+                    this.$router.go(-1);
+                }
             })
             .catch(err => this.$log.error(err));
     }

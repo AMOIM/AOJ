@@ -6,14 +6,12 @@ const authMiddleware = async(req, res, next) => {
         logger.info(token[0]);
         logger.info(token[1]);
         if(token[0] === 'Bearer') {
-            jwt.verify(token[1],process.env.SECRET_KEY, function(err, decoded) {
+            jwt.verify(token[1],process.env.SECRET_KEY, function(err) {
                 if(!err) {
-                    logger.info(1);
-                    logger.info(JSON.stringify(decoded));
                     next();
                 }
                 else {
-                    logger.info(2);
+                    logger.error('Token Error\n' + err);
                     return res.status(200).json({result : 5});
                 }
             });
