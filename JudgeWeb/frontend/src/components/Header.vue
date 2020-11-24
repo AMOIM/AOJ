@@ -26,11 +26,14 @@
           <v-btn class="link_block" text href="/">
             홈
           </v-btn>
-          <v-btn class="link_block" text href="/contest/list">
-            대회
-          </v-btn>
           <v-btn class="link_block" text>
             채점 환경
+          </v-btn>
+          <v-btn class="link_block" text href="/problem/list">
+            문제
+          </v-btn>
+          <v-btn class="link_block" text href="/contest/list">
+            대회
           </v-btn>
           <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/problem/create">
             문제 생성
