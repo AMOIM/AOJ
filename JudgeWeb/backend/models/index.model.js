@@ -72,12 +72,9 @@ export class ProblemModel {
         try {
             const result = await ProblemSchema.findOne()
                 .where({'number': number});
-            if(result === null) throw new Error('Not exist problem');
             return result;
         } catch (err) {
-            if(err.message !== 'Not exist problem')
-                err.message = 'Find Problem Error';
-            err.message = 'Model -> ' + err.message;
+            err.message = 'Model -> Find Problem Error';
             throw err;
         }
     };
@@ -162,21 +159,28 @@ export class ContestModel {
             throw new Error('Model -> getContest error');
         }
     }
-    static Save = async(req) => { 
-        logger.info('abcd'); 
+    static Save = async(req) => {
         try {
             const result = await ContestSchema.find()
                 .sort('-number').limit(1);
             const max = result.length !== 0 ? result[0].number + 1 : 1;
-            const stime = await req.body.contest.start.split('.');
-            const etime = await req.body.contest.end.split('.');
+
+            const contest = {
+                ...req.body.contest
+            };
+
+            let problemList = new Array;
+
+            for(let problem of contest.problems)
+                problemList.push(problem.number);
+
             const newContest = new ContestSchema({
-                title : req.body.contest.title, 
+                title : contest.title,
                 number : max, 
-                problemNum : req.body.contest.problems, 
-                userList : req.body.contest.users, 
-                start : new Date(stime[0],stime[1]-1,stime[2],stime[3],stime[4]), 
-                end : new Date(etime[0],etime[1]-1,etime[2],etime[3],etime[4])
+                problemNum : problemList,
+                userList : contest.users,
+                start : new Date(contest.start),
+                end : new Date(contest.end)
             });
             await newContest.save();
             return true;
@@ -205,6 +209,16 @@ export class ContestModel {
 }
 
 export class UserModel {
+    static get = async (req) => {
+        try {
+            const result = await UserSchema.findOne()
+                .where({'id' : req.body.id });
+            return result;
+        } catch (err) {
+            throw new Error('Model -> getAll error');
+        }
+    }
+
     static login = async(id, pw) => {
         try {
             const user = await UserSchema.findOne({id: id, password: pw});

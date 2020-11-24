@@ -163,6 +163,10 @@ export default {
         })
             .then(result => {
                 this.problem = result.data;
+                if(this.problem === null){
+                    alert('존재하지 않는 문제입니다.');
+                    this.$router.go(-1);
+                }
                 this.problem.timeLimit = this.problem.timeLimit / 1000;
                 this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
             })
