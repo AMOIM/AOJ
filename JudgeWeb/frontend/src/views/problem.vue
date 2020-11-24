@@ -1,4 +1,5 @@
 <template>
+<v-card v-if="this.chk">
 <v-container>
     <v-container>
     <v-list-item three-line style="padding: 0px;">
@@ -113,6 +114,7 @@
       </v-btn>
     </form>
 </v-container>
+</v-card>
 </template>
 
 <script>

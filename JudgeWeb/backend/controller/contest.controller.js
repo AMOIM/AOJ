@@ -79,6 +79,17 @@ export default class Contest {
             next(err);
         }
     }
+    static getOne = async(req, res, next) => {
+        try {
+            const number = req.params.id;
+            const result = await ContestService.getOne(number);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /contest/userlist\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
     static getProblemList = async (req, res, next) => {
         try {
             const competitionNum = req.params.competitionNum;

@@ -113,7 +113,7 @@ const pendingSchema = new mongoose.Schema({
     }
 });
 
-const contestSchema = new mongoose.Schema({ // 수정했어유
+const contestSchema = new mongoose.Schema({ 
     title : { 
         type : String,
         required : true,
