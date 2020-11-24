@@ -3,6 +3,15 @@ import crypto from 'crypto';
 
 
 export class UserService {
+    static get = async (req) => {
+        try {
+            return UserModel.get(req);
+        } catch(err) {
+            err.message = 'Service -> getAll err';
+            throw err;
+        }
+    }
+
     static login = async (req) => {
         const user = {
             ...req.body.user

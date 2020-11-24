@@ -1,6 +1,16 @@
 import { UserService } from '../service/user.service.js';
 
 export class UserController {
+    static get = async (req, res, next) => {
+        try {
+            const result = await UserService.get(req);
+            return res.status(200).json({ user : result});
+        } catch(err) {
+            err.message = 'Controller -> getAll err';
+            next(err);
+        }
+    }
+
     static login = async (req, res, next) => {
         try {
             const result = await UserService.login(req);

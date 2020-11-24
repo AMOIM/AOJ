@@ -116,8 +116,6 @@ export default {
         const apiProblem = await this.$http.get(`/api/contest/${id}`);
         const problemList = apiProblem.data;
 
-        this.$log.info(problemList);
-
         this.$http.post(`/api/contest/status/${id}`, {
             user: this.userName
         })
