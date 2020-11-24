@@ -1,4 +1,5 @@
 <template>
+<v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
 <v-row>
     <v-col style="max-width: 350px;">
         <sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>
@@ -26,18 +27,25 @@
         </v-card>
     </v-col>
 </v-row>
+</v-card>
 </template>
 
 <script>
 import sidebarComponent from '../components/SideBar';
+import {checklogin} from '../components/mixins/checklogin.js';
+import {checkuser} from '../components/mixins/checkuser.js';
 
 export default {
+    mixins:[checklogin, checkuser],
     name: 'scoreboard.vue',
     components: {
         sidebarComponent
     },
     data: () => {
         return {
+            chk: false,
+            chk2: false,
+            isadmin: false,
             list : [],
             search: '',
             headers : [
@@ -51,7 +59,12 @@ export default {
             model: 1,
         };
     },
-    mounted() {
+    async mounted() {
+        if(this.$store.state.name === 'admin') this.isadmin = true;
+        else {
+            this.chk = await this.check();
+            this.chk2 = await this.checkparticipant(this.$route.params.id);
+        }
         const id = this.$route.params.id;
         if (id === undefined)
             this.$router.go(-1);

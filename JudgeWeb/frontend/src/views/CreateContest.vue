@@ -1,4 +1,5 @@
 <template>
+<v-card elevation="0" v-if="this.chk && this.isadmin" id="contest">
   <div>
     <div><h2>대회 생성</h2></div>
     <v-form
@@ -86,19 +87,24 @@
     <DatePicker :show="startShow" :mod=0 @save="save" @close="close"/>
     <DatePicker :show="endShow" :mod=1 @save="save" @close="close"/>
   </div>
+  </v-card>
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
 
 export default {
     components: {
         DatePicker: () => import('../components/DatePicker'),
     },
+    mixins:[checklogin],
     data() {
         return {
             valid: true,
             id: '',
             number: '',
+            chk: false,
+            isadmin: false,
             contest: {
                 start: '',
                 end: '',
@@ -114,11 +120,17 @@ export default {
             endShow: false
         };
     },
-    mounted() {
+    async mounted() {
         this.contest.start = new Date();
         this.contest.start.setSeconds(0);
         this.contest.end = new Date(new Date().setHours(new Date().getHours() + 3));
         this.contest.end.setSeconds(0);
+        this.chk = await this.check();
+        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
+        if(this.chk && this.$store.state.name !== 'admin') {
+            this.$router.push('/');
+            alert('관리자만 접근이 가능합니다.');
+        }
     },
     methods: {
         deleteProblem(index) {

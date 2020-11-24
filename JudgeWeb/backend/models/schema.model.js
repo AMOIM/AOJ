@@ -48,6 +48,14 @@ const problemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    inputDescription: {
+        type: String,
+        required: true
+    },
+    outputDescription: {
+        type: String,
+        required: true
+    },
     inputList: [
         {
             txt: String
@@ -105,7 +113,7 @@ const pendingSchema = new mongoose.Schema({
     }
 });
 
-const contestSchema = new mongoose.Schema({ // 수정했어유
+const contestSchema = new mongoose.Schema({ 
     title : { 
         type : String,
         required : true,

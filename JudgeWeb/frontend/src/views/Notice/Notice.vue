@@ -1,4 +1,5 @@
 <template>
+<v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
 <v-row>
 <v-col style="max-width: 350px;">
 <sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>
@@ -26,19 +27,26 @@
 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
 </v-col>
 </v-row>
+</v-card>
 </template>
 
 <script>
 import componentNoticeCreate from '../../components/Notice/NoticeCreate';
 import sidebarComponent from '../../components/SideBar';
+import {checklogin} from '../../components/mixins/checklogin.js';
+import {checkuser} from '../../components/mixins/checkuser.js';
 
 export default {
+    mixins:[checklogin, checkuser],
     components: {
         componentNoticeCreate,
         sidebarComponent
     },
     data: function() {
         return {
+            chk : false,
+            chk2: false,
+            isadmin: false,
             competitionNum: '',
             notices: [{
                 date: '',
@@ -68,6 +76,13 @@ export default {
             },
             model: 3,
         };
+    },
+    async mounted() {
+        if(this.$store.state.name === 'admin') this.isadmin = true;
+        else {
+            this.chk = await this.check();
+            this.chk2 = await this.checkparticipant(this.$route.params.id);
+        }
     },
     created() {
         this.competitionNum = this.$route.params.id;

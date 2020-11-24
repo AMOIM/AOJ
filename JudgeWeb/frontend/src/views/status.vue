@@ -1,4 +1,5 @@
 <template>
+<v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
   <v-row>
     <v-col style="max-width: 350px;">
       <sidebarComponent style="max-width: 200px;"></sidebarComponent>
@@ -52,11 +53,15 @@
       </div>
     </v-col>
   </v-row>
+</v-card>
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
+import {checkuser} from '../components/mixins/checkuser.js';
 
 export default {
+    mixins:[checklogin, checkuser],
     name: 'status.vue',
     components: {
         CodeView: () => import('../components/CodeView'),
@@ -64,6 +69,9 @@ export default {
     },
     data() {
         return {
+            chk: false,
+            chk2: false,
+            isadmin: false,
             list: [],
             userName: '',
             myCode: {
@@ -96,14 +104,17 @@ export default {
         },
     },
     async mounted() {
+        if(this.$store.state.name === 'admin') this.isadmin = true;
+        else {
+            this.chk = await this.check();
+            this.chk2 = await this.checkparticipant(this.$route.params.id);
+        }
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
         if (id === undefined)
             this.$router.go(-1);
         const apiProblem = await this.$http.get(`/api/contest/${id}`);
         const problemList = apiProblem.data;
-
-        this.$log.info(problemList);
 
         this.$http.post(`/api/contest/status/${id}`, {
             user: this.userName
