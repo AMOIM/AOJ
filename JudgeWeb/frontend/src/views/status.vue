@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="this.chk">
+<v-card v-if="(this.chk && this.chk2) || this.isadmin">
   <v-row>
     <v-col style="max-width: 350px;">
       <sidebarComponent style="max-width: 200px;"></sidebarComponent>
@@ -58,9 +58,10 @@
 
 <script>
 import {checklogin} from '../components/mixins/checklogin.js';
+import {checkuser} from '../components/mixins/checkuser.js';
 
 export default {
-    mixins:[checklogin],
+    mixins:[checklogin, checkuser],
     name: 'status.vue',
     components: {
         CodeView: () => import('../components/CodeView'),
@@ -69,6 +70,8 @@ export default {
     data() {
         return {
             chk: false,
+            chk2: false,
+            isadmin: false,
             list: [],
             userName: '',
             myCode: {
@@ -101,7 +104,11 @@ export default {
         },
     },
     async mounted() {
-        this.chk = await this.check();
+        if(this.$store.state.name === 'admin') this.isadmin = true;
+        else {
+            this.chk = await this.check();
+            this.chk2 = await this.checkparticipant(this.$route.params.id);
+        }
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
         if (id === undefined)
