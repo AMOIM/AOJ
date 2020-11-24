@@ -32,7 +32,7 @@
           <v-btn class="link_block" text>
             채점 환경
           </v-btn>
-          <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/problem/contest">
+          <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/problem/create">
             문제 생성
           </v-btn></div>
           <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/contest/create">

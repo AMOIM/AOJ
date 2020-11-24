@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="this.chk">
+<v-card elevation="0" v-if="this.chk">
 <v-container>
     <v-container>
     <v-list-item three-line style="padding: 0px;">

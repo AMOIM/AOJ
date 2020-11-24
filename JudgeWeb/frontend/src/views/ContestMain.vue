@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="this.chk">
+<v-card elevation="0" v-if="this.chk">
   <v-row>
     <v-col style="max-width: 350px;">
       <sidebarComponent style="max-width: 200px;" :data="model"></sidebarComponent>

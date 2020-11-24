@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="this.chk && this.isadmin" id="contest">
+<v-card elevation="0" v-if="this.chk && this.isadmin" id="contest">
 <v-container>
   <div><h2>문제 생성</h2></div>
   <v-form

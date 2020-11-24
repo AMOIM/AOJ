@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="this.chk && this.isadmin" id="contest">
+  <v-card elevation="0" v-if="this.chk && this.isadmin" id="contest">
     <div> <h2>Create Contest</h2> </div>
     <div> 대회 제목 : <input v-model="contest.title" placeholder="대회 제목을 입력하세요."> </div>
     <div> 대회 시작 시각 : <input v-model="contest.start" placeholder="ex) 2020.09.09.17.00"></div>
