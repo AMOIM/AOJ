@@ -87,17 +87,12 @@
         <v-select
             v-model="lang"
             :items="language"
-            label="Outlined style"
+            label="제출 언어"
             outlined
+            style="max-width : 200px"
         ></v-select>
       </v-col>
-      <v-textarea
-          name="code"
-          filled
-          label="source code"
-          auto-grow
-          v-model="code"
-      ></v-textarea>
+      <prism-editor class="my-editor height-400" v-model="code" :highlight="highlighter" line-numbers></prism-editor>
       <v-btn
         class="ma-2"
         color="deep-purple darken-2"
@@ -119,17 +114,28 @@
 
 <script>
 import {checklogin} from '../components/mixins/checklogin.js';
+import { PrismEditor } from 'vue-prism-editor';
+import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
+
+// import highlighting library (you can use any library you want just return html string)
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism-tomorrow.css'; // import syntax highlighting styles
 
 export default {
     mixins:[checklogin],
     name: 'problem.vue',
+    components: {
+        PrismEditor,
+    },
     data: () => {
         return {
             chk: false,
             problem: {},
             code : '',
             language: ['c', 'cpp', 'java', 'python2', 'python3'],
-            lang : 'c',
+            lang : 'cpp',
             userName : ''
         };
     },
@@ -148,6 +154,9 @@ export default {
                     alert('제출 오류');
                     this.$log.error(err);
                 });
+        },
+        highlighter(code) {
+            return highlight(code, languages.js); //returns html
         }
     },
     async mounted() {
@@ -171,10 +180,26 @@ export default {
                 this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
             })
             .catch(err => this.$log.error(err));
+
+        this.code = '\n\n\n\n\n\nWrite your code\nAnd submit code\n\n\n\n\n\n';
     }
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+// required class
+.my-editor {
+  background: #2d2d2d;
+  color: #ccc;
 
+  font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 5px;
+}
+
+// optional
+.prism-editor__textarea:focus {
+  outline: none;
+}
 </style>
