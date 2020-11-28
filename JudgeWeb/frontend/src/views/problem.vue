@@ -45,7 +45,7 @@
     </v-row>
     </v-container>
     <v-container>
-      <v-row v-for="(item, i) in problem.inputList" :key='item._id'>
+      <v-row v-for="(item, i) in problem.inputList.slice(0,2)" :key='item._id'>
           <v-col>
             <v-list-item style="padding: 0px;">
                 <v-list-item-content class="text-left align-self-start">
