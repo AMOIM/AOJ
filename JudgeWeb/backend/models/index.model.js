@@ -161,6 +161,42 @@ export class ContestModel {
             throw new Error('Model -> getContestNum error');
         }
     }
+    static update = async (req) => {
+        try {
+            const contest = {
+                ...req.body.contest
+            };
+            let problemnumber = new Array;
+            for(let problem of contest.problemList)
+                problemnumber.push(problem.number);
+            await ContestSchema.updateOne(
+                {
+                    number : contest.number
+                },
+                {
+                    $set : {
+                        title : contest.title,
+                        problemNum : problemnumber,
+                        userList : contest.userList,
+                        start : new Date(contest.start),
+                        end : new Date(contest.end)
+                    }
+                }
+            );
+            return true;
+        } catch (err) {
+            throw new Error('Model -> updateContest error');
+        }
+    }
+    static delete = async (number) => {
+        try {
+            await ContestSchema.remove()
+                .where({'number': number});
+            return true;
+        } catch (err) {
+            throw new Error('Model -> deleteContest error');
+        }
+    }
 
     static GetContest = async() => {
         try {

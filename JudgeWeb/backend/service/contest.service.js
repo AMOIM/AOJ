@@ -31,5 +31,24 @@ export default class ContestService {
             throw err;
         }
     }
+    static update = async(req) => {
+        try{
+            const result = await ContestModel.update(req);
+            return result;
+        } catch(err) {
+            err.message = 'Service -> contestupdate err';
+            throw err;
+        }
+    }
+    static delete = async(number) => {
+        try{
+            const result = await ContestModel.delete(number);
+            return result;
+        } catch(err) {
+            err.message = 'Service -> contestdelete err';
+            throw err;
+        }
+    }
+
 }
 

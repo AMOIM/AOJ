@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const authMiddleware = async(req, res, next) => {
+const authMiddleware = async(req, res) => {
     logger.info('auth');
     if(req.headers && req.headers.authorization) {
         const token = await req.headers.authorization.split(' ');
