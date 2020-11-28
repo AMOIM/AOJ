@@ -7,7 +7,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import('../views/Home.vue')
+        component: () => import('../views/Markdown/MarkdownHome.vue')
     },
     {
         path: '/signup',
@@ -85,12 +85,7 @@ const routes = [
         component: () => import('../views/Markdown/MarkdownCreate.vue')
     },
     {
-        path : '/markdown/home',
-        name : 'Markdown Home',
-        component: () => import('../views/Markdown/MarkdownHome.vue')
-    },
-    {
-        path : '/markdown/judge',
+        path : '/judge',
         name : 'Markdown Judge',
         component: () => import('../views/Markdown/MarkdownJudge.vue')
     }

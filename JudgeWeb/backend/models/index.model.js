@@ -329,7 +329,7 @@ export class MarkdownModel {
         try {
             const homeMarkdown = fs.readFileSync('../frontend/public/markdown/home.md', 'utf8');
             const judgeMarkdown = fs.readFileSync('../frontend/public/markdown/judge.md', 'utf8');
-            return {"homeMarkdown" : homeMarkdown, "judgeMarkdown" : judgeMarkdown};
+            return {'homeMarkdown' : homeMarkdown, 'judgeMarkdown' : judgeMarkdown};
         } catch(err) {
             err.message = 'Model -> get markdown err';
             throw err;

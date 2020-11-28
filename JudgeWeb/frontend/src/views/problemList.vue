@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" v-if="this.chk">
+<v-card elevation="0">
   <v-simple-table>
   <template v-slot:default>
     <thead>
@@ -20,18 +20,12 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
 
 export default {
-    mixins:[checklogin],
     data: function () {
         return {
-            chk: false,
             result : []
         };
-    },
-    async mounted() {
-        this.chk = await this.check();
     },
     created() {
         this.$http.get('/api/problem/list')

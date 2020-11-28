@@ -1,10 +1,9 @@
-import { logger } from '../config/winston.js';
 import MarkdownService from '../service/markdown.service.js';
 
 export default class Markdown {
     static create = async (req, res, next) => {
         try {
-            const result = await MarkdownService.create({...req.body});
+            await MarkdownService.create({...req.body});
             return res.status(200).send(true);
         } catch(err) {
             err.message = 'POST /markdown/create\nController -> ' + err.message;

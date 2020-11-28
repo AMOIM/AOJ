@@ -27,14 +27,11 @@ export class UserController {
         try {
             const result = await UserService.login(req);
             if(result === false) {
-                logger.info(result);
                 return res.status(200).json({token : 0});
             }
             else {
                 try {
                     const token = await UserService.createtoken(req,result);
-                    logger.info(result);
-                    logger.info(token);
                     return res.status(200).json({token : token});
                 } catch(err) {
                     err.message = 'Controller -> login(token) err';

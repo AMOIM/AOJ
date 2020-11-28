@@ -16,7 +16,6 @@ const authMiddleware = async(req, res) => {
         }
     }
     else {
-        logger.info(3);
         return res.status(200).json({result : 4});
     }
 };
