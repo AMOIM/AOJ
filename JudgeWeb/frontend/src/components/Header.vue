@@ -35,10 +35,13 @@
           <v-btn class="link_block" text href="/contest/list">
             대회
           </v-btn>
-          <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/problem/create">
+          <v-btn class="link_block" text href="/status">
+            내 코드
+          </v-btn>
+          <div v-if="$store.state.name === 'admin' " class="link_block" ><v-btn text href="/problem/create">
             문제 생성
           </v-btn></div>
-          <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/contest/create">
+          <div v-if="$store.state.name === 'admin' " class="link_block" ><v-btn text href="/contest/create">
             대회 생성
           </v-btn></div>
         </v-row>

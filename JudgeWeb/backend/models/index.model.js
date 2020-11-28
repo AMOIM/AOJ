@@ -139,12 +139,28 @@ export class StatusModel {
     }
     static get = async (user, problem, start, end) => {
         try {
-            const result = await StatusSchema.find()
-                .where({ 'userName' : user , 'problemNum' : problem})
-                .gte('date', start)
-                .lte('date', end)
-                .sort('date');
-            return result;
+            if(typeof problem === 'undefined'){
+                const result = await StatusSchema.find()
+                    .where({'userName' : user})
+                    .sort('date');
+                return result;
+            }
+            else if(user === 'admin'){
+                const result = await StatusSchema.find()
+                    .where({'problemNum': problem})
+                    .gte('date', start)
+                    .lte('date', end)
+                    .sort('date');
+                return result;
+            }
+            else {
+                const result = await StatusSchema.find()
+                    .where({'userName': user, 'problemNum': problem})
+                    .gte('date', start)
+                    .lte('date', end)
+                    .sort('date');
+                return result;
+            }
         } catch (err) {
             throw new Error('Model -> getStatus error');
         }
