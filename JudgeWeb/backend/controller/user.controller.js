@@ -4,9 +4,21 @@ export class UserController {
     static get = async (req, res, next) => {
         try {
             const result = await UserService.get(req);
-            return res.status(200).json({ user : result});
+            return res.status(200).json(result);
         } catch(err) {
-            err.message = 'Controller -> getAll err';
+            err.message = 'POST /user\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
+    static update = async (req, res, next) => {
+        try {
+            const result = await UserService.update(req);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'POST /user/update\nController -> ' + err.message;
+            err.status = 400;
             next(err);
         }
     }

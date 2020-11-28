@@ -241,9 +241,25 @@ export class UserModel {
         try {
             const result = await UserSchema.findOne()
                 .where({'id' : req.body.id });
+            result.password = 0;
             return result;
         } catch (err) {
             throw new Error('Model -> getAll error');
+        }
+    }
+
+    static update = async (id, pw, changePW) => {
+        try {
+            const result = await UserSchema.updateOne(
+                {
+                    id : id,
+                    password : pw
+                },
+                { $set : { password : changePW }}
+            );
+            return result.n;
+        } catch (err) {
+            throw new Error('Model -> update Error');
         }
     }
 

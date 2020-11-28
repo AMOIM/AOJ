@@ -15,7 +15,7 @@
       <div v-if="$store.state.name === null" class="margin_right">
         <router-link to="/login" class="link_white">로그인</router-link>
       </div>
-      <div v-if="$store.state.name !== null" class="margin_right"> {{$store.state.name}}님</div>
+      <div v-if="$store.state.name !== null" class="margin_right"><v-btn class="link_block" text href="/user">{{$store.state.name}}님</v-btn></div>
       <div v-if="$store.state.name !== null" class="margin_right"><button v-on:click="logout">로그아웃</button> </div>
 
       <template v-slot:extension>
