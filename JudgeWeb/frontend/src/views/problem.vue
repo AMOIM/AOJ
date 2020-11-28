@@ -148,8 +148,7 @@ export default {
                 problemNum : this.problem.number
             })
                 .then(() => {
-                    alert('제출 완료');
-                    this.$router.go(0);
+                    this.$router.push({path : '/status/'});
                 }).catch(err => {
                     alert('제출 오류');
                     this.$log.error(err);
