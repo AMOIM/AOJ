@@ -22,5 +22,14 @@ export default class ContestService {
             throw err;
         }
     }
+    static getOne = async(number) => {
+        try{
+            const result = await ContestModel.get(number);
+            return result;
+        } catch(err) {
+            err.message = 'Service -> contestfindone err';
+            throw err;
+        }
+    }
 }
 

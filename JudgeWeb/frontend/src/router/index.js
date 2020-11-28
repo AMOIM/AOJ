@@ -20,6 +20,11 @@ const routes = [
         component: () => import('../views/Login.vue')
     },
     {
+        path: '/user',
+        name: 'User',
+        component: () => import('../views/User.vue')
+    },
+    {
         path: '/contest/create',
         name: 'CreateContest',
         component: () => import('../views/CreateContest.vue')
@@ -45,6 +50,11 @@ const routes = [
         component: () => import('../views/CreateProblem.vue')
     },
     {
+        path: '/problem/list',
+        name: 'ProblemList',
+        component: () => import('../views/problemList.vue')
+    },
+    {
         path: '/problem/:id?',
         name: 'Problem',
         component: () => import('../views/problem.vue')
@@ -53,6 +63,11 @@ const routes = [
         path : '/contest/scoreboard/:id?',
         name : 'Scoreboard',
         component: () => import('../views/scoreboard.vue')
+    },
+    {
+        path : '/status',
+        name : 'My Status',
+        component: () => import('../views/MyStatus.vue')
     },
     {
         path : '/contest/status/:id?',

@@ -1,5 +1,5 @@
 <template>
-<v-card v-if="this.chk">
+<v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
   <v-row>
     <v-col style="max-width: 350px;">
       <sidebarComponent style="max-width: 200px;"></sidebarComponent>
@@ -10,6 +10,7 @@
           <thead>
           <tr>
             <th class="text-center">채점 번호</th>
+            <th class="text-center">닉네임</th>
             <th class="text-center">문제 번호</th>
             <th class="text-center">결과</th>
             <th class="text-center">메모리</th>
@@ -22,6 +23,7 @@
           <tbody>
           <tr v-for="item in calData" :key="item.name">
             <td>{{ item.number }}</td>
+            <td>{{item.userName}}</td>
             <td>
               <router-link :to='{path : "/problem/" + item.problemNum}' class="link">{{ item.alphabet }}</router-link>
             </td>
@@ -58,9 +60,10 @@
 
 <script>
 import {checklogin} from '../components/mixins/checklogin.js';
+import {checkuser} from '../components/mixins/checkuser.js';
 
 export default {
-    mixins:[checklogin],
+    mixins:[checklogin, checkuser],
     name: 'status.vue',
     components: {
         CodeView: () => import('../components/CodeView'),
@@ -69,6 +72,8 @@ export default {
     data() {
         return {
             chk: false,
+            chk2: false,
+            isadmin: false,
             list: [],
             userName: '',
             myCode: {
@@ -101,15 +106,16 @@ export default {
         },
     },
     async mounted() {
-        this.chk = await this.check();
+        if(this.$store.state.name === 'admin') this.isadmin = true;
+        else {
+            this.chk = await this.check();
+            this.chk2 = await this.checkparticipant(this.$route.params.id);
+        }
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
-        if (id === undefined)
-            this.$router.go(-1);
+
         const apiProblem = await this.$http.get(`/api/contest/${id}`);
         const problemList = apiProblem.data;
-
-        this.$log.info(problemList);
 
         this.$http.post(`/api/contest/status/${id}`, {
             user: this.userName

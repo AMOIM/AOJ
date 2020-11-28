@@ -12,6 +12,7 @@ router.post('/status/:id', Contest.getStatus);
 
 router.post('/create', Contest.createContest);
 router.get('/list', Contest.getContest);
+router.get('/userlist/:id', Contest.getOne);
 
 router.get('/:competitionNum', Contest.getProblemList);
 

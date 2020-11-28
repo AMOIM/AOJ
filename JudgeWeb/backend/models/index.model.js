@@ -75,6 +75,16 @@ export class ProblemModel {
         try {
             const result = await ProblemSchema.findOne()
                 .where({'number': number});
+            return result;
+        } catch (err) {
+            err.message = 'Model -> Find Problem Error';
+            throw err;
+        }
+    };
+    static allFind = async () => {
+        try {
+            const result = await ProblemSchema.find()
+                .sort('-number');
             if(result === null) throw new Error('Not exist problem');
             return result;
         } catch (err) {
@@ -88,7 +98,6 @@ export class ProblemModel {
         try {
             const result = await ProblemSchema.find()
                 .sort('-number').limit(1);
-
             const max = result.length !== 0 ? result[0].number + 1 : 1;
             const newProblem = new ProblemSchema({
                 number: max,
@@ -133,12 +142,28 @@ export class StatusModel {
     }
     static get = async (user, problem, start, end) => {
         try {
-            const result = await StatusSchema.find()
-                .where({ 'userName' : user , 'problemNum' : problem})
-                .gte('date', start)
-                .lte('date', end)
-                .sort('date');
-            return result;
+            if(typeof problem === 'undefined'){
+                const result = await StatusSchema.find()
+                    .where({'userName' : user})
+                    .sort('date');
+                return result;
+            }
+            else if(user === 'admin'){
+                const result = await StatusSchema.find()
+                    .where({'problemNum': problem})
+                    .gte('date', start)
+                    .lte('date', end)
+                    .sort('date');
+                return result;
+            }
+            else {
+                const result = await StatusSchema.find()
+                    .where({'userName': user, 'problemNum': problem})
+                    .gte('date', start)
+                    .lte('date', end)
+                    .sort('date');
+                return result;
+            }
         } catch (err) {
             throw new Error('Model -> getStatus error');
         }
@@ -165,21 +190,28 @@ export class ContestModel {
             throw new Error('Model -> getContest error');
         }
     }
-    static Save = async(req) => { 
-        logger.info('abcd'); 
+    static Save = async(req) => {
         try {
             const result = await ContestSchema.find()
                 .sort('-number').limit(1);
             const max = result.length !== 0 ? result[0].number + 1 : 1;
-            const stime = await req.body.contest.start.split('.');
-            const etime = await req.body.contest.end.split('.');
+
+            const contest = {
+                ...req.body.contest
+            };
+
+            let problemList = new Array;
+
+            for(let problem of contest.problems)
+                problemList.push(problem.number);
+
             const newContest = new ContestSchema({
-                title : req.body.contest.title, 
+                title : contest.title,
                 number : max, 
-                problemNum : req.body.contest.problems, 
-                userList : req.body.contest.users, 
-                start : new Date(stime[0],stime[1]-1,stime[2],stime[3],stime[4]), 
-                end : new Date(etime[0],etime[1]-1,etime[2],etime[3],etime[4])
+                problemNum : problemList,
+                userList : contest.users,
+                start : new Date(contest.start),
+                end : new Date(contest.end)
             });
             await newContest.save();
             return true;
@@ -208,6 +240,32 @@ export class ContestModel {
 }
 
 export class UserModel {
+    static get = async (req) => {
+        try {
+            const result = await UserSchema.findOne()
+                .where({'id' : req.body.id });
+            result.password = 0;
+            return result;
+        } catch (err) {
+            throw new Error('Model -> getAll error');
+        }
+    }
+
+    static update = async (id, pw, changePW) => {
+        try {
+            const result = await UserSchema.updateOne(
+                {
+                    id : id,
+                    password : pw
+                },
+                { $set : { password : changePW }}
+            );
+            return result.n;
+        } catch (err) {
+            throw new Error('Model -> update Error');
+        }
+    }
+
     static login = async(id, pw) => {
         try {
             const user = await UserSchema.findOne({id: id, password: pw});
@@ -227,11 +285,14 @@ export class UserModel {
         });
         try {
             const result = await UserSchema.findOne({id: id});
-            if(result===null) {
+            const result2 = await UserSchema.findOne({name: name});
+            if(result !== null)
+                return 2;
+            else if(result2 !== null) return 3;
+            else {
                 await newUser.save();
-                return 1; 
+                return 1;
             }
-            else return 2;
         }catch(err) {
             err.message = 'Model -> signup err';
             throw err;  
