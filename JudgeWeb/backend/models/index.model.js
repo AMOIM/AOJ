@@ -2,6 +2,9 @@ import { UserSchema, NoticeSchema, ContestSchema, PendingSchema, ProblemSchema, 
 import mongoose from 'mongoose';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
+import path from 'path';
+import fs from 'fs';
+import { json } from 'body-parser';
 
 export class NoticeModel {
     static getNotice = async (req) => {
@@ -245,6 +248,29 @@ export class UserModel {
             return token;
         } catch(err) {
             err.message = 'Model -> createtoken err';
+            throw err;
+        }
+    }
+}
+
+export class MarkdownModel {
+    static create = (data) => {
+        try {
+            const input = data.markdownText;
+            const title = data.markdownTitle;
+            fs.writeFileSync('../frontend/public/markdown/' + title + '.md', input, 'utf8');
+        } catch(err) {
+            err.message = 'Model -> create markdown err';
+            throw err;
+        }
+    }
+    static get = () => {
+        try {
+            const homeMarkdown = fs.readFileSync('../frontend/public/markdown/home.md', 'utf8');
+            const judgeMarkdown = fs.readFileSync('../frontend/public/markdown/judge.md', 'utf8');
+            return {"homeMarkdown" : homeMarkdown, "judgeMarkdown" : judgeMarkdown};
+        } catch(err) {
+            err.message = 'Model -> get markdown err';
             throw err;
         }
     }
