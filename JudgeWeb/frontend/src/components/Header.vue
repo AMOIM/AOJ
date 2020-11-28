@@ -26,7 +26,7 @@
           <v-btn class="link_block" text href="/markdown/home">
             홈
           </v-btn>
-          <v-btn class="link_block" text>
+          <v-btn class="link_block" text href="/markdown/judge">
             채점 환경
           </v-btn>
           <v-btn class="link_block" text href="/problem/list">
@@ -35,8 +35,6 @@
           <v-btn class="link_block" text href="/contest/list">
             대회
           </v-btn>
-          <v-btn class="link_block" text href="/markdown/judge">
-            채점 환경
           <v-btn class="link_block" text href="/status">
             내 코드
           </v-btn>
