@@ -7,8 +7,26 @@ export class UserService {
         try {
             return UserModel.get(req);
         } catch(err) {
-            err.message = 'Service -> getAll err';
-            throw err;
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+
+    static update = async (req) => {
+        try {
+            const user = {
+                ... req.body
+            };
+            const  cipher = crypto.createCipher('aes192', 'key');
+            cipher.update(user.password, 'utf8', 'base64');
+            const cipherPW = cipher.final('base64');
+
+            const  cipher2 = crypto.createCipher('aes192', 'key');
+            cipher2.update(user.changePW, 'utf8', 'base64');
+            const cipherPW2 = cipher2.final('base64');
+
+            return await UserModel.update(user.id, cipherPW, cipherPW2);
+        } catch(err) {
+            throw new Error('Service -> ' + err.message);
         }
     }
 
@@ -51,8 +69,7 @@ export class UserService {
         const cipherPW = cipher.final('base64');
         try {
             const result = await UserModel.signup(user.id, user.name, cipherPW);
-            if (result ===2) return 2;
-            else return 1;
+            return result;
         } catch(err) {
             err.message = 'Service -> signup err';
             throw err;
