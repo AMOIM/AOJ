@@ -69,8 +69,7 @@ export class UserService {
         const cipherPW = cipher.final('base64');
         try {
             const result = await UserModel.signup(user.id, user.name, cipherPW);
-            if (result ===2) return 2;
-            else return 1;
+            return result;
         } catch(err) {
             err.message = 'Service -> signup err';
             throw err;

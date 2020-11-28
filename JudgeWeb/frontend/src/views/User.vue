@@ -16,7 +16,7 @@
     >
       {{msg}}
     </v-alert>
-    <div><h1>개인 정보</h1></div>
+    <v-card-title class="text-h4 justify-center">개인 정보</v-card-title>
     <v-card-text class="margin-top-100">
       <v-text-field v-model="user.id" type="text" label="아이디" readonly/>
       <v-text-field v-model="user.name" type="text" label="닉네임" readonly/>
@@ -55,7 +55,7 @@ export default {
             eflag : false,
             pwRules: [
                 v => !!v || '비밀번호를 입력해주세요!',
-                v => v && v.length <= 20 || '비밀번호를 40자 이내로 입력하세요!',
+                v => v && v.length <= 20 || '비밀번호를 20자 이내로 입력하세요!',
             ],
         };
     },
@@ -86,7 +86,7 @@ export default {
                 this.msg = '비밀번호를 확인해주세요.';
                 return;
             }
-            this.$http.post('/api/user/update', {
+            this.$http.put('/api/user/update', {
                 id : this.user.id,
                 password : this.password,
                 changePW : this.changePW

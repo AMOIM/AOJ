@@ -282,11 +282,14 @@ export class UserModel {
         });
         try {
             const result = await UserSchema.findOne({id: id});
-            if(result===null) {
+            const result2 = await UserSchema.findOne({name: name});
+            if(result !== null)
+                return 2;
+            else if(result2 !== null) return 3;
+            else {
                 await newUser.save();
-                return 1; 
+                return 1;
             }
-            else return 2;
         }catch(err) {
             err.message = 'Model -> signup err';
             throw err;  

@@ -50,8 +50,7 @@ export class UserController {
     static signup = async (req, res, next) => {
         try {
             const result = await UserService.signup(req);
-            if(result === 2) return res.status(200).json({result : 2});
-            else return res.status(200).json({result : 1});
+            return res.status(200).json({result : result});
         } catch(err) {
             err.message = 'Controller -> signup err';
             next(err);
