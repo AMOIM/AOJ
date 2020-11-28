@@ -63,6 +63,21 @@ const routes = [
         path : '/contest/:id',
         name : 'Contest Main',
         component: () => import('../views/ContestMain.vue')
+    },
+    {
+        path : '/markdown/create',
+        name : 'MarkDown Create',
+        component: () => import('../views/Markdown/MarkdownCreate.vue')
+    },
+    {
+        path : '/markdown/home',
+        name : 'Markdown Home',
+        component: () => import('../views/Markdown/MarkdownHome.vue')
+    },
+    {
+        path : '/markdown/judge',
+        name : 'Markdown Judge',
+        component: () => import('../views/Markdown/MarkdownJudge.vue')
     }
 ];
 

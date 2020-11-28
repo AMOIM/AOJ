@@ -23,13 +23,13 @@
             align="center"
             color="white"
         >
-          <v-btn class="link_block" text href="/">
+          <v-btn class="link_block" text href="/markdown/home">
             홈
           </v-btn>
           <v-btn class="link_block" text href="/contest/list">
             대회
           </v-btn>
-          <v-btn class="link_block" text>
+          <v-btn class="link_block" text href="/markdown/judge">
             채점 환경
           </v-btn>
           <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/problem/contest">
