@@ -10,6 +10,7 @@
           <thead>
           <tr>
             <th class="text-center">채점 번호</th>
+            <th class="text-center">닉네임</th>
             <th class="text-center">문제 번호</th>
             <th class="text-center">결과</th>
             <th class="text-center">메모리</th>
@@ -22,6 +23,7 @@
           <tbody>
           <tr v-for="item in calData" :key="item.name">
             <td>{{ item.number }}</td>
+            <td>{{item.userName}}</td>
             <td>
               <router-link :to='{path : "/problem/" + item.problemNum}' class="link">{{ item.alphabet }}</router-link>
             </td>
@@ -111,8 +113,7 @@ export default {
         }
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
-        if (id === undefined)
-            this.$router.go(-1);
+
         const apiProblem = await this.$http.get(`/api/contest/${id}`);
         const problemList = apiProblem.data;
 

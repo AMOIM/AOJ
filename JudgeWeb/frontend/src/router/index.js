@@ -60,6 +60,11 @@ const routes = [
         component: () => import('../views/scoreboard.vue')
     },
     {
+        path : '/status',
+        name : 'My Status',
+        component: () => import('../views/MyStatus.vue')
+    },
+    {
         path : '/contest/status/:id?',
         name : 'status',
         component: () => import('../views/status.vue')
