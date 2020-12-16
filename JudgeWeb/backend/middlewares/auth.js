@@ -1,11 +1,8 @@
 import jwt from 'jsonwebtoken';
 
 const authMiddleware = async(req, res) => {
-    logger.info('auth');
     if(req.headers && req.headers.authorization) {
         const token = await req.headers.authorization.split(' ');
-        logger.info(token[0]);
-        logger.info(token[1]);
         if(token[0] === 'Bearer') {
             jwt.verify(token[1],process.env.SECRET_KEY, function(err) {
                 if(!err) {
@@ -19,7 +16,6 @@ const authMiddleware = async(req, res) => {
         }
     }
     else {
-        logger.info(3);
         return res.status(200).json({result : 4});
     }
 };

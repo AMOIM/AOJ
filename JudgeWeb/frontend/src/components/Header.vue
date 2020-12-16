@@ -15,7 +15,7 @@
       <div v-if="$store.state.name === null" class="margin_right">
         <router-link to="/login" class="link_white">로그인</router-link>
       </div>
-      <div v-if="$store.state.name !== null" class="margin_right"> {{$store.state.name}}님</div>
+      <div v-if="$store.state.name !== null" class="margin_right"><router-link to="/user" class="link_white">{{$store.state.name}}님</router-link></div>
       <div v-if="$store.state.name !== null" class="margin_right"><button v-on:click="logout">로그아웃</button> </div>
 
       <template v-slot:extension>
@@ -23,24 +23,30 @@
             align="center"
             color="white"
         >
-          <v-btn class="link_block" text href="/">
-            홈
-          </v-btn>
-          <v-btn class="link_block" text>
+          <router-link to="/" class="link_block link_white">홈</router-link>
+
+          <router-link to="/judge" class="link_block link_white">
             채점 환경
-          </v-btn>
-          <v-btn class="link_block" text href="/problem/list">
+          </router-link>
+
+          <router-link to="/problem/list" class="link_block link_white">
             문제
-          </v-btn>
-          <v-btn class="link_block" text href="/contest/list">
+          </router-link>
+
+          <router-link to="/contest/list" class="link_block link_white">
             대회
-          </v-btn>
-          <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/problem/create">
+          </router-link>
+
+          <router-link to="/status" class="link_block link_white">
+            내 코드
+          </router-link>
+
+          <div v-if="$store.state.name === 'admin' " class="link_block" ><router-link to="/problem/create" class="link_white">
             문제 생성
-          </v-btn></div>
-          <div v-if="$store.state.name === 'admin' "><v-btn class="link_block" text href="/contest/create">
+          </router-link></div>
+          <div v-if="$store.state.name === 'admin' " class="link_block" ><router-link to="/contest/create" class="link_white">
             대회 생성
-          </v-btn></div>
+          </router-link></div>
         </v-row>
       </template>
 

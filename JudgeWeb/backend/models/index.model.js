@@ -2,6 +2,7 @@ import { UserSchema, NoticeSchema, ContestSchema, PendingSchema, ProblemSchema, 
 import mongoose from 'mongoose';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
 
 export class NoticeModel {
     static getNotice = async (req) => {
@@ -139,12 +140,28 @@ export class StatusModel {
     }
     static get = async (user, problem, start, end) => {
         try {
-            const result = await StatusSchema.find()
-                .where({ 'userName' : user , 'problemNum' : problem})
-                .gte('date', start)
-                .lte('date', end)
-                .sort('date');
-            return result;
+            if(typeof problem === 'undefined'){
+                const result = await StatusSchema.find()
+                    .where({'userName' : user})
+                    .sort('date');
+                return result;
+            }
+            else if(user === 'admin'){
+                const result = await StatusSchema.find()
+                    .where({'problemNum': problem})
+                    .gte('date', start)
+                    .lte('date', end)
+                    .sort('date');
+                return result;
+            }
+            else {
+                const result = await StatusSchema.find()
+                    .where({'userName': user, 'problemNum': problem})
+                    .gte('date', start)
+                    .lte('date', end)
+                    .sort('date');
+                return result;
+            }
         } catch (err) {
             throw new Error('Model -> getStatus error');
         }
@@ -261,9 +278,25 @@ export class UserModel {
         try {
             const result = await UserSchema.findOne()
                 .where({'id' : req.body.id });
+            result.password = 0;
             return result;
         } catch (err) {
             throw new Error('Model -> getAll error');
+        }
+    }
+
+    static update = async (id, pw, changePW) => {
+        try {
+            const result = await UserSchema.updateOne(
+                {
+                    id : id,
+                    password : pw
+                },
+                { $set : { password : changePW }}
+            );
+            return result.n;
+        } catch (err) {
+            throw new Error('Model -> update Error');
         }
     }
 
@@ -286,11 +319,14 @@ export class UserModel {
         });
         try {
             const result = await UserSchema.findOne({id: id});
-            if(result===null) {
+            const result2 = await UserSchema.findOne({name: name});
+            if(result !== null)
+                return 2;
+            else if(result2 !== null) return 3;
+            else {
                 await newUser.save();
-                return 1; 
+                return 1;
             }
-            else return 2;
         }catch(err) {
             err.message = 'Model -> signup err';
             throw err;  
@@ -307,6 +343,29 @@ export class UserModel {
             return token;
         } catch(err) {
             err.message = 'Model -> createtoken err';
+            throw err;
+        }
+    }
+}
+
+export class MarkdownModel {
+    static create = (data) => {
+        try {
+            const input = data.markdownText;
+            const title = data.markdownTitle;
+            fs.writeFileSync('../frontend/public/markdown/' + title + '.md', input, 'utf8');
+        } catch(err) {
+            err.message = 'Model -> create markdown err';
+            throw err;
+        }
+    }
+    static get = () => {
+        try {
+            const homeMarkdown = fs.readFileSync('../frontend/public/markdown/home.md', 'utf8');
+            const judgeMarkdown = fs.readFileSync('../frontend/public/markdown/judge.md', 'utf8');
+            return {'homeMarkdown' : homeMarkdown, 'judgeMarkdown' : judgeMarkdown};
+        } catch(err) {
+            err.message = 'Model -> get markdown err';
             throw err;
         }
     }

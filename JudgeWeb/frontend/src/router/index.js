@@ -7,7 +7,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import('../views/Home.vue')
+        component: () => import('../views/Markdown/MarkdownHome.vue')
     },
     {
         path: '/signup',
@@ -18,6 +18,11 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () => import('../views/Login.vue')
+    },
+    {
+        path: '/user',
+        name: 'User',
+        component: () => import('../views/User.vue')
     },
     {
         path: '/contest/create',
@@ -65,6 +70,11 @@ const routes = [
         component: () => import('../views/scoreboard.vue')
     },
     {
+        path : '/status',
+        name : 'My Status',
+        component: () => import('../views/MyStatus.vue')
+    },
+    {
         path : '/contest/status/:id?',
         name : 'status',
         component: () => import('../views/status.vue')
@@ -73,6 +83,16 @@ const routes = [
         path : '/contest/:id',
         name : 'Contest Main',
         component: () => import('../views/ContestMain.vue')
+    },
+    {
+        path : '/markdown/create',
+        name : 'MarkDown Create',
+        component: () => import('../views/Markdown/MarkdownCreate.vue')
+    },
+    {
+        path : '/judge',
+        name : 'Markdown Judge',
+        component: () => import('../views/Markdown/MarkdownJudge.vue')
     }
 ];
 
