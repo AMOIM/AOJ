@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
+import {checklogin} from '@/components/mixins/checklogin';
 
 export default {
     components: {
