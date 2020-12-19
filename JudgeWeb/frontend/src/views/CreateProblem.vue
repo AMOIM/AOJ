@@ -11,6 +11,7 @@
     <v-text-field
       v-model="problemTitle"
       :rules="titleRules"
+      :counter="30"
       label="문제 제목"
       required
     ></v-text-field>
@@ -30,7 +31,7 @@
     ></v-text-field>
 
     <v-textarea
-      rows="3"
+      rows="10"
       name="content"
       label="문제 내용"
       v-model="problemContent"
@@ -38,7 +39,7 @@
     ></v-textarea>
 
     <v-textarea
-      rows="3"
+      rows="5"
       name="inputDescription"
       label="문제 입력"
       v-model="inputDescription"
@@ -46,7 +47,7 @@
     ></v-textarea>
 
     <v-textarea
-      rows="3"
+      rows="5"
       name="outputDescription"
       label="문제 출력"
       v-model="outputDescription"
@@ -144,6 +145,7 @@ export default {
             valid: true,
             titleRules: [
                 v => !!v || '문제 제목을 입력해주세요!',
+                v => v && v.length <= 30 || '제목을 30글자 이내로 작성해주세요!'
             ],
             problemTime: '',
             timeRules: [
