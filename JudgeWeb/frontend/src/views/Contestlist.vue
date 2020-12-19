@@ -6,6 +6,7 @@
       <th class="text-center">대회 제목</th>
       <th class="text-center">대회 시작 시각</th>
       <th class="text-center">대회 종료 시각</th>
+      <th class="text-center" v-if="chk && isadmin"></th>
     </tr>
     </thead>
     <tbody>
@@ -13,6 +14,7 @@
       <td><router-link :to='{path:"/contest/" + item.number}'> {{item.title}} </router-link></td>
       <td>{{ item.start | moment('YYYY-MM-DD HH:mm:ss') }}</td>
       <td>{{ item.end | moment('YYYY-MM-DD HH:mm:ss') }}</td>
+      <td v-if="chk && isadmin"><v-btn color="deep-purple darken-2" class="white--text" @click="update(item.number)">수정<i class="mdi mdi-pencil"></i></v-btn></td>
     </tr>
     </tbody>
   </template>
@@ -20,28 +22,38 @@
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
 export default {
+    mixins:[checklogin],
     data: function () {
         return {
-            result : []
+            result : [],
+            chk : false,
+            isadmin : false
         };
+    },
+    async mounted() {
+        this.chk = await this.check(1);
+        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
     },
     created() {
         this.$http.get('/api/contest/list')
             .then(
                 (response) => {
                     this.result = response.data;
-                    this.$log.info(response.data);
                 },
                 (error) => { 
-                    this.$log.info(3);
                     alert('에러1' + error.response.data.error);
                 }
             )
             .catch(error => {
-                this.$log.info(4);
                 alert('에러2' + error);
             });
+    },
+    methods: {
+        update(num) {
+            this.$router.push(`update/${num}`);
+        }
     }
 };
 </script>

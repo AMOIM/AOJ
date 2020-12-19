@@ -5,6 +5,26 @@ import StatusService from '../service/status.service';
 import ContestService from '../service/contest.service';
 
 export default class Contest {
+    static update = async(req, res, next) => {
+        try {
+            const result = await ContestService.update(req);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /contest/update\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static delete = async(req, res, next) => {
+        try {
+            const result = await ContestService.delete(req.params.id);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /contest/delete\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
     static getNotice = async (req, res, next) => {
         try {
             const result = await NoticeService.getNotice(req);

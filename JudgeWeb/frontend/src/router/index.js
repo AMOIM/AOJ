@@ -30,6 +30,11 @@ const routes = [
         component: () => import('../views/CreateContest.vue')
     },
     {
+        path: '/contest/update/:id',
+        name: 'CreateUpdate',
+        component: () => import('../views/contestUpdate.vue')
+    },
+    {
         path: '/contest/list',
         name: 'Contestlist',
         component: () => import('../views/Contestlist.vue')
