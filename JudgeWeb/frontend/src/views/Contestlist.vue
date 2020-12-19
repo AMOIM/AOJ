@@ -3,6 +3,7 @@
   <template v-slot:default>
     <thead>
     <tr>
+      <th class="text-center">대회 번호</th>
       <th class="text-center">대회 제목</th>
       <th class="text-center">대회 시작 시각</th>
       <th class="text-center">대회 종료 시각</th>
@@ -11,6 +12,7 @@
     </thead>
     <tbody>
     <tr v-for="item in result" :key="item.name">
+      <td>{{item.number}}</td>
       <td><router-link :to='{path:"/contest/" + item.number}'> {{item.title}} </router-link></td>
       <td>{{ item.start | moment('YYYY-MM-DD HH:mm:ss') }}</td>
       <td>{{ item.end | moment('YYYY-MM-DD HH:mm:ss') }}</td>
