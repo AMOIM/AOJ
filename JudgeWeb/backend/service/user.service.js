@@ -75,5 +75,21 @@ export class UserService {
             throw err;
         }
     }
+
+    static delete = async(req) => {
+        try {
+            return await UserModel.delete(req.body.id);
+        } catch(err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+
+    static deleteContestUser = async(req) => {
+        try {
+            return await UserModel.deleteContestUser(req.body.id);
+        } catch(err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
 }
 

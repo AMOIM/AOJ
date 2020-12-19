@@ -44,8 +44,13 @@
           <div v-if="$store.state.name === 'admin' " class="link_block" ><router-link to="/problem/create" class="link_white">
             문제 생성
           </router-link></div>
+
           <div v-if="$store.state.name === 'admin' " class="link_block" ><router-link to="/contest/create" class="link_white">
             대회 생성
+          </router-link></div>
+
+          <div v-if="$store.state.name === 'admin' " class="link_block" ><router-link to="/user/delete" class="link_white">
+            회원 탈퇴
           </router-link></div>
         </v-row>
       </template>

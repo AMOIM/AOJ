@@ -93,6 +93,11 @@ const routes = [
         path : '/judge',
         name : 'Markdown Judge',
         component: () => import('../views/Markdown/MarkdownJudge.vue')
+    },
+    {
+        path: '/user/delete',
+        name: 'Delete User',
+        component: () => import('../views/DeleteUser.vue')
     }
 ];
 

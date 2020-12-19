@@ -345,6 +345,32 @@ export class UserModel {
             err.message = 'Model -> createtoken err';
             throw err;
         }
+    };
+
+    static delete = async(id) => {
+        try {
+            const result = await UserSchema.remove()
+                .where({'id': id});
+            return result.n === 1;
+        } catch(err) {
+            throw new Error('Model -> delete err');
+        }
+    }
+
+    static deleteContestUser = async(id) => {
+        try {
+            const contest = await ContestSchema.findOne()
+                .where({'number' : id});
+
+            for(let user of contest.userList) {
+                logger.info(user);
+                await UserSchema.remove()
+                    .where({'id': user});
+            }
+            return contest !== null;
+        } catch(err) {
+            throw new Error('Model -> deleteContest err');
+        }
     }
 }
 
