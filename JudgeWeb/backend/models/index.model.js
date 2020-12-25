@@ -115,6 +115,15 @@ export class ProblemModel {
             throw new Error('Model -> ' + err.message);
         }
     };
+    static delete = async (number) => {
+        try {
+            await ProblemSchema.remove()
+                .where({'number': number});
+            return true;
+        } catch (err) {
+            throw new Error('Model -> deleteProblem error');
+        }
+    };
 }
 
 export class StatusModel {

@@ -55,6 +55,11 @@ const routes = [
         component: () => import('../views/CreateProblem.vue')
     },
     {
+        path: '/problem/update/:id',
+        name: 'ProblemUpdate',
+        component: () => import('../views/UpdateProblem.vue')
+    },
+    {
         path: '/problem/list',
         name: 'ProblemList',
         component: () => import('../views/problemList.vue')
