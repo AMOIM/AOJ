@@ -53,4 +53,26 @@ export class UserController {
             next(err);
         }
     }
+
+    static delete = async (req, res, next) => {
+        try {
+            const result = await UserService.delete(req);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'POST /user/delete\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
+    static deleteContestUser = async (req, res, next) => {
+        try {
+            const result = await UserService.deleteContestUser(req);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'POST /user/delete\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
 } 

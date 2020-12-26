@@ -115,6 +115,15 @@ export class ProblemModel {
             throw new Error('Model -> ' + err.message);
         }
     };
+    static delete = async (number) => {
+        try {
+            await ProblemSchema.remove()
+                .where({'number': number});
+            return true;
+        } catch (err) {
+            throw new Error('Model -> deleteProblem error');
+        }
+    };
 }
 
 export class StatusModel {
@@ -344,6 +353,32 @@ export class UserModel {
         } catch(err) {
             err.message = 'Model -> createtoken err';
             throw err;
+        }
+    };
+
+    static delete = async(id) => {
+        try {
+            const result = await UserSchema.remove()
+                .where({'id': id});
+            return result.n === 1;
+        } catch(err) {
+            throw new Error('Model -> delete err');
+        }
+    }
+
+    static deleteContestUser = async(id) => {
+        try {
+            const contest = await ContestSchema.findOne()
+                .where({'number' : id});
+
+            for(let user of contest.userList) {
+                logger.info(user);
+                await UserSchema.remove()
+                    .where({'id': user});
+            }
+            return contest !== null;
+        } catch(err) {
+            throw new Error('Model -> deleteContest err');
         }
     }
 }

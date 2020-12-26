@@ -113,6 +113,7 @@ export default {
                 end: '',
                 title: '',
                 userList: [],
+                problemList: []
             },
             titleRules: [
                 v => !!v || '제목을 입력해주세요!',
@@ -131,28 +132,30 @@ export default {
         }
         await this.$http.get(`/api/contest/userlist/${this.$route.params.id}`)
             .then(
-                (response) => {
-                    this.contest = response.data;
+                async (response) => {
+                    const contest = response.data;
+                    let problems = new Array;
+                    for(let num of contest.problemNum) {
+                        await this.$http.post('/api/problem', {
+                            id: num
+                        })
+                            .then(result => {
+                                const problem = result.data;
+                                problems.push({
+                                    number : num,
+                                    title : problem.title
+                                });
+                            })
+                            .catch(err => this.$log.error(err));
+                    }
+                    contest.problemList = problems;
+                    this.contest = contest;
                 }
             )
             .catch(error => {
                 this.$log.info(error);
             });
-        this.contest.problemList = new Array;
-        for(let num of this.contest.problemNum) {
-            await this.$http.post('/api/problem', {
-                id: num
-            })
-                .then(result => {
-                    const problem = result.data;
-                    this.contest.problemList.push({
-                        number : num,
-                        title : problem.title
-                    });
-                })
-                .catch(err => this.$log.error(err));
-        }
-        this.$log.info(this.contest.problemList);
+
         this.chk3=true;
     },
     methods: {

@@ -41,4 +41,14 @@ export default class Problem {
             next(err);
         }
     }
+    static delete = async(req, res, next) => {
+        try {
+            const result = await ProblemService.delete(req.params.id);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /problem/delete\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
 }

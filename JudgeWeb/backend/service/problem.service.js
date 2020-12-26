@@ -37,4 +37,13 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
+    static delete = async(number) => {
+        try{
+            const result = await ProblemModel.delete(number);
+            return result;
+        } catch(err) {
+            err.message = 'Service -> problemdelete err';
+            throw err;
+        }
+    }
 }

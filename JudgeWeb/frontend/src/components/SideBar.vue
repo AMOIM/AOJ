@@ -3,7 +3,7 @@
 <v-container>
   <v-card
     class="mb-6 no-gutters"
-    max-width="130"
+    max-width="500"
     outlined
   >
     <v-list>
@@ -26,7 +26,7 @@
 <v-container>
     <v-card
     class="mb-6 no-gutters"
-    max-width="130"
+    max-width="500"
     outlined
   >
     <v-list>
@@ -37,10 +37,10 @@
           :key="i"
           :to="problems.path + item.number"
         >
-          <v-list-item-content style="padding: 0;">
+          <v-list-item-content style="text-align:left; padding: 0;">
               <v-row>
-                  <v-col style='color: #311B92;'>{{item.alphabet}}</v-col>
-                  <v-col><v-list-item-title v-text="item.title" style='color: #9575CD;'></v-list-item-title></v-col>
+                  <v-col style='max-width:40px;color: #311B92;'>{{item.alphabet}}</v-col>
+                  <v-col style='overflow: hidden'><v-list-item-title v-text="item.title" style='color: #9575CD;'></v-list-item-title></v-col>
               </v-row>
           </v-list-item-content>
         </v-list-item>
@@ -50,7 +50,6 @@
 </v-container>
 </v-container>
 </template>
-
 <script>
 export default {
     props: ['data'],

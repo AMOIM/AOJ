@@ -1,7 +1,7 @@
 <template>
 <v-card elevation="0" v-if="this.chk && this.isadmin" id="contest">
 <v-container>
-  <div><h2>문제 생성</h2></div>
+  <div><h2>문제 수정</h2></div>
   <v-form
     ref="form"
     v-model="valid"
@@ -77,6 +77,7 @@
         type="file"
         class="d-none"
         ref="inputFiles"
+        accept=".txt"
         @change="uploadInputFile()"
         multiple
       />
@@ -105,18 +106,17 @@
         type="file"
         class="d-none"
         ref="outputFiles"
+        accept=".txt"
         @change="uploadOutputFile()"
         multiple
       />
     </v-card>
-
-    <v-btn
-      color="deep-purple darken-2"
-      class="ma-2 white--text"
-      @click="submitFiles()"
-    >문제 생성
-      <v-icon right dark>mdi-cloud-upload</v-icon>
-    </v-btn>
+     <v-btn style="margin-top : 200px; margin-right : 10px;" color="deep-purple darken-2" dark @click="updateProblem()">
+        문제 수정<i class="mdi mdi-pencil"></i>
+      </v-btn>
+      <v-btn style="margin-top : 200px; margin-left : 10px;" color="red accent-3" dark @click="deleteProblem()">
+        문제 삭제<i class="mdi mdi-delete"></i>
+      </v-btn>
   </v-form>
   <v-alert
       dense
@@ -182,6 +182,21 @@ export default {
         }
     },
     methods: {
+        updateProblem() {
+        },
+        deleteProblem() {
+            this.$http.delete(`/api/problem/delete/${this.$route.params.id}`)
+                .then(
+                    (response) => {
+                        alert('문제가 삭제되었습니다.');
+                        this.$log.info(response.data);
+                        this.$router.push('/problem/list');
+                    }
+                )
+                .catch(error => {
+                    this.$log.info(error);
+                });
+        },
         addInputFiles(){
             this.$refs.inputFiles.click();
         },
