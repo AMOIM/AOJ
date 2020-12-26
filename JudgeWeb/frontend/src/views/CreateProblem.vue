@@ -76,7 +76,6 @@
         type="file"
         class="d-none"
         ref="inputFiles"
-        accept=".txt"
         @change="uploadInputFile()"
         multiple
       />
@@ -105,7 +104,6 @@
         type="file"
         class="d-none"
         ref="outputFiles"
-        accept=".txt"
         @change="uploadOutputFile()"
         multiple
       />

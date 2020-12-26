@@ -23,17 +23,26 @@ mongoose.connect(process.env.MONGO_URI, {
 // middleware
 // app.use(logger('dev'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    limit:'500mb',
+    extended: true 
+}));
+app.use(bodyParser.json({
+    limit:'500mb'
+}));
 
 app.use('/api', indexRoute);
 
 // frontend settings
 app.use(history());
 app.use(express.static('public'));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(express.json({
+    limit:'500mb'
+}));
+app.use(express.urlencoded({
+    limit:'500mb',
+    extended: true
+}));
 
 app.use(session({
     secret: 'keyboard cat',
