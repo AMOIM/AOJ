@@ -1,0 +1,263 @@
+<template>
+<v-card elevation="0" v-if="this.chk && this.isadmin" id="contest">
+<v-container>
+  <div><h2>문제 수정</h2></div>
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation
+    class="ma-15"
+  >
+    <v-text-field
+      v-model="problemTitle"
+      :rules="titleRules"
+      :counter="30"
+      label="문제 제목"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="problemTime"
+      :rules="timeRules"
+      label="시간 (초)"
+      required
+    ></v-text-field>
+
+   <v-text-field
+      v-model="problemMemory"
+      :rules="memoryRules"
+      label="메모리 (MB)"
+      required
+    ></v-text-field>
+
+    <v-textarea
+      rows="10"
+      name="content"
+      label="문제 내용"
+      v-model="problemContent"
+      :rules="contentRules"
+    ></v-textarea>
+
+    <v-textarea
+      rows="5"
+      name="inputDescription"
+      label="문제 입력"
+      v-model="inputDescription"
+      :rules="inputDescriptionRules"
+    ></v-textarea>
+
+    <v-textarea
+      rows="5"
+      name="outputDescription"
+      label="문제 출력"
+      v-model="outputDescription"
+      :rules="outputDescriptionRules"
+    ></v-textarea>
+
+    <v-card outlined>
+      <v-card-subtitle class="d-flex">
+        <v-icon>mdi-paperclip</v-icon>
+        <span class="ml-2">입력 테스트케이스 파일 첨부</span>
+      </v-card-subtitle>
+      <v-card-text class="d-flex flex-wrap">
+        <v-chip
+          v-for="(fileinfo, idx) in inputFiles"
+          :key="idx"
+          @click:close="removeInputFile(idx)"
+          close
+          class="mr-2 mt-1"
+        > {{ fileinfo.name }}
+        </v-chip>
+        <v-btn class="mt-1" small icon ref="inputFiles" @click="addInputFiles()">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        <span>버튼을 눌러 파일을 첨부하세요.</span>
+      </v-card-text>
+      <input
+        type="file"
+        class="d-none"
+        ref="inputFiles"
+        accept=".txt"
+        @change="uploadInputFile()"
+        multiple
+      />
+    </v-card>
+
+    <v-card outlined>
+      <v-card-subtitle class="d-flex">
+        <v-icon>mdi-paperclip</v-icon>
+        <span class="ml-2">출력 테스트케이스 파일 첨부</span>
+      </v-card-subtitle>
+      <v-card-text class="d-flex flex-wrap">
+        <v-chip
+          v-for="(fileinfo, idx) in outputFiles"
+          :key="idx"
+          @click:close="removeOutputFile(idx)"
+          close
+          class="mr-2 mt-1"
+        > {{ fileinfo.name }}
+        </v-chip>
+        <v-btn class="mt-1" small icon ref="outputFiles" @click="addOutputFiles()">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        <span>버튼을 눌러 파일을 첨부하세요.</span>
+      </v-card-text>
+      <input
+        type="file"
+        class="d-none"
+        ref="outputFiles"
+        accept=".txt"
+        @change="uploadOutputFile()"
+        multiple
+      />
+    </v-card>
+     <v-btn style="margin-top : 200px; margin-right : 10px;" color="deep-purple darken-2" dark @click="updateProblem()">
+        문제 수정<i class="mdi mdi-pencil"></i>
+      </v-btn>
+      <v-btn style="margin-top : 200px; margin-left : 10px;" color="red accent-3" dark @click="deleteProblem()">
+        문제 삭제<i class="mdi mdi-delete"></i>
+      </v-btn>
+  </v-form>
+  <v-alert
+      dense
+      text
+      v-if="msgFlag==true"
+      type="success"
+    >
+      {{msg}}
+    </v-alert>
+</v-container>
+</v-card>
+</template>
+
+<script>
+import {checklogin} from '../components/mixins/checklogin.js';
+
+export default {
+    mixins:[checklogin],
+    data: function(){
+        return {
+            isadmin: false,
+            chk: false,
+            problemTitle: '',
+            valid: true,
+            titleRules: [
+                v => !!v || '문제 제목을 입력해주세요!',
+                v => v && v.length <= 30 || '제목을 30글자 이내로 작성해주세요!'
+            ],
+            problemTime: '',
+            timeRules: [
+                v => !!v || '시간을 입력해주세요! 단위는 초입니다!'
+            ],
+            problemMemory: '',
+            memoryRules: [
+                v => !!v || '메모리를 입력해주세요! 단위는 MB입니다!'
+            ],
+            problemContent: '',
+            contentRules: [
+                v => !!v || '문제 내용을 입력해주세요!'
+            ],
+            inputDescription: '',
+            inputDescriptionRules: [
+                v => !!v || '문제 입력에 대한 설명을 작성해주세요!'
+            ],
+            outputDescription: '',
+            outputDescriptionRules: [
+                v => !!v || '문제 출력에 대한 설명을 작성해주세요!'
+            ],
+            inputFiles: [],
+            inputFilesString: [],
+            outputFiles: [],
+            outputFilesString: [],
+            msg: '',
+            msgFlag: false
+        };
+    },
+    async mounted() {
+        this.chk = await this.check();
+        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
+        if(this.chk && this.$store.state.name !== 'admin') {
+            this.$router.push('/');
+            alert('관리자만 접근이 가능합니다.');
+        }
+    },
+    methods: {
+        updateProblem() {
+        },
+        deleteProblem() {
+            this.$http.delete(`/api/problem/delete/${this.$route.params.id}`)
+                .then(
+                    (response) => {
+                        alert('문제가 삭제되었습니다.');
+                        this.$log.info(response.data);
+                        this.$router.push('/problem/list');
+                    }
+                )
+                .catch(error => {
+                    this.$log.info(error);
+                });
+        },
+        addInputFiles(){
+            this.$refs.inputFiles.click();
+        },
+        addOutputFiles(){
+            this.$refs.outputFiles.click();
+        },
+        uploadInputFile(){
+            let uploadedInputFiles = this.$refs.inputFiles.files;
+            for( let i = 0; i < uploadedInputFiles.length; i++ ){
+                this.inputFiles.push( uploadedInputFiles[i] );
+            }
+        },
+        uploadOutputFile(){
+            let uploadedOutputFiles = this.$refs.outputFiles.files;
+            for( let i = 0; i < uploadedOutputFiles.length; i++ ){
+                this.outputFiles.push( uploadedOutputFiles[i] );
+            }
+        },
+        removeInputFile( key ){
+            this.inputFiles.splice( key, 1 );
+        },
+        removeOutputFile( key ){
+            this.outputFiles.splice( key, 1 );
+        },
+        async submitFiles(){
+            for(let fileInput of this.inputFiles){
+                let reader = new FileReader();
+                reader.readAsText(fileInput);
+                const result = await new Promise((resolve) => {
+                    reader.onload = function() {
+                        resolve(reader.result);
+                    };
+                });
+                this.inputFilesString.push({'txt' : result});
+            }
+
+            for(let fileInput of this.outputFiles){
+                let reader = new FileReader();
+                reader.readAsText(fileInput);
+                const result = await new Promise((resolve) => {
+                    reader.onload = function() {
+                        resolve(reader.result);
+                    };
+                });
+                this.outputFilesString.push({'txt' : result});
+            }
+
+            await this.$http.post('/api/problem/create', {
+                problemTitle : this.problemTitle,
+                problemContent : this.problemContent,
+                problemTime : this.problemTime * 1000,
+                problemMemory : this.problemMemory * 1000000,
+                inputDescription : this.inputDescription,
+                outputDescription : this.outputDescription,
+                inputFilesString : this.inputFilesString,
+                outputFilesString : this.outputFilesString
+            }).then(res => {
+                this.msg = res.data + '번 문제가 생성되었습니다!';
+                this.msgFlag = true;
+            });
+        },
+    },
+};
+</script>
