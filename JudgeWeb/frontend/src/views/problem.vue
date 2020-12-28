@@ -45,8 +45,8 @@
     </v-row>
     </v-container>
     <v-container>
-      <v-row v-for="(item, i) in problem.inputList.slice(0,2)" :key='item._id'>
-          <v-col>
+      <v-row v-for="(item, i) in problem.testcase" :key='item._id'>
+          <v-col v-if="i<2">
             <v-list-item style="padding: 0px;">
                 <v-list-item-content class="text-left align-self-start">
                 <v-list-item-title style="font-size: 20px; padding: 10px;">예제 입력 {{i+1}}</v-list-item-title>
@@ -60,10 +60,10 @@
                 label="input"
                 auto-grow
                 readonly
-                :value='item.txt'
+                :value='item.in.txt'
             ></v-textarea>
           </v-col>
-          <v-col>
+          <v-col v-if="i<2">
             <v-list-item style="padding: 0px;">
                 <v-list-item-content class="text-left align-self-start">
                 <v-list-item-title style="font-size: 20px; padding: 10px;">예제 출력 {{i+1}}</v-list-item-title>
@@ -77,7 +77,7 @@
                 label="output"
                 auto-grow
                 readonly
-                :value='problem.outputList[i].txt'
+                :value='item.out.txt'
             ></v-textarea>
           </v-col>
         </v-row>
@@ -161,25 +161,27 @@ export default {
     async mounted() {
         this.chk = await this.check();
     },
-    created() {
+    async created() {
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
         if (id === undefined)
             this.$router.go(-1);
-        this.$http.post('/api/problem', {
-            id: id
-        })
-            .then(result => {
-                this.problem = result.data;
-                if(this.problem === null){
-                    alert('존재하지 않는 문제입니다.');
-                    this.$router.go(-1);
-                }
-                this.problem.timeLimit = this.problem.timeLimit / 1000;
-                this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
-            })
-            .catch(err => this.$log.error(err));
+        await this.$http.post('/api/problem', {
+            id : id
+        }).then(result => {
+            this.problem = result.data;
+            if(this.problem === null){
+                alert('존재하지 않는 문제입니다.');
+                this.$router.go(-1);
+            }
+            this.problem.timeLimit = this.problem.timeLimit / 1000;
+            this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
+        }).catch(err => this.$log.error(err));
 
+        await this.$http.get(`/api/problem/testcase/${id}`).then(res => {
+            Object.assign(this.problem, {testcase : res.data});
+            this.$log.info(this.problem);
+        });
         this.code = '\n\n\n\n\n\nWrite your code\nAnd submit code\n\n\n\n\n\n';
     }
 };

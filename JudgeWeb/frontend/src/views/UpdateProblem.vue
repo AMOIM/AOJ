@@ -54,7 +54,8 @@
       :rules="outputDescriptionRules"
     ></v-textarea>
 
-    <v-card outlined>
+    <v-card v-if="fileModifyFlag==true">
+      <v-card outlined>
       <v-card-subtitle class="d-flex">
         <v-icon>mdi-paperclip</v-icon>
         <span class="ml-2">입력 테스트케이스 파일 첨부</span>
@@ -77,13 +78,12 @@
         type="file"
         class="d-none"
         ref="inputFiles"
-        accept=".txt"
         @change="uploadInputFile()"
         multiple
       />
-    </v-card>
+      </v-card>
 
-    <v-card outlined>
+      <v-card outlined>
       <v-card-subtitle class="d-flex">
         <v-icon>mdi-paperclip</v-icon>
         <span class="ml-2">출력 테스트케이스 파일 첨부</span>
@@ -106,19 +106,13 @@
         type="file"
         class="d-none"
         ref="outputFiles"
-        accept=".txt"
         @change="uploadOutputFile()"
         multiple
       />
+      </v-card>
     </v-card>
-     <v-btn style="margin-top : 200px; margin-right : 10px;" color="deep-purple darken-2" dark @click="updateProblem()">
-        문제 수정<i class="mdi mdi-pencil"></i>
-      </v-btn>
-      <v-btn style="margin-top : 200px; margin-left : 10px;" color="red accent-3" dark @click="deleteProblem()">
-        문제 삭제<i class="mdi mdi-delete"></i>
-      </v-btn>
-  </v-form>
-  <v-alert
+    <div>
+    <v-alert
       dense
       text
       v-if="msgFlag==true"
@@ -126,6 +120,39 @@
     >
       {{msg}}
     </v-alert>
+    </div>
+    <div>
+    <v-alert
+      v-model="fileFlag"
+      border="left"
+      close-text="Close Alert"
+      color="deep-purple accent-4"
+      dark
+      dismissible
+    >
+      {{fileMsg}}
+    </v-alert>
+    </div>
+    <v-container>
+     <v-row style="justify-content: center;">
+       <v-btn text v-if="fileModifyFlag==false" v-on:click="fileModifyFlag=true">
+        입출력 파일을 수정하려면 클릭하세요. 단, 모든 입출력파일을 다시 수정해야합니다!
+       </v-btn>
+     </v-row>
+     <v-row style="max-height: 200px">
+     <v-col class="text-right">
+      <v-btn color="deep-purple darken-2" dark @click="updateProblem()">
+        문제 수정<i class="mdi mdi-pencil"></i>
+      </v-btn>
+     </v-col>
+     <v-col class="text-left">
+      <v-btn color="red accent-3" dark @click="deleteProblem()">
+        문제 삭제<i class="mdi mdi-delete"></i>
+      </v-btn>
+     </v-col>
+    </v-row>
+    </v-container>
+  </v-form>
 </v-container>
 </v-card>
 </template>
@@ -170,7 +197,11 @@ export default {
             outputFiles: [],
             outputFilesString: [],
             msg: '',
-            msgFlag: false
+            msgFlag: false,
+            fileFlag: false,
+            fileModifyFlag: false,
+            updateFlag: false,
+            fileMsg: ''
         };
     },
     async mounted() {
@@ -181,21 +212,99 @@ export default {
             alert('관리자만 접근이 가능합니다.');
         }
     },
+    async created() {
+        await this.$http.post('/api/problem', {
+            id : this.$route.params.id
+        }).then(res => {
+            this.problemTitle = res.data.title;
+            this.problemTime = res.data.timeLimit;
+            this.problemMemory = res.data.memoryLimit;
+            this.problemContent = res.data.description;
+            this.inputDescription = res.data.inputDescription;
+            this.outputDescription = res.data.outputDescription;
+        });
+        this.problemTime /= 1000;
+        this.problemMemory /= 1000000;
+    },
     methods: {
-        updateProblem() {
-        },
-        deleteProblem() {
-            this.$http.delete(`/api/problem/delete/${this.$route.params.id}`)
-                .then(
-                    (response) => {
-                        alert('문제가 삭제되었습니다.');
-                        this.$log.info(response.data);
-                        this.$router.push('/problem/list');
+        async updateProblem() {
+            if(this.fileModifyFlag) {
+                if(this.inputFiles.length !== this.outputFiles.length) {
+                    this.fileFlag = true;
+                    this.fileMsg = '테스트 케이스 개수가 맞지 않습니다!';
+                }
+                else if(this.inputFiles.length < 2){
+                    this.fileFlag = true;
+                    this.fileMsg = '테스트 케이스는 2개 이상부터 등록할 수 있습니다!';
+                }
+                else {
+                    for(let fileInput of this.inputFiles){
+                        let reader = new FileReader();
+                        reader.readAsText(fileInput);
+                        const result = await new Promise((resolve) => {
+                            reader.onload = function() {
+                                resolve(reader.result);
+                            };
+                        });
+                        this.inputFilesString.push({'txt' : result});
                     }
-                )
-                .catch(error => {
-                    this.$log.info(error);
+
+                    for(let fileInput of this.outputFiles){
+                        let reader = new FileReader();
+                        reader.readAsText(fileInput);
+                        const result = await new Promise((resolve) => {
+                            reader.onload = function() {
+                                resolve(reader.result);
+                            };
+                        });
+                        this.outputFilesString.push({'txt' : result});
+                    }
+                    await this.$http.put(`/api/problem/testcase/${this.$route.params.id}`,{
+                        number : this.$route.params.id,
+                        inputFilesString : this.inputFilesString,
+                        outputFilesString : this.outputFilesString
+                    });
+                    this.updateFlag = true;
+                }
+            }
+            else this.updateFlag = true;
+            if(this.updateFlag) {
+                this.fileFlag = false;
+                await this.$http.patch(`/api/problem/update/${this.$route.params.id}`,{
+                    problemTitle : this.problemTitle,
+                    problemContent : this.problemContent,
+                    problemTime : this.problemTime * 1000,
+                    problemMemory : this.problemMemory * 1000000,
+                    inputDescription : this.inputDescription,
+                    outputDescription : this.outputDescription,
+                }).then(res => {
+                    this.msg = res.data + '번 문제가 수정되었습니다!';
+                    this.msgFlag = true;
+                    window.location.reload(true);
                 });
+            }
+        },
+        async deleteProblem() {
+            this.msgFlag = false;
+            const result = await this.$http.delete(`/api/problem/testcase/${this.$route.params.id}`);
+            if(result){
+                await this.$http.delete(`/api/problem/delete/${this.$route.params.id}`)
+                    .then(
+                        (response) => {
+                            alert('문제가 삭제되었습니다.');
+                            this.$log.info(response.data);
+                            this.$router.push('/problem/list');
+                        }
+                    )
+                    .catch(error => {
+                        this.$log.info(error);
+                    });
+            }
+            else {
+                this.msg = '문제 수정에 실패하였습니다.';
+                this.msgFlag = true;
+                window.location.reload(true);
+            }
         },
         addInputFiles(){
             this.$refs.inputFiles.click();
@@ -220,44 +329,7 @@ export default {
         },
         removeOutputFile( key ){
             this.outputFiles.splice( key, 1 );
-        },
-        async submitFiles(){
-            for(let fileInput of this.inputFiles){
-                let reader = new FileReader();
-                reader.readAsText(fileInput);
-                const result = await new Promise((resolve) => {
-                    reader.onload = function() {
-                        resolve(reader.result);
-                    };
-                });
-                this.inputFilesString.push({'txt' : result});
-            }
-
-            for(let fileInput of this.outputFiles){
-                let reader = new FileReader();
-                reader.readAsText(fileInput);
-                const result = await new Promise((resolve) => {
-                    reader.onload = function() {
-                        resolve(reader.result);
-                    };
-                });
-                this.outputFilesString.push({'txt' : result});
-            }
-
-            await this.$http.post('/api/problem/create', {
-                problemTitle : this.problemTitle,
-                problemContent : this.problemContent,
-                problemTime : this.problemTime * 1000,
-                problemMemory : this.problemMemory * 1000000,
-                inputDescription : this.inputDescription,
-                outputDescription : this.outputDescription,
-                inputFilesString : this.inputFilesString,
-                outputFilesString : this.outputFilesString
-            }).then(res => {
-                this.msg = res.data + '번 문제가 생성되었습니다!';
-                this.msgFlag = true;
-            });
-        },
+        }
     },
 };
 </script>

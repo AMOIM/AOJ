@@ -110,6 +110,29 @@
       />
     </v-card>
 
+    <div>
+    <v-alert
+      dense
+      text
+      v-if="msgFlag==true"
+      type="success"
+    >
+      {{msg}}
+    </v-alert>
+    </div>
+    <div>
+    <v-alert
+      v-model="fileFlag"
+      border="left"
+      close-text="Close Alert"
+      color="deep-purple accent-4"
+      dark
+      dismissible
+    >
+      {{fileMsg}}
+    </v-alert>
+    </div>
+
     <v-btn
       color="deep-purple darken-2"
       class="ma-2 white--text"
@@ -118,14 +141,6 @@
       <v-icon right dark>mdi-cloud-upload</v-icon>
     </v-btn>
   </v-form>
-  <v-alert
-      dense
-      text
-      v-if="msgFlag==true"
-      type="success"
-    >
-      {{msg}}
-    </v-alert>
 </v-container>
 </v-card>
 </template>
@@ -170,7 +185,9 @@ export default {
             outputFiles: [],
             outputFilesString: [],
             msg: '',
-            msgFlag: false
+            msgFlag: false,
+            fileFlag: false,
+            fileMsg: ''
         };
     },
     async mounted() {
@@ -207,41 +224,56 @@ export default {
             this.outputFiles.splice( key, 1 );
         },
         async submitFiles(){
-            for(let fileInput of this.inputFiles){
-                let reader = new FileReader();
-                reader.readAsText(fileInput);
-                const result = await new Promise((resolve) => {
-                    reader.onload = function() {
-                        resolve(reader.result);
-                    };
-                });
-                this.inputFilesString.push({'txt' : result});
+            this.fileFlag = false;
+            this.msgFlag = false;
+            if(this.inputFiles.length !== this.outputFiles.length){
+                this.fileFlag = true;
+                this.fileMsg = '테스트케이스 개수가 맞지 않습니다!';
             }
-
-            for(let fileInput of this.outputFiles){
-                let reader = new FileReader();
-                reader.readAsText(fileInput);
-                const result = await new Promise((resolve) => {
-                    reader.onload = function() {
-                        resolve(reader.result);
-                    };
-                });
-                this.outputFilesString.push({'txt' : result});
+            else if(this.inputFiles.length < 2){
+                this.fileFlag = true;
+                this.fileMsg = '테스트 케이스는 2개 이상부터 등록할 수 있습니다!';
             }
+            else {
+                for(let fileInput of this.inputFiles){
+                    let reader = new FileReader();
+                    reader.readAsText(fileInput);
+                    const result = await new Promise((resolve) => {
+                        reader.onload = function() {
+                            resolve(reader.result);
+                        };
+                    });
+                    this.inputFilesString.push({'txt' : result});
+                }
 
-            await this.$http.post('/api/problem/create', {
-                problemTitle : this.problemTitle,
-                problemContent : this.problemContent,
-                problemTime : this.problemTime * 1000,
-                problemMemory : this.problemMemory * 1000000,
-                inputDescription : this.inputDescription,
-                outputDescription : this.outputDescription,
-                inputFilesString : this.inputFilesString,
-                outputFilesString : this.outputFilesString
-            }).then(res => {
-                this.msg = res.data + '번 문제가 생성되었습니다!';
-                this.msgFlag = true;
-            });
+                for(let fileInput of this.outputFiles){
+                    let reader = new FileReader();
+                    reader.readAsText(fileInput);
+                    const result = await new Promise((resolve) => {
+                        reader.onload = function() {
+                            resolve(reader.result);
+                        };
+                    });
+                    this.outputFilesString.push({'txt' : result});
+                }
+            
+                await this.$http.post('/api/problem/create', {
+                    problem : {
+                        problemTitle : this.problemTitle,
+                        problemContent : this.problemContent,
+                        problemTime : this.problemTime * 1000,
+                        problemMemory : this.problemMemory * 1000000,
+                        inputDescription : this.inputDescription,
+                        outputDescription : this.outputDescription},
+                    testcase : {
+                        inputFilesString : this.inputFilesString,
+                        outputFilesString : this.outputFilesString
+                    }}).then(res => {
+                    this.msg = res.data + '번 문제가 생성되었습니다!';
+                    this.msgFlag = true;
+                    window.location.reload(true); 
+                });
+            }
         },
     },
 };
