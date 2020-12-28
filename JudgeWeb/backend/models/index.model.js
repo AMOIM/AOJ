@@ -1,4 +1,4 @@
-import { UserSchema, NoticeSchema, ContestSchema, PendingSchema, ProblemSchema, StatusSchema } from './schema.model.js';
+import { UserSchema, NoticeSchema, ContestSchema, PendingSchema, ProblemSchema, StatusSchema, TestCaseSchema } from './schema.model.js';
 import mongoose from 'mongoose';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
@@ -105,10 +105,7 @@ export class ProblemModel {
                 memoryLimit: data.problemMemory,
                 inputDescription: data.inputDescription,
                 outputDescription: data.outputDescription,
-                inputList: data.inputFilesString,
-                outputList: data.outputFilesString
             });
-
             await newProblem.save();
             return newProblem.number;
         } catch (err) {
@@ -124,6 +121,60 @@ export class ProblemModel {
             throw new Error('Model -> deleteProblem error');
         }
     };
+    static update = async (req) => {
+        try {
+            await ProblemSchema.updateOne(
+                {
+                    number : req.params.id
+                },
+                {
+                    $set : {
+                        title: req.body.problemTitle,
+                        description: req.body.problemContent,
+                        timeLimit: req.body.problemTime,
+                        memoryLimit: req.body.problemMemory,
+                        inputDescription: req.body.inputDescription,
+                        outputDescription: req.body.outputDescription,
+                    }
+                }
+            );
+            return true;
+        }catch (err) {
+            throw new Error('Model -> updateProblem error');
+        }
+    };
+    static getTestcase = async (number) => {
+        try {
+            const result = await TestCaseSchema.find()
+                .where({'number': number})
+                .sort('index');
+            return result;
+        } catch (err) {
+            throw new Error('Model -> getTestcase error');
+        }
+    }
+    static createTestcase = async (data) => {
+        try {
+            const newProblemTestCase = new TestCaseSchema({
+                number: data.number,
+                index: data.index,
+                in: data.inputFilesString,
+                out: data.outputFilesString
+            });
+            await newProblemTestCase.save();
+        } catch (err) {
+            throw new Error('Model -> createTestcase error');
+        }
+    };
+    static deleteTestcase = async (number) => {
+        try {
+            await TestCaseSchema.remove()
+                .where({'number': number});
+            return true;
+        } catch (err) {
+            throw new Error('Model -> deleteTestcase error');
+        }
+    }
 }
 
 export class StatusModel {

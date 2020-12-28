@@ -55,17 +55,23 @@ const problemSchema = new mongoose.Schema({
     outputDescription: {
         type: String,
         required: true
+    }
+});
+
+const testcaseSchema = new mongoose.Schema({
+    number: {
+        type: Number,
+        required: true,
     },
-    inputList: [
-        {
-            txt: String
-        },
-    ],
-    outputList: [
-        {
-            txt: String
-        }
-    ],
+    index: {
+        type: Number
+    },
+    in: {
+        txt: String
+    },
+    out: {
+        txt: String
+    }
 });
 
 const statusSchema = new mongoose.Schema({
@@ -143,6 +149,7 @@ const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
 const ContestSchema = new mongoose.model('ContestSchema', contestSchema);
 const UserSchema = new mongoose.model('UserSchema', userSchema);
+const TestCaseSchema = new mongoose.model('TestCaseSchema', testcaseSchema);
 
 export {
     NoticeSchema,
@@ -150,5 +157,6 @@ export {
     ProblemSchema,
     StatusSchema,
     PendingSchema,
-    UserSchema
+    UserSchema,
+    TestCaseSchema
 };

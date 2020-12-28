@@ -42,8 +42,48 @@ export default class ProblemService {
             const result = await ProblemModel.delete(number);
             return result;
         } catch(err) {
-            err.message = 'Service -> problemdelete err';
-            throw err;
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+    static update = async (req) => {
+        try {
+            const result = await ProblemModel.update(req);
+            return result;
+        } catch(err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+    static getTestcase = async (number) => {
+        try {
+            const result = await ProblemModel.getTestcase(number);
+            return result;
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+    static createTestcase = async (data) => {
+        try {
+            for(let i = 0; i < data.inputFilesString.length; i++){
+                const testcase = {
+                    number : data.number,
+                    index : i+1,
+                    inputFilesString : data.inputFilesString[i],
+                    outputFilesString : data.outputFilesString[i]
+                };
+                await ProblemModel.createTestcase(testcase);
+            }
+            return data.number;
+        } catch (err) {
+            await ProblemModel.delete(data.number);
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+    static deleteTestcase = async (number) => {
+        try {
+            const result = ProblemModel.deleteTestcase(number);
+            return result;
+        } catch(err) {
+            throw new Error('Service -> ' + err.message);
         }
     }
 }

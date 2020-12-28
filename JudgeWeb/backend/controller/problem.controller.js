@@ -23,7 +23,11 @@ export default class Problem {
     }
     static create = async (req, res, next) => {
         try {
-            const result = await ProblemService.create({...req.body});
+            const problemNumber = await ProblemService.create({...req.body.problem});
+            const result = await ProblemService.createTestcase({
+                number : problemNumber,
+                ...req.body.testcase
+            });
             return res.status(200).json(result);
         } catch (err) {
             err.message = 'POST /problem/create\nController -> ' + err.message;
@@ -47,6 +51,59 @@ export default class Problem {
             return res.status(200).json(result);
         } catch(err) {
             err.message = 'GET /problem/delete\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static update = async(req, res, next) => {
+        try {
+            const result = await ProblemService.update(req);
+            return res.status(200).json(req.params.id);
+        } catch(err) {
+            err.message = 'PATCH /problem/update\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static getTestcase = async(req, res, next) => {
+        try {
+            const result = await ProblemService.getTestcase(req.params.id);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /problem/testcase\n -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static createTestcase = async(req, res, next) => {
+        try {
+            const result = await ProblemService.createTestcase(req);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'POST /problem/testcase\n -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static updateTestcase = async(req, res, next) => {
+        try {
+            const deleteResult = await ProblemService.deleteTestcase(req.body.number);
+            if(deleteResult){
+                const result = await ProblemService.createTestcase({...req.body});
+                return res.status(200).json(result);
+            }
+        } catch(err) {
+            err.message = 'PUT /problem/testcase\n -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static deleteTestcase = async(req, res, next) => {
+        try {
+            const result = await ProblemService.deleteTestcase(req.params.id);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'DELETE /problem/testcase\n -> ' + err.message;
             err.status = 400;
             next(err);
         }
