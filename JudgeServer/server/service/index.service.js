@@ -3,7 +3,7 @@ import childProcess from 'child_process';
 import path from 'path';
 
 import Compiler from '../models/compiler.model.js';
-import {PendingModel, ProblemModel, StatusModel} from '../models/index.model.js';
+import { PendingModel, ProblemModel, StatusModel, TestCaseModel } from '../models/index.model.js';
 
 const execSync = childProcess.execSync;
 const dir = path.join(__dirname, '../../test');
@@ -43,6 +43,7 @@ export default class IndexService {
                 try {
                     const judge = await StatusModel.find(pending.number);
                     const problem = await ProblemModel.find(judge.problemNum);
+                    const testCases = await TestCaseModel.find(problem.number);
 
                     const compile = await Compiler.run(judge.code, judge.lang);
                     if (compile.success === false) {
@@ -52,10 +53,10 @@ export default class IndexService {
 
                     let maxTime = 0, maxMemory = 0;
 
-                    for (let i = 0; i < problem.inputList.length; i++) {
+                    for (let testCase of testCases) {
                         const maxProcessNumber = 200;
                         const maxOutputSize = 2097152;
-                        const input = problem.inputList[i].txt;
+                        const input = testCase.in.txt;
                         const rule = await seccomp_rule(judge.lang);
                         const exePath = await exe_path(judge.lang);
                         const memoryLimit = await max_memory(judge.lang, problem.memoryLimit);
@@ -100,7 +101,7 @@ export default class IndexService {
                         } else if (status.result !== 0) throw new Error('서버 에러');
 
                         const userOutput = fs.readFileSync(`${dir}/output.txt`, 'utf8').toString();
-                        const ansOutput = problem.outputList[i].txt.toString();
+                        const ansOutput = testCase.out.txt.toString();
 
                         const userCmp = userOutput.split('\n');
                         const ansCmp = ansOutput.split('\n');
