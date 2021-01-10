@@ -20,7 +20,7 @@
             <v-divider></v-divider>
         </v-list-item-content>
     </v-list-item>
-    <v-row style="margin-left: 10px;">
+    <v-row class="show-text">
         {{problem.description}}
     </v-row>
     <br/>
@@ -30,7 +30,7 @@
             <v-divider></v-divider>
         </v-list-item-content>
     </v-list-item>
-    <v-row style="margin-left: 10px;">
+    <v-row class="show-text">
         {{problem.inputDescription}}
     </v-row>
     <br/>
@@ -40,7 +40,7 @@
             <v-divider></v-divider>
         </v-list-item-content>
     </v-list-item>
-    <v-row style="margin-left: 10px;">
+    <v-row class="show-text">
         {{problem.outputDescription}}
     </v-row>
     </v-container>
@@ -202,5 +202,10 @@ export default {
 // optional
 .prism-editor__textarea:focus {
   outline: none;
+}
+
+.show-text {
+    margin-left: 10px;
+    white-space:pre-line;
 }
 </style>
