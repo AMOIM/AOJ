@@ -7,7 +7,7 @@ const problemSchema = new mongoose.Schema({
         unique: true
     },
     title: {
-        type: Number,
+        type: String,
         required: true
     },
     description: {
@@ -22,18 +22,30 @@ const problemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    inputList: [
-        {
-            _id: Number,
-            txt: String
-        },
-    ],
-    outputList: [
-        {
-            _id: Number,
-            txt: String
-        }
-    ],
+    inputDescription: {
+        type: String,
+        required: true
+    },
+    outputDescription: {
+        type: String,
+        required: true
+    }
+});
+
+const testcaseSchema = new mongoose.Schema({
+    number: {
+        type: Number,
+        required: true,
+    },
+    index: {
+        type: Number
+    },
+    in: {
+        txt: String
+    },
+    out: {
+        txt: String
+    }
 });
 
 const statusSchema = new mongoose.Schema({
@@ -84,9 +96,11 @@ const pendingSchema = new mongoose.Schema({
 const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
 const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
+const TestCaseSchema = new mongoose.model('TestCaseSchema', testcaseSchema);
 
 export {
     ProblemSchema,
     StatusSchema,
-    PendingSchema
+    PendingSchema,
+    TestCaseSchema
 };
