@@ -208,13 +208,13 @@ export default {
         uploadInputFile(){
             let uploadedInputFiles = this.$refs.inputFiles.files;
             for( let i = 0; i < uploadedInputFiles.length; i++ ){
-                this.inputFiles.push( uploadedInputFiles[i] );
+                this.inputFiles.push(uploadedInputFiles[i]);
             }
         },
         uploadOutputFile(){
             let uploadedOutputFiles = this.$refs.outputFiles.files;
             for( let i = 0; i < uploadedOutputFiles.length; i++ ){
-                this.outputFiles.push( uploadedOutputFiles[i] );
+                this.outputFiles.push(uploadedOutputFiles[i]);
             }
         },
         removeInputFile( key ){
@@ -243,18 +243,37 @@ export default {
                             resolve(reader.result);
                         };
                     });
-                    this.inputFilesString.push({'txt' : result});
+                    const number = Number(fileInput.name.slice(0, -3));
+                    this.inputFilesString.push({
+                        'key' : number,
+                        'txt' : result
+                    });
+                    this.inputFilesString.sort(function (a, b) {
+                        if(a.key > b.key) return 1;
+                        if(a.key < b.key) return -1;
+                        return 0;
+                    });
                 }
 
-                for(let fileInput of this.outputFiles){
+                for(let fileOutput of this.outputFiles){
                     let reader = new FileReader();
-                    reader.readAsText(fileInput);
+                    reader.readAsText(fileOutput);
                     const result = await new Promise((resolve) => {
                         reader.onload = function() {
                             resolve(reader.result);
                         };
                     });
-                    this.outputFilesString.push({'txt' : result});
+                    const number = Number(fileOutput.name.slice(0, -4));
+                    this.$log.info(number);
+                    this.outputFilesString.push({
+                        'key' : number,
+                        'txt' : result
+                    });
+                    this.outputFilesString.sort(function (a, b) {
+                        if(a.key > b.key) return 1;
+                        if(a.key < b.key) return -1;
+                        return 0;
+                    });
                 }
             
                 await this.$http.post('/api/problem/create', {
