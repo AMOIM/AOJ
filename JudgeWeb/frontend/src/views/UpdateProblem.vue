@@ -54,22 +54,21 @@
       :rules="outputDescriptionRules"
     ></v-textarea>
 
-    <v-card v-if="fileModifyFlag==true">
-      <v-card outlined>
+    <v-card outlined>
       <v-card-subtitle class="d-flex">
         <v-icon>mdi-paperclip</v-icon>
-        <span class="ml-2">입력 테스트케이스 파일 첨부</span>
+        <span class="ml-2">테스트케이스 파일 첨부</span>
       </v-card-subtitle>
       <v-card-text class="d-flex flex-wrap">
         <v-chip
-          v-for="(fileinfo, idx) in inputFiles"
+          v-for="(fileinfo, idx) in files"
           :key="idx"
-          @click:close="removeInputFile(idx)"
+          @click:close="removeFile(idx)"
           close
           class="mr-2 mt-1"
         > {{ fileinfo.name }}
         </v-chip>
-        <v-btn class="mt-1" small icon ref="inputFiles" @click="addInputFiles()">
+        <v-btn class="mt-1" small icon ref="files" @click="addFiles()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <span>버튼을 눌러 파일을 첨부하세요.</span>
@@ -77,40 +76,12 @@
       <input
         type="file"
         class="d-none"
-        ref="inputFiles"
-        @change="uploadInputFile()"
+        ref="files"
+        @change="uploadFile()"
         multiple
       />
-      </v-card>
-
-      <v-card outlined>
-      <v-card-subtitle class="d-flex">
-        <v-icon>mdi-paperclip</v-icon>
-        <span class="ml-2">출력 테스트케이스 파일 첨부</span>
-      </v-card-subtitle>
-      <v-card-text class="d-flex flex-wrap">
-        <v-chip
-          v-for="(fileinfo, idx) in outputFiles"
-          :key="idx"
-          @click:close="removeOutputFile(idx)"
-          close
-          class="mr-2 mt-1"
-        > {{ fileinfo.name }}
-        </v-chip>
-        <v-btn class="mt-1" small icon ref="outputFiles" @click="addOutputFiles()">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <span>버튼을 눌러 파일을 첨부하세요.</span>
-      </v-card-text>
-      <input
-        type="file"
-        class="d-none"
-        ref="outputFiles"
-        @change="uploadOutputFile()"
-        multiple
-      />
-      </v-card>
     </v-card>
+
     <div>
     <v-alert
       dense
@@ -134,11 +105,6 @@
     </v-alert>
     </div>
     <v-container>
-     <v-row style="justify-content: center;">
-       <v-btn text v-if="fileModifyFlag==false" v-on:click="fileModifyFlag=true">
-        입출력 파일을 수정하려면 클릭하세요. 단, 모든 입출력파일을 다시 수정해야합니다!
-       </v-btn>
-     </v-row>
      <v-row style="max-height: 200px">
      <v-col class="text-right">
       <v-btn color="deep-purple darken-2" dark @click="updateProblem()">
@@ -192,9 +158,10 @@ export default {
             outputDescriptionRules: [
                 v => !!v || '문제 출력에 대한 설명을 작성해주세요!'
             ],
-            inputFiles: [],
+            files: [],
+            testFiles: [],
+            sampleFiles: [],
             inputFilesString: [],
-            outputFiles: [],
             outputFilesString: [],
             msg: '',
             msgFlag: false,
@@ -228,66 +195,78 @@ export default {
     },
     methods: {
         async updateProblem() {
-            if(this.fileModifyFlag) {
-                if(this.inputFiles.length !== this.outputFiles.length) {
-                    this.fileFlag = true;
-                    this.fileMsg = '테스트 케이스 개수가 맞지 않습니다!';
+            this.msgFlag = false;
+            this.sampleFiles = [];
+            this.testFiles = [];
+            this.inputFilesString = [];
+            this.outputFilesString = [];
+
+            this.$log.info(this.files.length);
+            if(this.files.legnth !== 0){
+                this.fileFlag = false;
+
+                this.files.sort(function (a, b) {
+                    if(a.name > b.name) return 1;
+                    if(a.name < b.name) return -1;
+                    return 0;
+                });
+                for (let file of this.files) {
+                    if(file.name.includes('sample')) this.sampleFiles.push(file);
+                    else this.testFiles.push(file);
                 }
-                else if(this.inputFiles.length < 2){
+                if(this.sampleFiles.length % 2 !== 0 || this.testFiles.length % 2 !== 0) {
+                    this.fileFlag = true;
+                    this.fileMsg = '테스트케이스 개수가 맞는지 확인해주세요!';
+                }
+                else if(this.sampleFiles.length < 4) {
                     this.fileFlag = true;
                     this.fileMsg = '테스트 케이스는 2개 이상부터 등록할 수 있습니다!';
                 }
                 else {
-                    for(let fileInput of this.inputFiles){
+                    this.fileFlag = false;
+                    for (let file of this.sampleFiles) {
                         let reader = new FileReader();
-                        reader.readAsText(fileInput);
+                        reader.readAsText(file);
                         const result = await new Promise((resolve) => {
                             reader.onload = function() {
                                 resolve(reader.result);
                             };
                         });
-                        const number = Number(fileInput.name.slice(0, -3));
-                        this.inputFilesString.push({
-                            'key' : number,
-                            'txt' : result
-                        });
-                        this.inputFilesString.sort(function (a, b) {
-                            if(a.key > b.key) return 1;
-                            if(a.key < b.key) return -1;
-                            return 0;
-                        });
+                        if(file.name.includes('.in')) this.inputFilesString.push({txt : result});
+                        else this.outputFilesString.push({txt : result});
                     }
-
-                    for(let fileOutput of this.outputFiles){
+                    for (let file of this.testFiles) {
                         let reader = new FileReader();
-                        reader.readAsText(fileOutput);
+                        reader.readAsText(file);
                         const result = await new Promise((resolve) => {
                             reader.onload = function() {
                                 resolve(reader.result);
                             };
                         });
-                        const number = Number(fileOutput.name.slice(0, -4));
-                        this.$log.info(number);
-                        this.outputFilesString.push({
-                            'key' : number,
-                            'txt' : result
-                        });
-                        this.outputFilesString.sort(function (a, b) {
-                            if(a.key > b.key) return 1;
-                            if(a.key < b.key) return -1;
-                            return 0;
-                        });
+                        if(file.name.includes('.in')) this.inputFilesString.push({txt : result});
+                        else this.outputFilesString.push({txt : result});
                     }
-                    await this.$http.put(`/api/problem/testcase/${this.$route.params.id}`,{
-                        number : this.$route.params.id,
-                        inputFilesString : this.inputFilesString,
-                        outputFilesString : this.outputFilesString
-                    });
-                    this.updateFlag = true;
+                    this.$log.info(this.inputFilesString.length);
+                    this.$log.info(this.outputFilesString.length);
+                    if(this.inputFilesString.length !== this.outputFilesString.length) {
+                        this.fileFlag = true;
+                        this.fileMsg = '테스트 케이스 개수가 맞지 않습니다. 확인해주세요!';
+                    }
+                    else {
+                        await this.$http.put(`/api/problem/testcase/${this.$route.params.id}`,{
+                            number : this.$route.params.id,
+                            inputFilesString : this.inputFilesString,
+                            outputFilesString : this.outputFilesString
+                        });
+                        this.updateFlag = true;
+                    }
                 }
             }
-            else this.updateFlag = true;
-            if(this.updateFlag) {
+            if(this.files.length !== 0 && this.updateFlag === false) {
+                this.fileFlag = true;
+                this.fileMsg = '테스트 케이스 수정에 문제가 있습니다!';
+            }
+            else {
                 this.fileFlag = false;
                 await this.$http.patch(`/api/problem/update/${this.$route.params.id}`,{
                     problemTitle : this.problemTitle,
@@ -297,8 +276,8 @@ export default {
                     inputDescription : this.inputDescription,
                     outputDescription : this.outputDescription,
                 }).then(res => {
-                    this.msg = res.data + '번 문제가 수정되었습니다!';
                     this.msgFlag = true;
+                    this.msg = res.data + '번 문제가 수정되었습니다!';
                     window.location.reload(true);
                 });
             }
@@ -325,30 +304,18 @@ export default {
                 window.location.reload(true);
             }
         },
-        addInputFiles(){
-            this.$refs.inputFiles.click();
+        addFiles(){
+            this.$refs.files.click();
         },
-        addOutputFiles(){
-            this.$refs.outputFiles.click();
-        },
-        uploadInputFile(){
-            let uploadedInputFiles = this.$refs.inputFiles.files;
-            for( let i = 0; i < uploadedInputFiles.length; i++ ){
-                this.inputFiles.push( uploadedInputFiles[i] );
+        uploadFile(){
+            let uploadedTestFiles = this.$refs.files.files;
+            for( let i = 0; i < uploadedTestFiles.length; i++ ){
+                this.files.push(uploadedTestFiles[i]);
             }
         },
-        uploadOutputFile(){
-            let uploadedOutputFiles = this.$refs.outputFiles.files;
-            for( let i = 0; i < uploadedOutputFiles.length; i++ ){
-                this.outputFiles.push( uploadedOutputFiles[i] );
-            }
+        removeFile( key ){
+            this.files.splice( key, 1 );
         },
-        removeInputFile( key ){
-            this.inputFiles.splice( key, 1 );
-        },
-        removeOutputFile( key ){
-            this.outputFiles.splice( key, 1 );
-        }
     },
 };
 </script>

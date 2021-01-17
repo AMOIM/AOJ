@@ -57,7 +57,7 @@ export default class Problem {
     }
     static update = async(req, res, next) => {
         try {
-            const result = await ProblemService.update(req);
+            await ProblemService.update(req);
             return res.status(200).json(req.params.id);
         } catch(err) {
             err.message = 'PATCH /problem/update\nController -> ' + err.message;

@@ -201,7 +201,7 @@ export default {
                 if(file.name.includes('sample')) this.sampleFiles.push(file);
                 else this.testFiles.push(file);
             }
-            this.$log.info(this.sampleFiles);
+            
             if(this.sampleFiles.length % 2 !== 0 || this.testFiles.length % 2 !== 0) {
                 this.fileFlag = true;
                 this.fileMsg = '테스트케이스 개수가 맞는지 확인해주세요!';
