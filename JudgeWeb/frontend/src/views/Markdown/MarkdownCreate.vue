@@ -1,4 +1,5 @@
 <template>
+<v-card elevation="0" v-if="this.chk && this.isadmin">
 <v-container>
         <v-container
            style="margin: 0px;">
@@ -41,9 +42,11 @@
             </v-btn>
         </v-row>
 </v-container>
+</v-card>
 </template>
 
 <script>
+import {checklogin} from '../../components/mixins/checklogin';
 import {Editor} from 'vuetify-markdown-editor';
 import 'vuetify-markdown-editor/dist/vuetify-markdown-editor.css';
 
@@ -51,8 +54,11 @@ export default {
     components: {
         'markdown-editor' : Editor
     },
+    mixins:[checklogin],
     data() {
         return {
+            chk: false,
+            isadmin: false,
             homeText: '',
             judgeText: '',
             tabs: null,
@@ -60,6 +66,14 @@ export default {
             matkdownTitle: '',
             message: null,
         };
+    },
+    async mounted() {
+        this.chk = await this.check();
+        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
+        if(this.chk && this.$store.state.name !== 'admin') {
+            this.$router.push('/');
+            alert('관리자만 접근이 가능합니다.');
+        }
     },
     async created() {
         const res = await this.$http.get('/api/markdown/get');
