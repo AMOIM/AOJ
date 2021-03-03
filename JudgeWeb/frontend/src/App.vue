@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
 export default {
     components: {
         Header: () => import('./components/Header'),
