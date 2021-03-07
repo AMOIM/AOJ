@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-app-bar
+    <v-app-bar class="app_bar"
         color="#673AB7"
         dark
         dense
@@ -21,6 +21,13 @@ export default {
 </script>
 
 <style scoped>
+  .app_bar {
+    position:fixed; 
+    left:0px; 
+    bottom:0px; 
+    height:60px; 
+    width:100%; 
+  }
   .margin_left {
     margin-left : 3%;
   }
