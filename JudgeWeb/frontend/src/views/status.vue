@@ -1,8 +1,8 @@
 <template>
 <v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
   <v-row>
-    <v-col style="max-width: 350px;">
-      <sidebarComponent style="max-width: 200px;"></sidebarComponent>
+    <v-col style="max-width: 500px;">
+      <sidebarComponent style="max-width: 300px;"></sidebarComponent>
     </v-col>
     <v-col>
       <v-simple-table>
