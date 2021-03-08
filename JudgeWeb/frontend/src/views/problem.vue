@@ -207,5 +207,6 @@ export default {
 .show-text {
     margin-left: 10px;
     white-space:pre-line;
+    text-align: left;
 }
 </style>
