@@ -6,27 +6,27 @@
 </v-col>
 <v-col style="max-width: 700px;">
 <v-container>
-  <v-row>
+  <v-row class="show-text">
       <div style="width:12%; font-weight:bold;"><v-col>문제</v-col></div>
-      <div style="width:20%; font-weight:bold;"><v-col>시간</v-col></div>
-      <div style="width:60%; font-weight:bold;"><v-col>내용</v-col></div>
+      <div style="width:35%; font-weight:bold;"><v-col>시간</v-col></div>
+      <div style="width:50%; font-weight:bold;"><v-col>내용</v-col></div>
   </v-row>
   <v-row  v-for="i in notices" :key="i.date">
     <v-col>
-      <v-row>
+      <v-row class="show-text">
         <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
-        <div style="width:20%"><v-col>{{ i.date }}</v-col></div>
-        <div style="width:60%; white-space:pre-line; text-align: left;"><v-col>{{ i.content }}</v-col></div>
+        <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
+        <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
         <div style="width:8%" v-if="i.child.content==null"><v-col>
             <v-btn class="ma-2" fab dark small color="purple darken-2" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn></v-col>
         </div>
       </v-row>
-      <v-row v-if="i.child.content !== null">
+      <v-row class="show-text" v-if="i.child.content !== null">
         <div style="width:12%"><v-col><v-icon class="fa fa-reply fa-rotate-180" aria-hidden="true"></v-icon></v-col></div>
-        <div style="width:20%"><v-col>{{ i.child.date }}</v-col></div>
-        <div style="width:60%; white-space:pre-line; text-align:left;"><v-col>{{ i.child.content }}</v-col></div>
+        <div style="width:35%"><v-col>{{ i.child.date }}</v-col></div>
+        <div style="width:50%; white-space:pre-line;"><v-col>{{ i.child.content }}</v-col></div>
       </v-row>
     </v-col>
   </v-row>
@@ -138,3 +138,9 @@ export default {
     }
 };
 </script>
+
+<style>
+.show-text {
+    text-align: left;
+}
+</style>

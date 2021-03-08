@@ -6,17 +6,17 @@
 </v-col>
 <v-col style="max-width: 700px;">
 <v-container>
-  <v-row>
+  <v-row class="show-text">
       <div style="width:12%; font-weight:bold;"><v-col>문제</v-col></div>
-      <div style="width:20%; font-weight:bold;"><v-col>시간</v-col></div>
-      <div style="width:60%; font-weight:bold;"><v-col>내용</v-col></div>
+      <div style="width:35%; font-weight:bold;"><v-col>시간</v-col></div>
+      <div style="width:50%; font-weight:bold;"><v-col>내용</v-col></div>
   </v-row>
   <v-row  v-for="i in notices" :key="i.date">
     <v-col>
-      <v-row>
+      <v-row class="show-text">
         <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
-        <div style="width:20%"><v-col>{{ i.date }}</v-col></div>
-        <div style="width:60%; white-space:pre-line; text-align: left;"><v-col>{{ i.content }}</v-col></div>
+        <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
+        <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
       </v-row>
     </v-col>
   </v-row>
@@ -107,3 +107,9 @@ export default {
     }
 };
 </script>
+
+<style>
+.show-text {
+    text-align: left;
+}
+</style>
