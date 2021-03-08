@@ -16,7 +16,7 @@
       <v-row>
         <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
         <div style="width:20%"><v-col>{{ i.date }}</v-col></div>
-        <div style="width:60%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
+        <div style="width:60%; white-space:pre-line; text-align: left;"><v-col>{{ i.content }}</v-col></div>
       </v-row>
     </v-col>
   </v-row>
