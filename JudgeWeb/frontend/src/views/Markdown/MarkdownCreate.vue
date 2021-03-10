@@ -41,6 +41,16 @@
                 작성
             </v-btn>
         </v-row>
+        <v-snackbar
+				v-model="snackbar.show"
+				:timeout="2000"
+				:color="snackbar.color"
+			>
+				{{ snackbar.text }}
+				<v-btn justify="center" text v-on:click="snackbar.show = false">
+					close
+				</v-btn>
+			</v-snackbar>
 </v-container>
 </v-card>
 </template>
@@ -63,8 +73,13 @@ export default {
             judgeText: '',
             tabs: null,
             markdownText: '',
-            matkdownTitle: '',
+            markdownTitle: 'home',
             message: null,
+            snackbar: {
+                text: '',
+                color: '',
+                show: '',
+            }
         };
     },
     async mounted() {
@@ -90,20 +105,30 @@ export default {
         },
     },
     methods: {
-        submitMarkDown() {
+        async submitMarkDown() {
             if(this.tabs === 'two'){
-                this.matkdownTitle = 'judge';
+                this.markdownTitle = 'judge';
                 this.markdownText = this.judgeText;
             }
             else {
-                this.matkdownTitle = 'home';
+                this.markdownTitle = 'home';
                 this.markdownText = this.homeText;
             }
-            this.$http.post('/api/markdown/create',
-                {
-                    markdownTitle:this.matkdownTitle,
-                    markdownText:this.markdownText
-                });
+            try {
+                const result = await this.$http.post('/api/markdown/create',
+                    {
+                        markdownTitle:this.markdownTitle,
+                        markdownText:this.markdownText
+                    });
+                if(result.status === 200) {
+                    if(this.markdownTitle === 'home') this.$router.push('/');
+                    else this.$router.push('/judge');
+                }
+            }catch(err) {
+                this.snackbar.color = 'error';
+                this.snackbar.text = '수정 실패하였습니다!';
+                this.snackbar.show = true;
+            }
         }
     }
 };
