@@ -1,4 +1,45 @@
 import jwt from 'jsonwebtoken';
+import { logger } from '../config/winston';
+import { UserService } from '../service/user.service';
+
+function authMiddlewareBackend(role) {
+    let token = '';
+    let decoded = '';
+    return [
+        async (req, res, next) => {
+            try {
+                token = req.headers.authorization.split('Bearer ')[1];
+                try {
+                    decoded = await jwt.verify(token, process.env.SECRET_KEY);
+                    const user = await UserService.get({'body' : {'id' : decoded.id}});
+                    if (!user) {
+                        const err = new Error();
+                        err.status = 403;
+                        err.message = 'Unauthorized';
+                        next(err);
+                    }
+                    else if(role === 'admin'){
+                        if(user.name !== 'admin'){
+                            const err = new Error();
+                            err.status = 403;
+                            err.message = 'Unauthorized';
+                            next(err);
+                        }
+                    }
+                } catch (err) {
+                    err.status = 401;
+                    err.message = 'Token Error';
+                    next(err);
+                }
+            } catch (err) {
+                err.status = 401;
+                err.message = 'Token is Missing';
+                next(err);
+            }
+            next();
+        },
+    ];
+}
 
 const authMiddleware = async(req, res) => {
     if(req.headers && req.headers.authorization) {
@@ -20,7 +61,7 @@ const authMiddleware = async(req, res) => {
     }
 };
 
-export default authMiddleware;
+export {authMiddlewareBackend, authMiddleware};
 
 //로그인시 access와 refresh 둘다 발급(refresh token 서버에 저장?)
 //local에 refresh저장 헤더에는 access저장?
