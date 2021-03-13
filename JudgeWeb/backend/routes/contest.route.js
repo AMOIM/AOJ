@@ -1,21 +1,22 @@
 import { Router } from 'express';
 import Contest from '../controller/contest.controller.js';
+import { authMiddlewareBackend } from '../middlewares/auth';
 
 const router = Router();
 
-router.get('/notice/:competitionNum', Contest.getNotice);
-router.post('/notice/post', Contest.createPost);
-router.post('/notice/reply', Contest.createReply);
+router.get('/notice/:competitionNum', authMiddlewareBackend(), Contest.getNotice);
+router.post('/notice/post', authMiddlewareBackend(), Contest.createPost);
+router.post('/notice/reply', authMiddlewareBackend('admin'), Contest.createReply);
 
-router.get('/scoreboard/:id', Contest.getScoreboard);
-router.post('/status/:id', Contest.getStatus);
+router.get('/scoreboard/:id', authMiddlewareBackend(), Contest.getScoreboard);
+router.post('/status/:id', authMiddlewareBackend(), Contest.getStatus);
 
-router.post('/create', Contest.createContest);
+router.post('/create', authMiddlewareBackend('admin'), Contest.createContest);
 router.get('/list', Contest.getContest);
-router.get('/userlist/:id', Contest.getOne);
-router.put('/update', Contest.update);
-router.delete('/delete/:id', Contest.delete);
+router.get('/userlist/:id', authMiddlewareBackend(), Contest.getOne);
+router.put('/update', authMiddlewareBackend('admin'), Contest.update);
+router.delete('/delete/:id', authMiddlewareBackend('admin'), Contest.delete);
 
-router.get('/:competitionNum', Contest.getProblemList);
+router.get('/:competitionNum', authMiddlewareBackend(), Contest.getProblemList);
 
 export default router;
