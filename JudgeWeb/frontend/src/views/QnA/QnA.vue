@@ -18,7 +18,7 @@
         <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
         <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
         <div style="width:8%" v-if="i.child.content==null"><v-col>
-            <v-btn class="ma-2" fab dark small color="purple darken-2" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
+            <v-btn class="ma-2" fab dark small color="purple darken-2" v-if="isadmin" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn></v-col>
         </div>
