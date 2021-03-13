@@ -1,18 +1,18 @@
 import { Router } from 'express';
-
 import Problem from '../controller/problem.controller';
+import { authMiddlewareBackend } from '../middlewares/auth';
 
 const router = Router();
 
 router.post('/', Problem.get);
 router.get('/list', Problem.getAll);
-router.post('/submit', Problem.submit);
-router.post('/create', Problem.create);
-router.delete('/delete/:id', Problem.delete);
-router.patch('/update/:id', Problem.update);
-router.get('/testcase/:id', Problem.getTestcase);
-router.post('/testcase/:id', Problem.createTestcase);
-router.put('/testcase/:id', Problem.updateTestcase);
-router.delete('/testcase/:id', Problem.deleteTestcase);
+router.post('/submit', authMiddlewareBackend(), Problem.submit);
+router.post('/create', authMiddlewareBackend('admin'), Problem.create);
+router.delete('/delete/:id', authMiddlewareBackend('admin'), Problem.delete);
+router.patch('/update/:id', authMiddlewareBackend('admin'), Problem.update);
+router.get('/testcase/:id', authMiddlewareBackend(), Problem.getTestcase);
+router.post('/testcase/:id', authMiddlewareBackend('admin'), Problem.createTestcase);
+router.put('/testcase/:id', authMiddlewareBackend('admin'), Problem.updateTestcase);
+router.delete('/testcase/:id', authMiddlewareBackend('admin'), Problem.deleteTestcase);
 
 export default router;
