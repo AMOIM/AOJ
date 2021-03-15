@@ -7,7 +7,7 @@
     <v-col style="max-width: 1000px;">
       <v-simple-table
         fixed-header
-        height="500px"
+        height="400px"
       >
         <template v-slot:default>
           <thead>
@@ -31,6 +31,32 @@
           </tbody>
         </template>
       </v-simple-table>
+
+      <v-simple-table
+        fixed-header
+        height="400px"
+      >
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 100px;">
+                <b><h3>번호</h3></b>
+              </th>
+              <th class="text-center">
+                <b><h3>참가자</h3></b>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(user,index) in contest.userList"
+              :key="user.id">
+              <td>{{index + 1}}</td>
+              <td>{{ user }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
     </v-col>
   </v-row>
 </v-card>
@@ -47,6 +73,14 @@ export default {
     },
     data () {
         return {
+            contest: {
+                start: '',
+                end: '',
+                title: '',
+                userList: [],
+                problemList: []
+            },
+            //time : new Date(),
             chk : false,
             problems: [],
             competitionNum: '',
@@ -60,6 +94,10 @@ export default {
         this.competitionNum = this.$route.params.id;
         this.$http.get('/api/contest/'+this.competitionNum).then(res => {
             this.problems = res.data;
+        });
+        this.$http.get('/api/contest/userlist/'+this.competitionNum).then(res => {
+            this.contest = res.data;
+            //alert(this.time + this.contest.start);
         });
     }
 };
