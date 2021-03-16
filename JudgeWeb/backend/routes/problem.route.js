@@ -11,7 +11,6 @@ router.post('/create', authMiddlewareBackend('admin'), Problem.create);
 router.delete('/delete/:id', authMiddlewareBackend('admin'), Problem.delete);
 router.patch('/update/:id', authMiddlewareBackend('admin'), Problem.update);
 router.get('/testcase/:id', authMiddlewareBackend(), Problem.getTestcase);
-router.post('/testcase/:id', authMiddlewareBackend('admin'), Problem.createTestcase);
 router.put('/testcase/:id', authMiddlewareBackend('admin'), Problem.updateTestcase);
 router.delete('/testcase/:id', authMiddlewareBackend('admin'), Problem.deleteTestcase);
 
