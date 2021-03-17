@@ -178,7 +178,7 @@ export default {
             this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
         }).catch(err => this.$log.error(err));
 
-        await this.$http.get(`/api/problem/testcase/${id}`).then(res => {
+        await this.$http.get(`/api/problem/testcase/example/${id}`).then(res => {
             Object.assign(this.problem, {testcase : res.data});
             this.$log.info(this.problem);
         });
