@@ -3,6 +3,12 @@ import { UserService } from '../service/user.service.js';
 export class UserController {
     static get = async (req, res, next) => {
         try {
+            if(req.decoded.id !== req.body.id) {
+                const err = new Error();
+                err.message = 'Unauthorized User';
+                err.status = 403;
+                next(err);
+            }
             const result = await UserService.get(req);
             return res.status(200).json(result);
         } catch(err) {
