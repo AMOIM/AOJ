@@ -4,14 +4,13 @@ import { UserService } from '../service/user.service';
 
 function authMiddlewareBackend(role) {
     let token = '';
-    let decoded = '';
     return [
         async (req, res, next) => {
             try {
                 token = req.headers.authorization.split('Bearer ')[1];
                 try {
-                    decoded = await jwt.verify(token, process.env.SECRET_KEY);
-                    const user = await UserService.get({'body' : {'id' : decoded.id}});
+                    req.decoded = await jwt.verify(token, process.env.SECRET_KEY);
+                    const user = await UserService.get({'body' : {'id' : req.decoded.id}});
                     if (!user) {
                         const err = new Error();
                         err.status = 403;
