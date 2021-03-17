@@ -107,7 +107,7 @@ export default {
     },
     created() {
         this.competitionNum = this.$route.params.id;
-        this.$http.get(`/api/contest/notice/${this.competitionNum}?key=0`).then(res => {
+        this.$http.get(`/api/contest/notice/${this.$store.state.id}/${this.competitionNum}?key=0`).then(res => {
             this.notices = res.data;
         });
     },
