@@ -5,7 +5,7 @@ import crypto from 'crypto';
 export class UserService {
     static get = async (req) => {
         try {
-            return UserModel.get(req);
+            return UserModel.get(req.body.id);
         } catch(err) {
             throw new Error('Service -> ' + err.message);
         }
