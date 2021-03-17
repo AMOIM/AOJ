@@ -3,6 +3,7 @@
 <v-row>
 <v-col style="max-width: 500px;">
     <sidebarComponent style="max-width: 300px;" :data="model"></sidebarComponent>
+    <sidebarComponent2 v-if="this.openProblems" style="max-width: 300px;" :data="model"></sidebarComponent2>
 </v-col>
 <v-col style="max-width: 700px;">
 <v-container>
@@ -45,21 +46,25 @@
 import componentNoticeCreate from '../../components/Notice/NoticeCreate';
 import componentReplyCreate from '../../components/Notice/ReplyCreate';
 import sidebarComponent from '../../components/SideBar';
+import sidebarComponent2 from '../../components/SideBar2';
 import {checklogin} from '../../components/mixins/checklogin.js';
 import {checkuser} from '../../components/mixins/checkuser.js';
+import {checktime} from '../../components/mixins/checktime.js';
 
 export default {
-    mixins:[checklogin, checkuser],
+    mixins:[checklogin, checkuser, checktime],
     components: {
         componentNoticeCreate,
         componentReplyCreate,
-        sidebarComponent
+        sidebarComponent,
+        sidebarComponent2
     },
     data: function() {
         return {
             chk : false,
             chk2: false,
             isadmin: false,
+            openProblems : false,
             competitionNum: '',
             notices: [{
                 date: '',
@@ -104,6 +109,7 @@ export default {
             this.chk = await this.check();
             this.chk2 = await this.checkparticipant(this.$route.params.id);
         }
+        this.openProblems = await this.checktime(this.$route.params.id);
     },
     created() {
         this.competitionNum = this.$route.params.id;

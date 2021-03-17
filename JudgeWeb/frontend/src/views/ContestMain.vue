@@ -3,11 +3,13 @@
   <v-row>
     <v-col style="max-width: 500px;">
       <sidebarComponent style="max-width: 300px;" :data="model"></sidebarComponent>
+      <sidebarComponent2 v-if="this.openProblems" style="max-width: 300px;" :data="model"></sidebarComponent2>
     </v-col>
     <v-col style="max-width: 1000px;">
       <v-simple-table
         fixed-header
         height="400px"
+        v-if="this.openProblems"
       >
         <template v-slot:default>
           <thead>
@@ -64,24 +66,23 @@
 
 <script>
 import sidebarComponent from '../components/SideBar';
+import sidebarComponent2 from '../components/SideBar2';
 import {checklogin} from '../components/mixins/checklogin.js';
+import {checktime} from '../components/mixins/checktime.js';
 
 export default {
-    mixins:[checklogin],
+    mixins:[checklogin, checktime],
     components: {
-        sidebarComponent
+        sidebarComponent,
+        sidebarComponent2
     },
     data () {
         return {
-            contest: {
-                start: '',
-                end: '',
-                title: '',
-                userList: [],
-                problemList: []
-            },
-            //time : new Date(),
+            contest: [],
+            now : new Date(),
+            start : new Date(),
             chk : false,
+            openProblems : false,
             problems: [],
             competitionNum: '',
             model: 0,
@@ -92,12 +93,13 @@ export default {
     },
     async created () {
         this.competitionNum = this.$route.params.id;
-        this.$http.get('/api/contest/'+this.competitionNum).then(res => {
+        this.openProblems = await this.checktime(this.competitionNum);
+        await this.$http.get('/api/contest/'+this.competitionNum).then(res => {
             this.problems = res.data;
         });
-        this.$http.get('/api/contest/userlist/'+this.competitionNum).then(res => {
+        await this.$http.get('/api/contest/userlist/'+this.competitionNum).then(res => {
             this.contest = res.data;
-            //alert(this.time + this.contest.start);
+            this.start = new Date(this.contest.start);
         });
     }
 };
