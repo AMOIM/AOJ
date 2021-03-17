@@ -75,6 +75,16 @@ export default class Problem {
             next(err);
         }
     }
+    static getTestcaseExample = async(req, res, next) => {
+        try {
+            const result = await ProblemService.getTestcaseExample(req.params.id);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /problem/testcase/example\n -> ' +  err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
     static updateTestcase = async(req, res, next) => {
         try {
             const deleteResult = await ProblemService.deleteTestcase(req.body.number);
