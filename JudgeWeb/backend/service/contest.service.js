@@ -1,10 +1,12 @@
-import { ContestModel } from '../models/index.model.js';
+import { ContestModel, UserModel } from '../models/index.model.js';
 
 export default class ContestService {
     static Save = async(req) => {
         try {
+            for(let id of req.body.contest.users){
+                await UserModel.get(id);
+            }
             const result = await ContestModel.Save(req);
-            logger.info(result);
             if (result === true) return true;
             else return false;
         } catch(err) {
