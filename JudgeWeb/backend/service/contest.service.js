@@ -35,6 +35,9 @@ export default class ContestService {
     }
     static update = async(req) => {
         try{
+            for(let id of req.body.contest.userList){
+                await UserModel.get(id);
+            }
             const result = await ContestModel.update(req);
             return result;
         } catch(err) {
