@@ -61,6 +61,14 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
+    static getTestcaseExample = async (number) => {
+        try {
+            const result = await ProblemModel.getTestcaseExample(number);
+            return result;
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
     static createTestcase = async (data) => {
         try {
             for(let i = 0; i < data.inputFilesString.length; i++){
