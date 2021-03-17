@@ -37,6 +37,12 @@ export default class Contest {
     }
     static createPost = async (req, res, next) => {
         try {
+            if(req.body.isQnA === false && req.decoded.name !== 'admin'){
+                const err = new Error();
+                err.message = 'Unauthorized User';
+                err.status = 403;
+                next(err);
+            }
             await NoticeService.createPost(req);
             return res.status(200).send(true);
         } catch (err) {
