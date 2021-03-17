@@ -4,7 +4,7 @@ import { authMiddlewareBackend } from '../middlewares/auth';
 
 const router = Router();
 
-router.get('/notice/:competitionNum', authMiddlewareBackend(), Contest.getNotice);
+router.get('/notice/:id/:competitionNum', authMiddlewareBackend(), Contest.getNotice);
 router.post('/notice/post', authMiddlewareBackend(), Contest.createPost);
 router.post('/notice/reply', authMiddlewareBackend('admin'), Contest.createReply);
 
