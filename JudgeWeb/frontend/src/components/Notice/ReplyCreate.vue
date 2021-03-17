@@ -56,7 +56,6 @@ export default {
             this.$emit('submitReply', this.reply);
         },
         cancelBtn() {
-            this.$log.info(this.reply.number);
             this.reply.addReplyFlag = false;
             this.reply.content = null;
         }
