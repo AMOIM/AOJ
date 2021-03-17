@@ -11,7 +11,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="item in result" :key="item.name">
+    <tr v-for="item in result" :key="item.number">
       <td>{{item.number}}</td>
       <td><router-link :to='{path:"/contest/" + item.number}'> {{item.title}} </router-link></td>
       <td>{{ item.start | moment('YYYY-MM-DD HH:mm:ss') }}</td>
