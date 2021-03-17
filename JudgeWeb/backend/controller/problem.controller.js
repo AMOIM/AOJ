@@ -13,6 +13,12 @@ export default class Problem {
     }
     static submit = async (req, res, next) => {
         try {
+            if(req.decoded.id !== req.body.userNmae){
+                const err = new Error();
+                err.message = 'Unauthorized User';
+                err.status = 403;
+                next(err);
+            }
             await ProblemService.submit({...req.body});
             return res.status(200).send(true);
         } catch (err) {
