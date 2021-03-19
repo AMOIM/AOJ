@@ -41,7 +41,7 @@ export default class ContestService {
             const result = await ContestModel.update(req);
             return result;
         } catch(err) {
-            err.message = 'Service -> contestupdate err';
+            err.message = 'Service -> contestupdate err -> ' + err.message;
             throw err;
         }
     }
