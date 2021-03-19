@@ -13,6 +13,12 @@ export default class Problem {
     }
     static submit = async (req, res, next) => {
         try {
+            if(req.decoded.id !== req.body.userNmae){
+                const err = new Error();
+                err.message = 'Unauthorized User';
+                err.status = 403;
+                next(err);
+            }
             await ProblemService.submit({...req.body});
             return res.status(200).send(true);
         } catch (err) {
@@ -75,12 +81,12 @@ export default class Problem {
             next(err);
         }
     }
-    static createTestcase = async(req, res, next) => {
+    static getTestcaseExample = async(req, res, next) => {
         try {
-            const result = await ProblemService.createTestcase(req);
+            const result = await ProblemService.getTestcaseExample(req.params.id);
             return res.status(200).json(result);
         } catch(err) {
-            err.message = 'POST /problem/testcase\n -> ' + err.message;
+            err.message = 'GET /problem/testcase/example\n -> ' +  err.message;
             err.status = 400;
             next(err);
         }

@@ -159,8 +159,8 @@ export default {
         this.chk3=true;
     },
     methods: {
-        updateContest() {
-            this.$http.put('/api/contest/update', { contest : this.contest })
+        async updateContest() {
+            await this.$http.put('/api/contest/update', { contest : this.contest })
                 .then(
                     (response) => {
                         alert('대회수정이 완료되었습니다.');
@@ -169,7 +169,8 @@ export default {
                     }
                 )
                 .catch(error => {
-                    this.$log.info(error);
+                    alert('대회 제목이 중복됩니다!');
+                    this.$log.error(error);
                 });
         },
         deleteContest() {
@@ -191,27 +192,6 @@ export default {
         deleteUser(index) {
             this.contest.userList.splice(index, 1);
         },
-        async createProblem(number) {
-            if (this.number === '') {
-                alert('입력 후 등록해주십시오.');
-                return;
-            }
-            await this.$http.post('/api/problem', {
-                id: number
-            })
-                .then(result => {
-                    const problem = result.data;
-                    if(problem !== null){
-                        this.contest.problemList.push({
-                            number : number,
-                            title : problem.title
-                        });
-                    }
-                    else alert('존재하지 않는 문제입니다.');
-                })
-                .catch(err => this.$log.error(err));
-            this.number = '';
-        },
         async createUser(id) {
             if (this.id === '') {
                 alert('입력 후 등록해주십시오.');
@@ -230,13 +210,13 @@ export default {
                 .catch(err => this.$log.error(err));
             this.id = '';
         },
-        createContest() {
+        async createContest() {
             if(this.contest.problemList.length === 0 || this.contest.userList.length === 0 || this.contest.title === ''){
                 alert('정보를 모두 입력하세요.');
                 return;
             }
 
-            this.$http.post('/api/contest/create', {
+            await this.$http.post('/api/contest/create', {
                 contest: this.contest
             })
                 .then(

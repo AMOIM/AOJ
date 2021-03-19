@@ -10,7 +10,7 @@ export default class Contest {
             const result = await ContestService.update(req);
             return res.status(200).json(result);
         } catch(err) {
-            err.message = 'GET /contest/update\nController -> ' + err.message;
+            err.message = 'PUT /contest/update\nController -> ' + err.message;
             err.status = 400;
             next(err);
         }
@@ -37,6 +37,12 @@ export default class Contest {
     }
     static createPost = async (req, res, next) => {
         try {
+            if(req.body.isQnA === false && req.decoded.name !== 'admin'){
+                const err = new Error();
+                err.message = 'Unauthorized User';
+                err.status = 403;
+                next(err);
+            }
             await NoticeService.createPost(req);
             return res.status(200).send(true);
         } catch (err) {

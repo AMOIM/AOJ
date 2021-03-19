@@ -153,6 +153,17 @@ export class ProblemModel {
             throw new Error('Model -> getTestcase error');
         }
     }
+    static getTestcaseExample = async (number) => {
+        try {
+            const result = await TestCaseSchema.find()
+                .where({'number': number})
+                .sort('index')
+                .limit(2);
+            return result;
+        } catch (err) {
+            throw new Error('Model -> getTestcaseExample error');
+        }
+    }
     static createTestcase = async (data) => {
         try {
             const newProblemTestCase = new TestCaseSchema({
@@ -244,6 +255,7 @@ export class ContestModel {
                 ...req.body.contest
             };
             let problemnumber = new Array;
+
             for(let problem of contest.problemList)
                 problemnumber.push(problem.number);
             await ContestSchema.updateOne(
@@ -277,7 +289,7 @@ export class ContestModel {
 
     static GetContest = async() => {
         try {
-            const result = await ContestSchema.find()
+            const result = await ContestSchema.find().select({number : 1, title : 1, start : 1, end : 1})
                 .sort('-start');
             return result;
         } catch(err) {
@@ -293,7 +305,6 @@ export class ContestModel {
             const contest = {
                 ...req.body.contest
             };
-
             let problemList = new Array;
 
             for(let problem of contest.problems)
@@ -334,10 +345,10 @@ export class ContestModel {
 }
 
 export class UserModel {
-    static get = async (req) => {
+    static get = async (data) => {
         try {
             const result = await UserSchema.findOne()
-                .where({'id' : req.body.id });
+                .where({'id' : data });
             result.password = 0;
             return result;
         } catch (err) {
