@@ -10,7 +10,7 @@ export default class Contest {
             const result = await ContestService.update(req);
             return res.status(200).json(result);
         } catch(err) {
-            err.message = 'GET /contest/update\nController -> ' + err.message;
+            err.message = 'PUT /contest/update\nController -> ' + err.message;
             err.status = 400;
             next(err);
         }
