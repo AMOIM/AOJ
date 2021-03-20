@@ -110,6 +110,7 @@ export default {
         },
     },
     async mounted() {
+        setTimeout('location.reload()',60000);
         if(this.$store.state.name === 'admin') this.isadmin = true;
         else {
             this.chk = await this.check();
