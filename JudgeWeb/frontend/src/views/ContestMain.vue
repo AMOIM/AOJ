@@ -7,8 +7,6 @@
     </v-col>
     <v-col style="max-width: 1000px;">
       <v-simple-table
-        fixed-header
-        height="400px"
         v-if="this.openProblems"
       >
         <template v-slot:default>
@@ -31,13 +29,11 @@
               <td><router-link :to="{ path:'/problem/'+p.number}">{{ p.title }}</router-link></td>
             </tr>
           </tbody>
+          <div style = 'height: 200px'></div>
         </template>
       </v-simple-table>
-
-      <v-simple-table
-        fixed-header
-        height="400px"
-      >
+    
+      <v-simple-table>
         <template v-slot:default>
           <thead>
             <tr>
