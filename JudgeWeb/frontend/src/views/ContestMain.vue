@@ -89,7 +89,6 @@ export default {
         };
     },
     async mounted() {
-        setTimeout('location.reload()', 60000);
         this.chk = await this.check();
     },
     async created () {
