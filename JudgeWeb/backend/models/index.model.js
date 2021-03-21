@@ -255,6 +255,7 @@ export class ContestModel {
                         title : contest.title,
                         problemNum : problemnumber,
                         userList : contest.userList,
+                        idList : contest.idList,
                         start : new Date(contest.start),
                         end : new Date(contest.end)
                     }
@@ -304,6 +305,7 @@ export class ContestModel {
                 number : max, 
                 problemNum : problemList,
                 userList : contest.users,
+                idList : contest.idList,
                 start : new Date(contest.start),
                 end : new Date(contest.end)
             });

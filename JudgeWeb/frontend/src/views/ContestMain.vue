@@ -48,7 +48,7 @@
           <tbody>
             <tr
               v-for="(user,index) in contest.userList"
-              :key="user.id">
+              :key="user.name">
               <td>{{index + 1}}</td>
               <td>{{ user }}</td>
             </tr>
