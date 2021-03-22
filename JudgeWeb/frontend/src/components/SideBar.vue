@@ -7,7 +7,6 @@
   >
     <v-list>
       <v-list-item-group
-        v-model="model"
         color="#5E35B1">
         <v-list-item
           v-for="(item, i) in items"
@@ -25,7 +24,6 @@
 </template>
 <script>
 export default {
-    props: ['data'],
     data() {
         return {
             items: [
@@ -50,7 +48,6 @@ export default {
                     path: '/contest/qna/'
                 },
             ],
-            model: this.data,
             competitionNum: 0,
         };
     },

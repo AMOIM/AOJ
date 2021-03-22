@@ -1,6 +1,7 @@
 <template>
 <v-container>
     <v-card
+    v-if="this.openProblems"
     class="mb-6 no-gutters"
     max-width="500"
     outlined
@@ -26,23 +27,25 @@
 </v-container>
 </template>
 <script>
+import {checktime} from '../components/mixins/checktime.js';
 export default {
-    props: ['data'],
+    mixins:[checktime],
     data() {
         return {
             problems: {
                 problem: [],
                 path: '/problem/'
             },
-            model: this.data,
             competitionNum: 0,
+            openProblems : false
         };
     },
-    created () {
+    async created () {
         this.competitionNum = this.$route.params.id;
         this.$http.get('/api/contest/'+this.competitionNum).then(res => {
             this.problems.problem = res.data;
         });
+        this.openProblems = await this.checktime(this.competitionNum);
     }
 };
 </script>

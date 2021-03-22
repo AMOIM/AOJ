@@ -2,13 +2,11 @@
 <v-card elevation="0" v-if="this.chk">
   <v-row>
     <v-col style="max-width: 500px;">
-      <sidebarComponent style="max-width: 300px;" :data="model"></sidebarComponent>
-      <sidebarComponent2 v-if="this.openProblems" style="max-width: 300px;" :data="model"></sidebarComponent2>
+      <sidebarComponent style="max-width: 300px;"></sidebarComponent>
+      <problemSidebarComponent style="max-width: 300px;"></problemSidebarComponent>
     </v-col>
     <v-col style="max-width: 1000px;">
-      <v-simple-table
-        v-if="this.openProblems"
-      >
+      <v-simple-table v-if="this.openProblems">
         <template v-slot:default>
           <thead>
             <tr>
@@ -48,7 +46,7 @@
           <tbody>
             <tr
               v-for="(user,index) in contest.userList"
-              :key="user.name">
+              :key="user">
               <td>{{index + 1}}</td>
               <td>{{ user }}</td>
             </tr>
@@ -62,7 +60,7 @@
 
 <script>
 import sidebarComponent from '../components/SideBar';
-import sidebarComponent2 from '../components/SideBar2';
+import problemSidebarComponent from '../components/ProblemSideBar';
 import {checklogin} from '../components/mixins/checklogin.js';
 import {checktime} from '../components/mixins/checktime.js';
 
@@ -70,18 +68,15 @@ export default {
     mixins:[checklogin, checktime],
     components: {
         sidebarComponent,
-        sidebarComponent2
+        problemSidebarComponent
     },
     data () {
         return {
             contest: [],
-            now : new Date(),
-            start : new Date(),
             chk : false,
             openProblems : false,
             problems: [],
             competitionNum: '',
-            model: 0,
         };
     },
     async mounted() {
@@ -95,7 +90,6 @@ export default {
         });
         await this.$http.get('/api/contest/userlist/'+this.competitionNum).then(res => {
             this.contest = res.data;
-            this.start = new Date(this.contest.start);
         });
     }
 };

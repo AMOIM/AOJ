@@ -57,7 +57,7 @@
 
         <v-col>
           <v-row
-              :key="user.id"
+              :key="user"
               v-for="(user, index) in contest.userList"
           >
              <v-col cols="4">
