@@ -3,6 +3,7 @@
   <v-row>
     <v-col style="max-width: 500px;">
       <sidebarComponent style="max-width: 300px;"></sidebarComponent>
+      <problemSidebarComponent style="max-width: 300px;"></problemSidebarComponent>
     </v-col>
     <v-col>
       <v-simple-table>
@@ -67,7 +68,8 @@ export default {
     name: 'status.vue',
     components: {
         CodeView: () => import('../components/CodeView'),
-        sidebarComponent: () => import('@/components/SideBar')
+        sidebarComponent: () => import('@/components/SideBar'),
+        problemSidebarComponent: () => import('@/components/ProblemSideBar')
     },
     data() {
         return {
@@ -113,7 +115,6 @@ export default {
         }
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
-
         const apiProblem = await this.$http.get(`/api/contest/${id}`);
         const problemList = apiProblem.data;
 

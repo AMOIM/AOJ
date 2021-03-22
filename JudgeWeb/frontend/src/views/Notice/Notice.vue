@@ -2,7 +2,8 @@
 <v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
 <v-row>
 <v-col style="max-width: 500px;">
-<sidebarComponent style="max-width: 300px;" :data="model"></sidebarComponent>
+<sidebarComponent style="max-width: 300px;"></sidebarComponent>
+<problemSidebarComponent style="max-width: 300px;"></problemSidebarComponent>
 </v-col>
 <v-col style="max-width: 700px;">
 <v-container>
@@ -33,6 +34,7 @@
 <script>
 import componentNoticeCreate from '../../components/Notice/NoticeCreate';
 import sidebarComponent from '../../components/SideBar';
+import problemSidebarComponent from '../../components/ProblemSideBar';
 import {checklogin} from '../../components/mixins/checklogin.js';
 import {checkuser} from '../../components/mixins/checkuser.js';
 
@@ -40,7 +42,8 @@ export default {
     mixins:[checklogin, checkuser],
     components: {
         componentNoticeCreate,
-        sidebarComponent
+        sidebarComponent,
+        problemSidebarComponent
     },
     data: function() {
         return {
@@ -73,8 +76,7 @@ export default {
                 ],
                 addNoticeFlag: false,
                 type: '공지사항',
-            },
-            model: 3,
+            }
         };
     },
     async mounted() {

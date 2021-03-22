@@ -57,10 +57,13 @@
 
         <v-col>
           <v-row
-              :key="user.id"
+              :key="user"
               v-for="(user, index) in contest.userList"
           >
-              <v-col cols="9">
+             <v-col cols="4">
+                {{ contest.idList[index] }}
+              </v-col>
+              <v-col cols="4">
                 {{ user }}
               </v-col>
               <v-col cols="3">
@@ -113,6 +116,7 @@ export default {
                 end: '',
                 title: '',
                 userList: [],
+                idList: [],
                 problemList: []
             },
             titleRules: [
@@ -201,9 +205,10 @@ export default {
                 id: id
             })
                 .then(result => {
-                    const user = result.data.user;
-                    if(user !== null){
-                        this.contest.userList.push(this.id);
+                    const name = result.data.name;
+                    if(name !== null){
+                        this.contest.userList.push(name);
+                        this.contest.idList.push(id);
                     }
                     else alert('존재하지 않는 아이디입니다.');
                 })

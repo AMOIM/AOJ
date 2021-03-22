@@ -132,6 +132,7 @@ const contestSchema = new mongoose.Schema({
     },
     problemNum : [ Number ],
     userList : [ String ],
+    idList : [ String ],
     start : {
         type : Date,
         required : true
