@@ -55,6 +55,9 @@ const problemSchema = new mongoose.Schema({
     outputDescription: {
         type: String,
         required: true
+    },
+    openTime : {
+        type : Date
     }
 });
 

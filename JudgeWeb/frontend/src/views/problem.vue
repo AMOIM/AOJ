@@ -160,27 +160,43 @@ export default {
     },
     async mounted() {
         this.chk = await this.check();
-    },
-    async created() {
+        if(this.$store.state.name === 'admin') this.isAdmin = true;
+
         this.userName = this.$store.state.name;
         const id = this.$route.params.id;
         if (id === undefined)
             this.$router.go(-1);
-        await this.$http.post('/api/problem', {
-            id : id
-        }).then(result => {
-            this.problem = result.data;
-            if(this.problem === null){
-                alert('존재하지 않는 문제입니다.');
-                this.$router.go(-1);
-            }
-            this.problem.timeLimit = this.problem.timeLimit / 1000;
-            this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
-        }).catch(err => this.$log.error(err));
+        
+        if(this.isAdmin) {
+            await this.$http.post('/api/problem/', {
+                id : id
+            }).then(result => {
+                this.problem = result.data;
+                if(this.problem === null){
+                    alert('존재하지 않는 문제입니다.');
+                    this.$router.go(-1);
+                }
 
+                this.problem.timeLimit = this.problem.timeLimit / 1000;
+                this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
+            }).catch(err => this.$log.error(err));
+        }
+        else {
+            await this.$http.post('/api/problem/public', {
+                id: id
+            }).then(result => {
+                this.problem = result.data;
+                if (this.problem === null) {
+                    alert('존재하지 않는 문제입니다.');
+                    this.$router.go(-1);
+                }
+
+                this.problem.timeLimit = this.problem.timeLimit / 1000;
+                this.problem.memoryLimit = this.problem.memoryLimit / 1000000;
+            }).catch(err => this.$log.error(err));
+        }
         await this.$http.get(`/api/problem/testcase/example/${id}`).then(res => {
             Object.assign(this.problem, {testcase : res.data});
-            this.$log.info(this.problem);
         });
         this.code = '\n\n\n\n\n\nWrite your code\nAnd submit code\n\n\n\n\n\n';
     }

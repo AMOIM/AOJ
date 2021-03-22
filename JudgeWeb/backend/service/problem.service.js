@@ -8,6 +8,15 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
+
+    static getPublic = async (id) => {
+        try {
+            return await ProblemModel.findPublic(id);
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+
     static submit = async (data) => {
         try {
             const result = await StatusModel.push(data);
@@ -33,6 +42,13 @@ export default class ProblemService {
     static getAll = async () => {
         try {
             return await ProblemModel.allFind();
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+    static getAllPublic = async () => {
+        try {
+            return await ProblemModel.allFindPublic();
         } catch (err) {
             throw new Error('Service -> ' + err.message);
         }

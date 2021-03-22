@@ -11,6 +11,18 @@ export default class Problem {
             next(err);
         }
     }
+
+    static getPublic = async (req, res, next) => {
+        try {
+            const result = await ProblemService.getPublic(req.body.id);
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'POST /problem/public\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
     static submit = async (req, res, next) => {
         try {
             if(req.decoded.id !== req.body.userNmae){
@@ -51,6 +63,18 @@ export default class Problem {
             next(err);
         }
     }
+
+    static getAllPublic = async (req, res, next) => {
+        try {
+            const result = await ProblemService.getAllPublic();
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'POST /problem/list/public\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
     static delete = async(req, res, next) => {
         try {
             const result = await ProblemService.delete(req.params.id);

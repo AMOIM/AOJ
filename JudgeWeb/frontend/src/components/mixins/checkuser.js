@@ -6,7 +6,7 @@ export const checkuser = {
             await this.$http.get(`/api/contest/userlist/${id}`)
                 .then(
                     (response) => {
-                        result = response.data;                       
+                        result = response.data;
                         for(let j=0;j<result.userList.length;j++) {
                             if(result.userList[j] === this.$store.state.id) {
                                 chk=true;

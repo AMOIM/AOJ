@@ -35,22 +35,39 @@ export default {
     async mounted() {
         this.chk = await this.check(1);
         if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
-    },
-    created() {
-        this.$http.get('/api/problem/list')
-            .then(
-                (response) => {
-                    this.result = response.data;
-                },
-                (error) => { 
-                    this.$log.info(3);
-                    alert('에러1' + error.response.data.error);
-                }
-            )
-            .catch(error => {
-                this.$log.info(4);
-                alert('에러2' + error);
-            });
+        
+        if(this.isadmin){
+            this.$http.get('/api/problem/list')
+                .then(
+                    (response) => {
+                        this.result = response.data;
+                    },
+                    (error) => {
+                        this.$log.info(3);
+                        alert('에러1' + error.response.data.error);
+                    }
+                )
+                .catch(error => {
+                    this.$log.info(4);
+                    alert('에러2' + error);
+                });
+        }
+        else {
+            this.$http.get('/api/problem/list/public')
+                .then(
+                    (response) => {
+                        this.result = response.data;
+                    },
+                    (error) => {
+                        this.$log.info(3);
+                        alert('에러1' + error.response.data.error);
+                    }
+                )
+                .catch(error => {
+                    this.$log.info(4);
+                    alert('에러2' + error);
+                });
+        }
     },
     methods: {
         update(num) {

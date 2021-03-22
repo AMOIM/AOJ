@@ -86,9 +86,8 @@ export default class Contest {
     }
     static createContest = async (req, res, next) => {
         try {
-            const result = await ContestService.Save(req);
-            if(result === true) return res.status(200).json({result : 1});
-            else return res.status(200).json({result : 2});
+            await ContestService.Save(req);
+            return res.status(200).send(true);
         } catch(err) {
             err.message = 'POST /contest/create\nController -> ' + err.message;
             err.status = 400;

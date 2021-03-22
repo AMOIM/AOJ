@@ -188,19 +188,12 @@ export default {
                 contest: this.contest
             })
                 .then(
-                    async (response) => {
-                        if (response.data.result === 1) {
-                            this.$log.info(1);
-                            alert('대회가 개최되었습니다.');
-                            this.$router.push('/');
-                        } else {
-                            this.$log.info(2);
-                            alert('대회 개최가 실패하였습니다.');
-                        }
+                    async () => {
+                        alert('대회가 개최되었습니다.');
+                        this.$router.push('/');
                     })
-                .catch(error => {
-                    alert('대회 제목이 중복됩니다.');
-                    this.$log.error('Server error\n' + error);
+                .catch(() => {
+                    alert('대회 제목이 중복되거나 실패하였습니다.');
                 });
         },
         save(date, time, mod) {
