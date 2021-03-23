@@ -2,7 +2,7 @@ export const checktime = {
     methods: {
         async checktime(num) {
             let openProblems = false;
-            await this.$http.get(`/api/contest/userlist/${num}`)
+            await this.$http.get(`/api/contest/getone/${num}`)
                 .then(
                     async (res) => {
                         const contest = res.data;

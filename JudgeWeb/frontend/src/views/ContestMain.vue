@@ -88,7 +88,7 @@ export default {
         await this.$http.get('/api/contest/'+this.competitionNum).then(res => {
             this.problems = res.data;
         });
-        await this.$http.get('/api/contest/userlist/'+this.competitionNum).then(res => {
+        await this.$http.get('/api/contest/getone/'+this.competitionNum).then(res => {
             this.contest = res.data;
         });
     }

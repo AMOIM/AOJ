@@ -3,7 +3,7 @@ export const checkuser = {
         async checkparticipant(id) {
             let chk = false;
             let result;
-            await this.$http.get(`/api/contest/userlist/${id}`)
+            await this.$http.get(`/api/contest/getone/${id}`)
                 .then(
                     (response) => {
                         result = response.data;                       
