@@ -33,6 +33,24 @@ export default class ContestService {
             throw err;
         }
     }
+    static getUserList = async(number) => {
+        try{
+            const result = await ContestModel.getUserList(number);
+            return result;
+        } catch(err) {
+            err.message = 'Service -> contestfinduserlist err';
+            throw err;
+        }
+    }
+    static getTime = async(number) => {
+        try{
+            const result = await ContestModel.getTime(number);
+            return result;
+        } catch(err) {
+            err.message = 'Service -> contestfindtime err';
+            throw err;
+        }
+    }
     static update = async(req) => {
         try{
             for(let id of req.body.contest.userList){

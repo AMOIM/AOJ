@@ -3,12 +3,12 @@ export const checkuser = {
         async checkparticipant(id) {
             let chk = false;
             let result;
-            await this.$http.get(`/api/contest/getone/${id}`)
+            await this.$http.get(`/api/contest/userlist/${id}`)
                 .then(
                     (response) => {
                         result = response.data;                       
-                        for(let j=0;j<result.userList.length;j++) {
-                            if(result.userList[j] === this.$store.state.id) {
+                        for(let j=0;j<result.length;j++) {
+                            if(result[j] === this.$store.state.name) {
                                 chk=true;
                             }
                         }

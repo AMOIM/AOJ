@@ -45,7 +45,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="(user,index) in contest.userList"
+              v-for="(user,index) in userList"
               :key="user">
               <td>{{index + 1}}</td>
               <td>{{ user }}</td>
@@ -72,7 +72,7 @@ export default {
     },
     data () {
         return {
-            contest: [],
+            userList: [],
             chk : false,
             openProblems : false,
             problems: [],
@@ -88,8 +88,8 @@ export default {
         await this.$http.get('/api/contest/'+this.competitionNum).then(res => {
             this.problems = res.data;
         });
-        await this.$http.get('/api/contest/getone/'+this.competitionNum).then(res => {
-            this.contest = res.data;
+        await this.$http.get('/api/contest/userlist/'+this.competitionNum).then(res => {
+            this.userList = res.data;
         });
     }
 };

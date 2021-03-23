@@ -111,7 +111,29 @@ export default class Contest {
             const result = await ContestService.getOne(number);
             return res.status(200).json(result);
         } catch(err) {
+            err.message = 'GET /contest/getone\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static getUserList = async(req, res, next) => {
+        try {
+            const number = req.params.id;
+            const result = await ContestService.getUserList(number);
+            return res.status(200).json(result);
+        } catch(err) {
             err.message = 'GET /contest/userlist\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+    static getTime = async(req, res, next) => {
+        try {
+            const number = req.params.id;
+            const result = await ContestService.getTime(number);
+            return res.status(200).json(result);
+        } catch(err) {
+            err.message = 'GET /contest/gettime\nController -> ' + err.message;
             err.status = 400;
             next(err);
         }

@@ -2,13 +2,12 @@ export const checktime = {
     methods: {
         async checktime(num) {
             let openProblems = false;
-            await this.$http.get(`/api/contest/getone/${num}`)
+            await this.$http.get(`/api/contest/gettime/${num}`)
                 .then(
                     async (res) => {
-                        const contest = res.data;
-                        const dif = new Date(contest.start) - new Date();
+                        const dif = new Date(res.data) - new Date();
                         const now = await this.TimeFormat(new Date());
-                        const start = await this.TimeFormat(new Date(contest.start));
+                        const start = await this.TimeFormat(new Date(res.data));
                         if(now >= start) openProblems = true;
                         if(dif > 0) setTimeout('location.reload()', dif);
                     })
