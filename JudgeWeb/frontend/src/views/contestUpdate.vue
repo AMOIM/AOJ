@@ -195,6 +195,7 @@ export default {
         },
         deleteUser(index) {
             this.contest.userList.splice(index, 1);
+            this.contest.idList.splice(index, 1);
         },
         async createUser(id) {
             if (this.id === '') {
