@@ -3,7 +3,7 @@ import { ContestModel, UserModel } from '../models/index.model.js';
 export default class ContestService {
     static Save = async(req) => {
         try {
-            for(let id of req.body.contest.users){
+            for(let id of req.body.contest.idList){
                 await UserModel.get(id);
             }
             const result = await ContestModel.Save(req);
@@ -53,9 +53,9 @@ export default class ContestService {
     }
     static update = async(req) => {
         try{
-            for(let id of req.body.contest.userList){
-                await UserModel.get(id);
-            }
+             for(let id of req.body.contest.idList){
+                 await UserModel.get(id);
+             }
             const result = await ContestModel.update(req);
             return result;
         } catch(err) {
