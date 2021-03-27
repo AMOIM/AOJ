@@ -38,7 +38,7 @@ export default class ContestService {
             const result = await ContestModel.getUserList(number);
             return result;
         } catch(err) {
-            err.message = 'Service -> contestfinduserlist err';
+            err.message = 'Service -> ' + err.message;
             throw err;
         }
     }
@@ -47,15 +47,15 @@ export default class ContestService {
             const result = await ContestModel.getTime(number);
             return result;
         } catch(err) {
-            err.message = 'Service -> contestfindtime err';
+            err.message = 'Service -> ' + err.message;
             throw err;
         }
     }
     static update = async(req) => {
         try{
-             for(let id of req.body.contest.idList){
-                 await UserModel.get(id);
-             }
+            for(let id of req.body.contest.idList){
+                await UserModel.get(id);
+            }
             const result = await ContestModel.update(req);
             return result;
         } catch(err) {
