@@ -61,10 +61,9 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
-    static update = async (req) => {
+    static update = async (data, id) => {
         try {
-            const result = await ProblemModel.update(req);
-            return result;
+            await ProblemModel.update(data, id);
         } catch(err) {
             throw new Error('Service -> ' + err.message);
         }

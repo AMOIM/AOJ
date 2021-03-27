@@ -58,6 +58,10 @@ const problemSchema = new mongoose.Schema({
     },
     openTime : {
         type : Date
+    },
+    open : {
+        type : Boolean,
+        required : true
     }
 });
 
@@ -74,7 +78,7 @@ const testcaseSchema = new mongoose.Schema({
     },
     out: {
         txt: String
-    }
+    },
 });
 
 const statusSchema = new mongoose.Schema({

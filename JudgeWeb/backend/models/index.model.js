@@ -106,8 +106,10 @@ export class ProblemModel {
     static allFindPublic = async () => {
         try {
             const result = await ProblemSchema.find()
+                .where('open', true)
                 .lte('openTime', new Date())
                 .sort('-number');
+            logger.info(result);
             return result;
         } catch (err) {
             throw new Error('Model -> All Find Public Problem Error');
@@ -127,6 +129,7 @@ export class ProblemModel {
                 memoryLimit: data.problemMemory,
                 inputDescription: data.inputDescription,
                 outputDescription: data.outputDescription,
+                open : data.open
             });
             await newProblem.save();
             return newProblem.number;
@@ -143,24 +146,24 @@ export class ProblemModel {
             throw new Error('Model -> deleteProblem error');
         }
     };
-    static update = async (req) => {
+    static update = async (data, id) => {
         try {
             await ProblemSchema.updateOne(
                 {
-                    number : req.params.id
+                    number : id
                 },
                 {
                     $set : {
-                        title: req.body.problemTitle,
-                        description: req.body.problemContent,
-                        timeLimit: req.body.problemTime,
-                        memoryLimit: req.body.problemMemory,
-                        inputDescription: req.body.inputDescription,
-                        outputDescription: req.body.outputDescription,
+                        title: data.problemTitle,
+                        description: data.problemContent,
+                        timeLimit: data.problemTime,
+                        memoryLimit: data.problemMemory,
+                        inputDescription: data.inputDescription,
+                        outputDescription: data.outputDescription,
+                        open : data.open
                     }
                 }
             );
-            return true;
         }catch (err) {
             throw new Error('Model -> updateProblem error');
         }
