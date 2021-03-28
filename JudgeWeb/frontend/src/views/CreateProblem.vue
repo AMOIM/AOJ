@@ -8,6 +8,10 @@
     lazy-validation
     class="ma-15"
   >
+    <v-checkbox
+        v-model="open"
+        label="문제 공개"
+    ></v-checkbox>
     <v-text-field
       v-model="problemTitle"
       :rules="titleRules"
@@ -160,7 +164,8 @@ export default {
             msg: '',
             msgFlag: false,
             fileFlag: false,
-            fileMsg: ''
+            fileMsg: '',
+            open : false
         };
     },
     async mounted() {
@@ -246,10 +251,12 @@ export default {
                             problemTime : this.problemTime * 1000,
                             problemMemory : this.problemMemory * 1000000,
                             inputDescription : this.inputDescription,
-                            outputDescription : this.outputDescription},
+                            outputDescription : this.outputDescription,
+                            open : this.open
+                        },
                         testcase : {
                             inputFilesString : this.inputFilesString,
-                            outputFilesString : this.outputFilesString
+                            outputFilesString : this.outputFilesString,
                         }
                     }).then(res => {
                         this.msg = res.data + '번 문제가 생성되었습니다!';

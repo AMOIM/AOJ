@@ -6,19 +6,17 @@ export const checkuser = {
             await this.$http.get(`/api/contest/userlist/${id}`)
                 .then(
                     (response) => {
-                        result = response.data;                       
+                        result = response.data;
+
                         for(let j=0;j<result.length;j++) {
                             if(result[j] === this.$store.state.name) {
                                 chk=true;
                             }
                         }
-                    },
-                    (error) => { 
-                        alert('에러1' + error.response.data.error);
                     }
                 )
                 .catch(error => {
-                    alert('에러2' + error);
+                    this.$log.error(error);
                 });
             if(chk===false) {
                 this.$router.push(`/contest/${id}`);

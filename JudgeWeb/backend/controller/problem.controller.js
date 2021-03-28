@@ -11,13 +11,22 @@ export default class Problem {
             next(err);
         }
     }
+
+    static getPublic = async (req, res, next) => {
+        try {
+            const result = await ProblemService.getPublic(req.body.id);
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'POST /problem/public\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
     static submit = async (req, res, next) => {
         try {
-            if(req.decoded.id !== req.body.userNmae){
-                const err = new Error();
-                err.message = 'Unauthorized User';
-                err.status = 403;
-                next(err);
+            if(req.decoded.name !== req.body.userName){
+                return res.status(200).send(false);
             }
             await ProblemService.submit({...req.body});
             return res.status(200).send(true);
@@ -51,6 +60,18 @@ export default class Problem {
             next(err);
         }
     }
+
+    static getAllPublic = async (req, res, next) => {
+        try {
+            const result = await ProblemService.getAllPublic();
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'POST /problem/list/public\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
     static delete = async(req, res, next) => {
         try {
             const result = await ProblemService.delete(req.params.id);
@@ -63,7 +84,7 @@ export default class Problem {
     }
     static update = async(req, res, next) => {
         try {
-            await ProblemService.update(req);
+            await ProblemService.update({...req.body}, req.params.id);
             return res.status(200).json(req.params.id);
         } catch(err) {
             err.message = 'PATCH /problem/update\nController -> ' + err.message;

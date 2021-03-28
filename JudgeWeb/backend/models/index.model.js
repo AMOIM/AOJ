@@ -79,19 +79,43 @@ export class ProblemModel {
             throw err;
         }
     };
+
+    static findPublic = async (number) => {
+        try {
+            const result = await ProblemSchema.findOne()
+                .where({'number': number})
+                .lte('openTime', new Date());
+
+            return result;
+        } catch (err) {
+            err.message = 'Model -> Find Problem Error';
+            throw err;
+        }
+    };
+
     static allFind = async () => {
         try {
             const result = await ProblemSchema.find()
                 .sort('-number');
-            if(result === null) throw new Error('Not exist problem');
             return result;
         } catch (err) {
-            if(err.message !== 'Not exist problem')
-                err.message = 'Find Problem Error';
-            err.message = 'Model -> ' + err.message;
-            throw err;
+            throw new Error('Model -> All Find Problem Error');
         }
     };
+
+    static allFindPublic = async () => {
+        try {
+            const result = await ProblemSchema.find()
+                .where('open', true)
+                .lte('openTime', new Date())
+                .sort('-number');
+            logger.info(result);
+            return result;
+        } catch (err) {
+            throw new Error('Model -> All Find Public Problem Error');
+        }
+    };
+
     static create = async (data) => {
         try {
             const result = await ProblemSchema.find()
@@ -105,6 +129,7 @@ export class ProblemModel {
                 memoryLimit: data.problemMemory,
                 inputDescription: data.inputDescription,
                 outputDescription: data.outputDescription,
+                open : data.open
             });
             await newProblem.save();
             return newProblem.number;
@@ -121,24 +146,24 @@ export class ProblemModel {
             throw new Error('Model -> deleteProblem error');
         }
     };
-    static update = async (req) => {
+    static update = async (data, id) => {
         try {
             await ProblemSchema.updateOne(
                 {
-                    number : req.params.id
+                    number : id
                 },
                 {
                     $set : {
-                        title: req.body.problemTitle,
-                        description: req.body.problemContent,
-                        timeLimit: req.body.problemTime,
-                        memoryLimit: req.body.problemMemory,
-                        inputDescription: req.body.inputDescription,
-                        outputDescription: req.body.outputDescription,
+                        title: data.problemTitle,
+                        description: data.problemContent,
+                        timeLimit: data.problemTime,
+                        memoryLimit: data.problemMemory,
+                        inputDescription: data.inputDescription,
+                        outputDescription: data.outputDescription,
+                        open : data.open
                     }
                 }
             );
-            return true;
         }catch (err) {
             throw new Error('Model -> updateProblem error');
         }
@@ -184,6 +209,25 @@ export class ProblemModel {
             return true;
         } catch (err) {
             throw new Error('Model -> deleteTestcase error');
+        }
+    }
+    static updateOpenTime = async (problems, openTime) => {
+        try {
+            for(let problem of problems){
+                logger.info(problem);
+                await ProblemSchema.updateOne(
+                    {
+                        number : problem.number
+                    },
+                    {
+                        $set : {
+                            openTime : openTime
+                        }
+                    }
+                );
+            }
+        } catch (err) {
+            throw new Error('Model -> update open time error');
         }
     }
 }
@@ -276,6 +320,7 @@ export class ContestModel {
 
             for(let problem of contest.problemList)
                 problemnumber.push(problem.number);
+
             await ContestSchema.updateOne(
                 {
                     number : contest.number
@@ -291,7 +336,6 @@ export class ContestModel {
                     }
                 }
             );
-            return true;
         } catch (err) {
             throw new Error('Model -> updateContest error');
         }
@@ -331,7 +375,7 @@ export class ContestModel {
 
             const newContest = new ContestSchema({
                 title : contest.title,
-                number : max, 
+                number : max,
                 problemNum : problemList,
                 userList : contest.users,
                 idList : contest.idList,
@@ -369,10 +413,11 @@ export class UserModel {
         try {
             const result = await UserSchema.findOne()
                 .where({'id' : data });
-            result.password = 0;
+            if(result !== null)
+                result.password = 0;
             return result;
         } catch (err) {
-            throw new Error('Model -> getAll error');
+            throw new Error('Model -> get error');
         }
     }
 

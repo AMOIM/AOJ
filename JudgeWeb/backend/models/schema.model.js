@@ -55,6 +55,13 @@ const problemSchema = new mongoose.Schema({
     outputDescription: {
         type: String,
         required: true
+    },
+    openTime : {
+        type : Date
+    },
+    open : {
+        type : Boolean,
+        required : true
     }
 });
 

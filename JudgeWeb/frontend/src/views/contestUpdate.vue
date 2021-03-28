@@ -197,6 +197,27 @@ export default {
             this.contest.userList.splice(index, 1);
             this.contest.idList.splice(index, 1);
         },
+        async createProblem(number) {
+            if (this.number === '') {
+                alert('입력 후 등록해주십시오.');
+                return;
+            }
+            await this.$http.post('/api/problem', {
+                id: number
+            })
+                .then(result => {
+                    const problem = result.data;
+                    if(problem !== null){
+                        this.contest.problems.push({
+                            number : number,
+                            title : problem.title
+                        });
+                    }
+                    else alert('존재하지 않는 문제입니다.');
+                })
+                .catch(err => this.$log.error(err));
+            this.number = '';
+        },
         async createUser(id) {
             if (this.id === '') {
                 alert('입력 후 등록해주십시오.');
@@ -206,6 +227,10 @@ export default {
                 id: id
             })
                 .then(result => {
+                    if(result.data === null){
+                        alert('존재하지 않는 아이디입니다.');
+                        return;
+                    }
                     const name = result.data.name;
                     if(name !== null){
                         this.contest.userList.push(name);
@@ -216,31 +241,7 @@ export default {
                 .catch(err => this.$log.error(err));
             this.id = '';
         },
-        async createContest() {
-            if(this.contest.problemList.length === 0 || this.contest.userList.length === 0 || this.contest.title === ''){
-                alert('정보를 모두 입력하세요.');
-                return;
-            }
 
-            await this.$http.post('/api/contest/create', {
-                contest: this.contest
-            })
-                .then(
-                    async (response) => {
-                        if (response.data.result === 1) {
-                            this.$log.info(1);
-                            alert('대회가 개최되었습니다.');
-                            this.$router.push('/');
-                        } else {
-                            this.$log.info(2);
-                            alert('대회 개최가 실패하였습니다.');
-                        }
-                    })
-                .catch(error => {
-                    alert('대회 제목이 중복됩니다.');
-                    this.$log.error('Server error\n' + error);
-                });
-        },
         save(date, time, mod) {
             const timeStamp = time.split(':');
             if (mod === 0) {

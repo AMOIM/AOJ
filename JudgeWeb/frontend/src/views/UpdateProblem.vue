@@ -8,6 +8,10 @@
     lazy-validation
     class="ma-15"
   >
+    <v-checkbox
+        v-model="open"
+        label="문제 공개"
+    ></v-checkbox>
     <v-text-field
       v-model="problemTitle"
       :rules="titleRules"
@@ -168,7 +172,8 @@ export default {
             fileFlag: false,
             fileModifyFlag: false,
             updateFlag: false,
-            fileMsg: ''
+            fileMsg: '',
+            open : false
         };
     },
     async mounted() {
@@ -183,12 +188,14 @@ export default {
         await this.$http.post('/api/problem', {
             id : this.$route.params.id
         }).then(res => {
-            this.problemTitle = res.data.title;
-            this.problemTime = res.data.timeLimit;
-            this.problemMemory = res.data.memoryLimit;
-            this.problemContent = res.data.description;
-            this.inputDescription = res.data.inputDescription;
-            this.outputDescription = res.data.outputDescription;
+            const problem = res.data;
+            this.problemTitle = problem.title;
+            this.problemTime = problem.timeLimit;
+            this.problemMemory = problem.memoryLimit;
+            this.problemContent = problem.description;
+            this.inputDescription = problem.inputDescription;
+            this.outputDescription = problem.outputDescription;
+            this.open = problem.open;
         });
         this.problemTime /= 1000;
         this.problemMemory /= 1000000;
@@ -275,6 +282,7 @@ export default {
                     problemMemory : this.problemMemory * 1000000,
                     inputDescription : this.inputDescription,
                     outputDescription : this.outputDescription,
+                    open : this.open
                 }).then(res => {
                     this.msgFlag = true;
                     this.msg = res.data + '번 문제가 수정되었습니다!';

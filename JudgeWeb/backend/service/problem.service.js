@@ -8,6 +8,15 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
+
+    static getPublic = async (id) => {
+        try {
+            return await ProblemModel.findPublic(id);
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
+
     static submit = async (data) => {
         try {
             const result = await StatusModel.push(data);
@@ -37,6 +46,13 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
+    static getAllPublic = async () => {
+        try {
+            return await ProblemModel.allFindPublic();
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
     static delete = async(number) => {
         try{
             const result = await ProblemModel.delete(number);
@@ -45,10 +61,9 @@ export default class ProblemService {
             throw new Error('Service -> ' + err.message);
         }
     }
-    static update = async (req) => {
+    static update = async (data, id) => {
         try {
-            const result = await ProblemModel.update(req);
-            return result;
+            await ProblemModel.update(data, id);
         } catch(err) {
             throw new Error('Service -> ' + err.message);
         }

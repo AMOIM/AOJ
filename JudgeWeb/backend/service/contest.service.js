@@ -1,4 +1,4 @@
-import { ContestModel, UserModel } from '../models/index.model.js';
+import { ContestModel, ProblemModel, UserModel } from '../models/index.model.js';
 
 export default class ContestService {
     static Save = async(req) => {
@@ -6,9 +6,14 @@ export default class ContestService {
             for(let id of req.body.contest.idList){
                 await UserModel.get(id);
             }
-            const result = await ContestModel.Save(req);
-            if (result === true) return true;
-            else return false;
+
+            const contest = {
+                ...req.body.contest
+            };
+
+            await ContestModel.Save(req);
+            await ProblemModel.updateOpenTime(contest.problems, contest.start);
+
         } catch(err) {
             err.message = 'Service -> contestsave err';
             throw err;
@@ -56,10 +61,17 @@ export default class ContestService {
             for(let id of req.body.contest.idList){
                 await UserModel.get(id);
             }
+
+            const contest = {
+                ...req.body.contest
+            };
+
             const result = await ContestModel.update(req);
+            await ProblemModel.updateOpenTime(contest.problemList, contest.start);
+
             return result;
         } catch(err) {
-            err.message = 'Service -> contestupdate err -> ' + err.message;
+            err.message = 'Service -> ' + err.message;
             throw err;
         }
     }
@@ -68,7 +80,7 @@ export default class ContestService {
             const result = await ContestModel.delete(number);
             return result;
         } catch(err) {
-            err.message = 'Service -> contestdelete err';
+            err.message = 'Service -> ' + err.message;
             throw err;
         }
     }
