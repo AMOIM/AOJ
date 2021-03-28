@@ -134,7 +134,7 @@ export default {
             this.$router.push('/');
             alert('관리자만 접근이 가능합니다.');
         }
-        await this.$http.get(`/api/contest/userlist/${this.$route.params.id}`)
+        await this.$http.get(`/api/contest/get/${this.$route.params.id}`)
             .then(
                 async (response) => {
                     const contest = response.data;
@@ -195,6 +195,7 @@ export default {
         },
         deleteUser(index) {
             this.contest.userList.splice(index, 1);
+            this.contest.idList.splice(index, 1);
         },
         async createUser(id) {
             if (this.id === '') {

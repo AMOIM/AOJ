@@ -249,6 +249,24 @@ export class ContestModel {
             throw new Error('Model -> getContestNum error');
         }
     }
+    static getUserList = async (number) => {
+        try {
+            const result = await ContestSchema.findOne().select({userList : 1})
+                .where({'number': number});
+            return result.userList;
+        } catch (err) {
+            throw new Error('Model -> getUserList error');
+        }
+    }
+    static getTime = async (number) => {
+        try {
+            const result = await ContestSchema.findOne().select({start : 1})
+                .where({'number': number});
+            return result.start;
+        } catch (err) {
+            throw new Error('Model -> getTime error');
+        }
+    }
     static update = async (req) => {
         try {
             const contest = {

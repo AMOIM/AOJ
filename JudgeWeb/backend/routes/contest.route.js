@@ -13,7 +13,9 @@ router.post('/status/:id', authMiddlewareBackend(), Contest.getStatus);
 
 router.post('/create', authMiddlewareBackend('admin'), Contest.createContest);
 router.get('/list', Contest.getContest);
-router.get('/userlist/:id', authMiddlewareBackend('admin'), Contest.getOne);
+router.get('/get/:id', authMiddlewareBackend('admin'), Contest.getOne);
+router.get('/gettime/:id', Contest.getTime);
+router.get('/userlist/:id', Contest.getUserList);
 router.put('/update', authMiddlewareBackend('admin'), Contest.update);
 router.delete('/delete/:id', authMiddlewareBackend('admin'), Contest.delete);
 

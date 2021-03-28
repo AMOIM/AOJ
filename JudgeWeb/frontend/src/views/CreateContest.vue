@@ -142,6 +142,7 @@ export default {
         },
         deleteUser(index) {
             this.contest.users.splice(index, 1);
+            this.contest.idList.splice(index, 1);
         },
         async createProblem(number) {
             if (this.number === '') {
