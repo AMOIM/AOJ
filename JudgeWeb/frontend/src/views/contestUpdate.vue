@@ -57,10 +57,13 @@
 
         <v-col>
           <v-row
-              :key="user.id"
+              :key="user"
               v-for="(user, index) in contest.userList"
           >
-              <v-col cols="9">
+             <v-col cols="4">
+                {{ contest.idList[index] }}
+              </v-col>
+              <v-col cols="4">
                 {{ user }}
               </v-col>
               <v-col cols="3">
@@ -113,6 +116,7 @@ export default {
                 end: '',
                 title: '',
                 userList: [],
+                idList: [],
                 problemList: []
             },
             titleRules: [
@@ -130,7 +134,7 @@ export default {
             this.$router.push('/');
             alert('관리자만 접근이 가능합니다.');
         }
-        await this.$http.get(`/api/contest/userlist/${this.$route.params.id}`)
+        await this.$http.get(`/api/contest/get/${this.$route.params.id}`)
             .then(
                 async (response) => {
                     const contest = response.data;
@@ -191,6 +195,7 @@ export default {
         },
         deleteUser(index) {
             this.contest.userList.splice(index, 1);
+            this.contest.idList.splice(index, 1);
         },
         async createProblem(number) {
             if (this.number === '') {
@@ -226,9 +231,8 @@ export default {
                         alert('존재하지 않는 아이디입니다.');
                         return;
                     }
-
                     const name = result.data.name;
-                    if(name !== null) {
+                    if(name !== null){
                         this.contest.userList.push(name);
                         this.contest.idList.push(id);
                     }

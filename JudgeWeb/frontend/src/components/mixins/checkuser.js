@@ -7,6 +7,7 @@ export const checkuser = {
                 .then(
                     (response) => {
                         result = response.data;
+
                         for(let j=0;j<result.length;j++) {
                             if(result[j] === this.$store.state.name) {
                                 chk=true;
