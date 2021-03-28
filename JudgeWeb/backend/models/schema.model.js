@@ -78,7 +78,7 @@ const testcaseSchema = new mongoose.Schema({
     },
     out: {
         txt: String
-    },
+    }
 });
 
 const statusSchema = new mongoose.Schema({

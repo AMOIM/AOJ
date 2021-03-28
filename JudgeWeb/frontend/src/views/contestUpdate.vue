@@ -227,9 +227,10 @@ export default {
                         return;
                     }
 
-                    const user = result.data.user;
-                    if(user !== null){
-                        this.contest.userList.push(this.id);
+                    const name = result.data.name;
+                    if(name !== null) {
+                        this.contest.userList.push(name);
+                        this.contest.idList.push(id);
                     }
                     else alert('존재하지 않는 아이디입니다.');
                 })

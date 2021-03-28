@@ -212,7 +212,6 @@ export class ProblemModel {
         }
     }
     static updateOpenTime = async (problems, openTime) => {
-        logger.info(problems);
         try {
             for(let problem of problems){
                 logger.info(problem);
