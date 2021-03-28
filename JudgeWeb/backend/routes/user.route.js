@@ -9,6 +9,7 @@ router.post('/login', UserController.login);
 router.post('/signup', UserController.signup);
 router.delete('/delete', authMiddlewareBackend('admin'), UserController.delete);
 router.delete('/delete/contest', authMiddlewareBackend('admin'), UserController.deleteContestUser);
-
+router.get('/check', authMiddlewareBackend('admin'), UserController.check);
+router.patch('/approve', authMiddlewareBackend('admin'), UserController.approve);
 
 module.exports = router;
