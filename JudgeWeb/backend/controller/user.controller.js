@@ -83,9 +83,9 @@ export class UserController {
         }
     }
 
-    static check = async(req, res, next) => {
+    static getAll = async(req, res, next) => {
         try {
-            const result = await UserService.check();
+            const result = await UserService.getAll();
             return res.status(200).json(result);
         } catch (err) {
             err.message = 'GET /user/check\nController -> ' + err.message;

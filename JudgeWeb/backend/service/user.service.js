@@ -92,9 +92,9 @@ export class UserService {
         }
     }
 
-    static check = async() => {
+    static getAll = async() => {
         try {
-            const result = UserModel.check();
+            const result = UserModel.getAll();
             return result;
         } catch(err) {
             err.message = 'Service -> ' + err.message;

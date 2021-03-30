@@ -501,7 +501,6 @@ export class UserModel {
                 .where({'number' : id});
 
             for(let user of contest.userList) {
-                logger.info(user);
                 await UserSchema.remove()
                     .where({'id': user});
             }
@@ -511,9 +510,9 @@ export class UserModel {
         }
     }
 
-    static check = async() => {
+    static getAll = async() => {
         try {
-            const users = await UserSchema.find().where({'isApprove' : false}).select({id : 1, name : 1});
+            const users = await UserSchema.find().ne('name', 'admin').select({id : 1, name : 1, isApprove : 1});
             return users;
         } catch (err) {
             throw new Error('Model -> ');
