@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
-    "@mdi/font": "^5.4.55",
+    "@mdi/font": "^5.9.55",
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-plugin-router": "^4.4.6",
