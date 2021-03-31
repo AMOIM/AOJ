@@ -2,31 +2,34 @@
     <v-container fluid v-if="this.chk && this.isadmin">
         <v-row align="center" justify="center">
             <v-card elevation="0" style="width: 600px;">
-                <v-card-title>
-                    대회 참가자 관리
-                <v-spacer></v-spacer>
-                <v-text-field
-                    style="width: 100px;"
-                    v-model="contestId"
-                    append-icon="mdi-magnify"
-                    label="대회번호"
-                    single-line
-                    hide-details
-                    v-on:keyup.enter="contestDelete=true"
-                ></v-text-field>
+                <v-card-title class="mb-0 pb-0">대회 참가자 관리
+                    <v-spacer></v-spacer>
+                    <v-text-field
+                        style="width: 100px;"
+                        v-model="contestId"
+                        append-icon="mdi-magnify"
+                        label="대회번호 입력"
+                        single-line
+                        hide-details
+                        v-on:keyup.enter="contestDelete=true"
+                        @click:append="contestDelete=true"
+                    ></v-text-field>    
+                </v-card-title>            
+                <v-card-title class="mt-0 pt-0">
+                    <h6 style="color: grey;">특정 대회의 참가자들을 탈퇴시킬 수 있습니다.</h6>
                 </v-card-title>
             </v-card>
         </v-row>
         <v-row align="center" justify="center">
             <v-card elevation="0" style="width: 600px;">
-                <v-card-title class="justify-start">
+                <v-card-title>
                     회원 관리
                 <v-spacer></v-spacer>
                 <v-text-field
                     style="width: 47px;"
                     v-model="search"
                     append-icon="mdi-magnify"
-                    label="아이디"
+                    label="아이디 / 닉네임 검색"
                     single-line
                     hide-details
                 ></v-text-field>
@@ -42,11 +45,10 @@
                     <v-btn
                         class="ma-1"
                         color="purple lighten-4"
-                        fab
-                        small
                         v-if="item.isApprove===false"
                         v-on:click="approve(item)"
-                    >
+                        small
+                    >승인
                         <v-icon
                             small
                         >
@@ -56,10 +58,23 @@
                     <v-btn
                         class="ma-2"
                         color="purple lighten-4"
-                        fab
                         small
+                        v-if="item.isApprove===false"
                         v-on:click="secession(item)"
-                    >
+                    >거절
+                        <v-icon
+                            small
+                        >
+                        mdi-account-cancel-outline
+                        </v-icon>
+                    </v-btn>
+                    <v-btn
+                        class="ma-2"
+                        color="purple lighten-4"
+                        small
+                        v-if="item.isApprove===true"
+                        v-on:click="secession(item)"
+                    >탈퇴
                         <v-icon
                             small
                         >
@@ -137,7 +152,7 @@ export default {
             headers: [
                 { text: '아이디', align: 'center', value: 'id',},
                 { text: '닉네임', align: 'center', value: 'name' },
-                { text: '승인/거절', align: 'center', value: 'isApprove'},
+                { text: '관리', align: 'center', value: 'isApprove'},
             ],
             users: [],
             user: '',
