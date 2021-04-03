@@ -36,9 +36,10 @@ export default {
             })
                 .then(
                     async(response) => {
-                        if (response.data.token) {
+                        const token = response.data.token;
+                        if (token) {
                             await this.$store.dispatch('login', response.data.token);
-                            this.$router.push('/');
+                            await this.$router.push('/');
                         } else {
                             this.msg = '존재하지 않거나 계정의 정보가 일치하지 않습니다.';
                             this.flag = true;
@@ -46,7 +47,7 @@ export default {
                     }
                 )
                 .catch(err => {
-                    this.$log.error('Server error\n' + err);
+                    this.$log.error(err);
                 });
         }
     }

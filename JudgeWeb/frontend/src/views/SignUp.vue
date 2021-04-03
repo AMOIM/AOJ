@@ -90,8 +90,8 @@ export default {
                 })
                 .catch(function (error) {
                     if(error) {
-                        this.$log.error(error);
                         alert('Server Error\n문의 바랍니다.');
+                        this.$log.error(error);
                     }
                 });
         }

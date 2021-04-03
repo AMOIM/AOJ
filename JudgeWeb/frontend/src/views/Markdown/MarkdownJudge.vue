@@ -1,12 +1,12 @@
 <template>
-<v-container>
+  <v-container>
     <markdown-editor
         mode="viewer"
         :outline="true"
         v-model="judgeText"
         style="text-align: left;"
-        />
-</v-container>
+    />
+  </v-container>
 </template>
 
 <script>

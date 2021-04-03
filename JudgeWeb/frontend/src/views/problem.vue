@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" v-if="this.chk">
+<v-card elevation="0" >
 <v-container>
     <v-container>
     <v-list-item three-line style="padding: 0px;">
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
+import {check} from '@/components/mixins/check';
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
 
@@ -124,19 +124,19 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css'; // import syntax highlighting styles
 
 export default {
-    mixins:[checklogin],
+    mixins:[check],
     name: 'problem.vue',
     components: {
         PrismEditor,
     },
     data: () => {
         return {
-            chk: false,
-            problem: {},
+            problem : {},
             code : '',
             language: ['c', 'cpp', 'java', 'python2', 'python3'],
             lang : 'cpp',
-            userName : ''
+            userName : '',
+            isLogin : false
         };
     },
     methods : {
@@ -159,14 +159,20 @@ export default {
         }
     },
     async mounted() {
-        this.chk = await this.check();
-        if(this.$store.state.name === 'admin') this.isAdmin = true;
+        const id = this.$route.params.id;
+
+        if (id === undefined) {
+            await this.$router.push('/404');
+            return;
+        }
+
+        this.isLogin = await this.checkLogin();
+        if(this.isLogin === false) return;
+
+        this.isAdmin = await this.checkAdmin(true);
 
         this.userName = this.$store.state.name;
-        const id = this.$route.params.id;
-        if (id === undefined)
-            this.$router.go(-1);
-        
+
         const problem = {};
         if(this.isAdmin) {
             try {

@@ -6,14 +6,14 @@
     <tr>
       <th class="text-center">문제 번호</th>
       <th class="text-center">문제 이름</th>
-      <th class="text-center" v-if="chk && isAdmin"></th>
+      <th class="text-center" v-if="isAdmin"></th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="item in result" :key="item.title">
       <td>{{item.number}} </td>
       <td><router-link :to='{path:"/problem/" + item.number}'> {{item.title}} </router-link></td>
-      <td v-if="chk && isAdmin"><v-btn color="deep-purple darken-2" class="white--text" @click="update(item.number)">수정<i class="mdi mdi-pencil"></i></v-btn></td>
+      <td v-if="isAdmin"><v-btn color="deep-purple darken-2" class="white--text" @click="update(item.number)">수정<i class="mdi mdi-pencil"></i></v-btn></td>
     </tr>
     </tbody>
   </template>
@@ -22,19 +22,17 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
+import {check} from '@/components/mixins/check';
 export default {
-    mixins:[checklogin],
+    mixins:[check],
     data: function () {
         return {
             result : [],
-            chk : false,
             isAdmin : false
         };
     },
     async mounted() {
-        this.chk = await this.check(1);
-        if(this.chk && this.$store.state.name === 'admin') this.isAdmin = true;
+        this.isAdmin = await this.checkAdmin(true);
       
         if(this.isAdmin){
             try {

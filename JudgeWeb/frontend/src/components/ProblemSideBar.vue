@@ -1,7 +1,7 @@
 <template>
 <v-container>
     <v-card
-    v-if="this.openProblems"
+    v-if="this.openProblems || this.isAdmin"
     class="mb-6 no-gutters"
     max-width="500"
     outlined
@@ -27,9 +27,9 @@
 </v-container>
 </template>
 <script>
-import {checktime} from '../components/mixins/checktime.js';
+import {check} from '@/components/mixins/check.js';
 export default {
-    mixins:[checktime],
+    mixins:[check],
     data() {
         return {
             problems: {
@@ -37,15 +37,24 @@ export default {
                 path: '/problem/'
             },
             competitionNum: 0,
-            openProblems : false
+            openProblems : false,
+            isLogin : false,
+            isAdmin : false
         };
     },
     async created () {
         this.competitionNum = this.$route.params.id;
-        this.$http.get('/api/contest/'+this.competitionNum).then(res => {
-            this.problems.problem = res.data;
-        });
-        this.openProblems = await this.checktime(this.competitionNum);
+        this.$http.get('/api/contest/'+this.competitionNum)
+            .then(async res => {
+                this.problems.problem = res.data;
+                this.openProblems = await this.checkTime(this.competitionNum);
+            });
+    },
+    async mounted () {
+        this.isLogin = await this.checkLogin();
+        if(this.isLogin === false) return;
+
+        this.isAdmin = await this.checkAdmin(true);
     }
 };
 </script>

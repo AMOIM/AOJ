@@ -3,7 +3,7 @@
     <v-alert
       dense
       text
-      v-if="sflag"
+      v-if="successFlag"
       type="success"
     >
     {{msg}}
@@ -11,7 +11,7 @@
     <v-alert
         dense
         text
-        v-if="eflag"
+        v-if="errorFlag"
         type="error"
     >
       {{msg}}
@@ -51,8 +51,8 @@ export default {
             confirmPW : '',
             error: '',
             msg : '',
-            sflag : false,
-            eflag : false,
+            successFlag : false,
+            errorFlag : false,
             pwRules: [
                 v => !!v || '비밀번호를 입력해주세요!',
                 v => v && v.length <= 20 || '비밀번호를 20자 이내로 입력하세요!',
@@ -81,8 +81,8 @@ export default {
         },
         update(){
             if(this.error !== '') {
-                this.eflag = true;
-                this.sflag = false;
+                this.errorFlag = true;
+                this.successFlag = false;
                 this.msg = '비밀번호를 확인해주세요.';
                 return;
             }
@@ -94,18 +94,18 @@ export default {
                 .then(result => {
                     const ok = result.data;
                     if(ok) {
-                        this.eflag = false;
-                        this.sflag = true;
+                        this.errorFlag = false;
+                        this.successFlag = true;
                         this.msg = '수정 완료!';
                     }
                     else {
-                        this.eflag = true;
-                        this.sflag = false;
+                        this.errorFlag = true;
+                        this.successFlag = false;
                         this.msg = '입력한 비밀번호와 계정의 비밀번호가 다릅니다.';
                     }
                 })
                 .catch(err => {
-                    this.$log.info(err);
+                    this.$log.error(err);
                 });
         }
     }

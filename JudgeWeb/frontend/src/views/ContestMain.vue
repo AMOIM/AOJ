@@ -1,12 +1,12 @@
 <template>
-<v-card elevation="0" v-if="this.chk">
+<v-card elevation="0" v-if="this.isLogin">
   <v-row>
     <v-col style="max-width: 500px;">
       <sidebarComponent style="max-width: 300px;"></sidebarComponent>
       <problemSidebarComponent style="max-width: 300px;"></problemSidebarComponent>
     </v-col>
     <v-col style="max-width: 1000px;">
-      <v-simple-table v-if="this.openProblems">
+      <v-simple-table v-if="this.openProblems || this.isAdmin">
         <template v-slot:default>
           <thead>
             <tr>
@@ -59,13 +59,12 @@
 </template>
 
 <script>
-import sidebarComponent from '../components/SideBar';
-import problemSidebarComponent from '../components/ProblemSideBar';
-import {checklogin} from '../components/mixins/checklogin.js';
-import {checktime} from '../components/mixins/checktime.js';
+import sidebarComponent from '@/components/SideBar';
+import problemSidebarComponent from '@/components/ProblemSideBar';
+import {check} from '@/components/mixins/check';
 
 export default {
-    mixins:[checklogin, checktime],
+    mixins:[check],
     components: {
         sidebarComponent,
         problemSidebarComponent
@@ -73,28 +72,41 @@ export default {
     data () {
         return {
             userList: [],
-            chk : false,
+            isLogin : false,
+            isAdmin : false,
             openProblems : false,
             problems: [],
             competitionNum: '',
         };
     },
-    async mounted() {
-        this.chk = await this.check();
-    },
-    async created () {
+    async created() {
         this.competitionNum = this.$route.params.id;
-        this.openProblems = await this.checktime(this.competitionNum);
-        await this.$http.get('/api/contest/'+this.competitionNum).then(res => {
-            this.problems = res.data;
-        });
-        await this.$http.get('/api/contest/userlist/'+this.competitionNum).then(res => {
-            this.userList = res.data;
-        });
-    }
+
+        await this.$http.get('/api/contest/'+this.competitionNum)
+            .then(res => {
+                this.problems = res.data;
+            })
+            .catch(() => {
+                this.$router.push('/404');
+            });
+
+        if(typeof this.problem === 'undefined') return;
+
+        this.openProblems = await this.checkTime(this.competitionNum);
+        await this.$http.get('/api/contest/userlist/'+this.competitionNum)
+            .then(res => {
+                this.userList = res.data;
+            })
+            .catch(err => this.$log.error(err));
+    },
+    async mounted() {
+        this.isLogin = await this.checkLogin();
+        if(this.isLogin === false) return;
+
+        this.isAdmin = await this.checkAdmin(true);
+    },
 };
 </script>
 <style>
 a {  text-decoration: none;}
-.nomargin { padding-right: 0px;}
 </style>

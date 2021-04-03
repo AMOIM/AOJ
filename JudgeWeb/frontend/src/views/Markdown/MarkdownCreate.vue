@@ -1,11 +1,12 @@
 <template>
-<v-card elevation="0" v-if="this.chk && this.isadmin">
-<v-container>
-        <v-container
-           style="margin: 0px;">
+  <v-card elevation="0" v-if="this.chk && this.isAdmin">
+    <v-container>
+      <v-container
+          style="margin: 0px;">
+
         <v-tabs
-          v-model="tabs"
-          style="padding: 0px; margin: 0px;"
+            v-model="tabs"
+            style="padding: 0px; margin: 0px;"
         >
           <v-tab href="#one">
             Home.md
@@ -15,48 +16,50 @@
           </v-tab>
           <v-tabs-slider color="pink"></v-tabs-slider>
         </v-tabs>
-        </v-container>
-        <markdown-editor
-            v-if="activeText.text==='1'"
-            mode="preview"
-            :outline="true"
-            v-model="homeText"
-            style="text-align: left;"
-        />
-        <markdown-editor
-            v-if="activeText.text==='2'"
-            mode="preview"
-            :outline="true"
-            v-model="judgeText"
-            style="text-align: left;"
-        />
-        <v-row
-            align="center"
-            justify="space-around"
-        >
-            <v-btn 
-                text
-                color="deep-purple lighten-1"
-                @click="submitMarkDown()">
-                작성
-            </v-btn>
-        </v-row>
-        <v-snackbar
-				v-model="snackbar.show"
-				:timeout="2000"
-				:color="snackbar.color"
-			>
-				{{ snackbar.text }}
-				<v-btn justify="center" text v-on:click="snackbar.show = false">
-					close
-				</v-btn>
-			</v-snackbar>
-</v-container>
-</v-card>
+      </v-container>
+
+      <markdown-editor
+          v-if="activeText.text==='1'"
+          mode="preview"
+          :outline="true"
+          v-model="homeText"
+          style="text-align: left;"
+      />
+      <markdown-editor
+          v-if="activeText.text==='2'"
+          mode="preview"
+          :outline="true"
+          v-model="judgeText"
+          style="text-align: left;"
+      />
+      <v-row
+          align="center"
+          justify="space-around"
+      >
+        <v-btn
+            text
+            color="deep-purple lighten-1"
+            @click="submitMarkDown()">
+          작성
+        </v-btn>
+      </v-row>
+
+      <v-snackbar
+          v-model="snackbar.show"
+          :timeout="2000"
+          :color="snackbar.color"
+      >
+        {{ snackbar.text }}
+        <v-btn justify="center" text v-on:click="snackbar.show = false">
+          close
+        </v-btn>
+      </v-snackbar>
+    </v-container>
+  </v-card>
 </template>
 
 <script>
-import {checklogin} from '../../components/mixins/checklogin';
+import {check} from '@/components/mixins/check';
 import {Editor} from 'vuetify-markdown-editor';
 import 'vuetify-markdown-editor/dist/vuetify-markdown-editor.css';
 
@@ -64,11 +67,11 @@ export default {
     components: {
         'markdown-editor' : Editor
     },
-    mixins:[checklogin],
+    mixins:[check],
     data() {
         return {
             chk: false,
-            isadmin: false,
+            isAdmin: false,
             homeText: '',
             judgeText: '',
             tabs: null,
@@ -83,8 +86,8 @@ export default {
         };
     },
     async mounted() {
-        this.chk = await this.check();
-        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
+        this.chk = await this.checkLogin();
+        if(this.chk && this.$store.state.name === 'admin') this.isAdmin = true;
         if(this.chk && this.$store.state.name !== 'admin') {
             this.$router.push('/');
             alert('관리자만 접근이 가능합니다.');
@@ -121,8 +124,8 @@ export default {
                         markdownText:this.markdownText
                     });
                 if(result.status === 200) {
-                    if(this.markdownTitle === 'home') this.$router.push('/');
-                    else this.$router.push('/judge');
+                    if(this.markdownTitle === 'home') await this.$router.push('/');
+                    else await this.$router.push('/judge');
                 }
             }catch(err) {
                 this.snackbar.color = 'error';

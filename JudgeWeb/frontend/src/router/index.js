@@ -103,6 +103,10 @@ const routes = [
         path: '/user/delete',
         name: 'Delete User',
         component: () => import('../views/DeleteUser.vue')
+    },
+    {
+        path: '*',
+        redirect: '/'
     }
 ];
 

@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" v-if="this.chk && this.isadmin" id="contest">
+<v-card elevation="0" v-if="this.isAdmin" id="contest">
 <v-container>
   <div><h2>문제 수정</h2></div>
   <v-form
@@ -65,12 +65,12 @@
       </v-card-subtitle>
       <v-card-text class="d-flex flex-wrap">
         <v-chip
-          v-for="(fileinfo, idx) in files"
+          v-for="(fileInfo, idx) in files"
           :key="idx"
           @click:close="removeFile(idx)"
           close
           class="mr-2 mt-1"
-        > {{ fileinfo.name }}
+        > {{ fileInfo.name }}
         </v-chip>
         <v-btn class="mt-1" small icon ref="files" @click="addFiles()">
           <v-icon>mdi-plus</v-icon>
@@ -90,7 +90,7 @@
     <v-alert
       dense
       text
-      v-if="msgFlag==true"
+      v-if="msgFlag === true"
       type="success"
     >
       {{msg}}
@@ -128,14 +128,13 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
+import {check} from '@/components/mixins/check';
 
 export default {
-    mixins:[checklogin],
+    mixins:[check],
     data: function(){
         return {
-            isadmin: false,
-            chk: false,
+            isAdmin: false,
             problemTitle: '',
             valid: true,
             titleRules: [
@@ -177,11 +176,10 @@ export default {
         };
     },
     async mounted() {
-        this.chk = await this.check();
-        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
-        if(this.chk && this.$store.state.name !== 'admin') {
-            this.$router.push('/');
-            alert('관리자만 접근이 가능합니다.');
+        this.isAdmin = await this.checkAdmin(true);
+
+        if(!this.isAdmin) {
+            await this.$router.push('/404');
         }
     },
     async created() {
@@ -208,8 +206,7 @@ export default {
             this.inputFilesString = [];
             this.outputFilesString = [];
 
-            this.$log.info(this.files.length);
-            if(this.files.legnth !== 0){
+            if(this.files.length !== 0){
                 this.fileFlag = false;
 
                 this.files.sort(function (a, b) {
@@ -253,8 +250,7 @@ export default {
                         if(file.name.includes('.in')) this.inputFilesString.push({txt : result});
                         else this.outputFilesString.push({txt : result});
                     }
-                    this.$log.info(this.inputFilesString.length);
-                    this.$log.info(this.outputFilesString.length);
+
                     if(this.inputFilesString.length !== this.outputFilesString.length) {
                         this.fileFlag = true;
                         this.fileMsg = '테스트 케이스 개수가 맞지 않습니다. 확인해주세요!';
@@ -296,9 +292,8 @@ export default {
             if(result){
                 await this.$http.delete(`/api/problem/delete/${this.$route.params.id}`)
                     .then(
-                        (response) => {
+                        () => {
                             alert('문제가 삭제되었습니다.');
-                            this.$log.info(response.data);
                             this.$router.push('/problem/list');
                         }
                     )
@@ -317,7 +312,7 @@ export default {
         },
         uploadFile(){
             let uploadedTestFiles = this.$refs.files.files;
-            for( let i = 0; i < uploadedTestFiles.length; i++ ){
+            for( let i = 0; i < uploadedTestFiles.length; i++){
                 this.files.push(uploadedTestFiles[i]);
             }
         },

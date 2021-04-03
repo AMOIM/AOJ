@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
+<v-card elevation="0" v-if="this.isParticipant || this.isAdmin">
   <v-row>
     <v-col style="max-width: 500px;">
       <sidebarComponent style="max-width: 300px;"></sidebarComponent>
@@ -60,11 +60,10 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
-import {checkuser} from '../components/mixins/checkuser.js';
+import {check} from '@/components/mixins/check';
 
 export default {
-    mixins:[checklogin, checkuser],
+    mixins:[check],
     name: 'status.vue',
     components: {
         CodeView: () => import('../components/CodeView'),
@@ -73,9 +72,8 @@ export default {
     },
     data() {
         return {
-            chk: false,
-            chk2: false,
-            isadmin: false,
+            isParticipant: false,
+            isAdmin: false,
             list: [],
             userName: '',
             myCode: {
@@ -107,14 +105,16 @@ export default {
             return this.list.slice(this.startOffset, this.endOffset);
         },
     },
-    async mounted() {
-        if(this.$store.state.name === 'admin') this.isadmin = true;
-        else {
-            this.chk = await this.check();
-            this.chk2 = await this.checkparticipant(this.$route.params.id);
-        }
-        this.userName = this.$store.state.name;
+    async created() {
         const id = this.$route.params.id;
+
+        if (id === undefined) {
+            await this.$router.push('/404');
+            return;
+        }
+      
+        this.userName = this.$store.state.name;
+
         const apiProblem = await this.$http.get(`/api/contest/${id}`);
         const problemList = apiProblem.data;
 
@@ -138,6 +138,10 @@ export default {
             .catch(err => {
                 this.$log.error(err);
             });
+    },
+    async mounted() {
+        this.isAdmin = await this.checkAdmin();
+        this.isParticipant = await this.checkParticipant(this.$route.params.id);
     }
 };
 </script>

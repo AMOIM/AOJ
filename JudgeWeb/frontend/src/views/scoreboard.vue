@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
+<v-card elevation="0" v-if="this.isParticipant || this.isAdmin">
 <v-row>
     <v-col style="max-width: 500px;">
         <sidebarComponent style="max-width: 300px;"></sidebarComponent>
@@ -32,13 +32,12 @@
 </template>
 
 <script>
-import sidebarComponent from '../components/SideBar';
-import problemSidebarComponent from '../components/ProblemSideBar';
-import {checklogin} from '../components/mixins/checklogin.js';
-import {checkuser} from '../components/mixins/checkuser.js';
+import sidebarComponent from '@/components/SideBar';
+import problemSidebarComponent from '@/components/ProblemSideBar';
+import {check} from '@/components/mixins/check';
 
 export default {
-    mixins:[checklogin, checkuser],
+    mixins:[check],
     name: 'scoreboard.vue',
     components: {
         sidebarComponent,
@@ -46,9 +45,8 @@ export default {
     },
     data: () => {
         return {
-            chk: false,
-            chk2: false,
-            isadmin: false,
+            isParticipant: false,
+            isAdmin: false,
             list : [],
             search: '',
             headers : [
@@ -61,21 +59,19 @@ export default {
             ]
         };
     },
-    async mounted() {
-        if(this.$store.state.name === 'admin') this.isadmin = true;
-        else {
-            this.chk = await this.check();
-            this.chk2 = await this.checkparticipant(this.$route.params.id);
-        }
+    async created() {
         const id = this.$route.params.id;
-        if (id === undefined)
-            this.$router.go(-1);
+        if (id === undefined) {
+            await this.$router.push('/404');
+            return;
+        }
         this.$http.get(`/api/contest/scoreboard/${id}`)
             .then(result => {
                 const list = result.data;
                 for(let i = 0; i < list[0].problemList.length; i++)
                     this.headers.push({text : `${String.fromCharCode(i + 65)}`, value : 'problem[' + i + ']'});
                 this.headers.push({text : 'total', value : 'total'});
+
                 for(let i = 0; i < list.length; i++) {
                     const obj = {
                         rank : 0,
@@ -83,12 +79,14 @@ export default {
                         problem : [],
                         total : ''
                     };
-                    if(i && list[i - 1].acceptCnt === list[i].acceptCnt && list[i-1].penaltySum === list[i].penaltySum)
+                    if(i && list[i - 1].acceptCnt === list[i].acceptCnt
+                  && list[i-1].penaltySum === list[i].penaltySum)
                         obj.rank = '-';
                     else obj.rank = i + 1;
 
                     obj.userName = list[i].userName;
                     obj.total = `${list[i].acceptCnt} / ${list[i].penaltySum}`;
+
                     for(let j = 0;j < list[i].problemList.length ; j++) {
                         const problem = list[i].problemList[j];
                         this.$log.info(problem.accept);
@@ -101,6 +99,10 @@ export default {
             .catch(err => {
                 this.$log.error(err);
             });
+    },
+    async mounted() {
+        this.isAdmin = await this.checkAdmin();
+        this.isParticipant = await this.checkParticipant(this.$route.params.id);
     }
 };
 </script>

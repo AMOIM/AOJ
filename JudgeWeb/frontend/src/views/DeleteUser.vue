@@ -3,7 +3,7 @@
     <v-alert
         dense
         text
-        v-if="sflag"
+        v-if="successFlag"
         type="success"
     >
       {{msg}}
@@ -11,7 +11,7 @@
     <v-alert
         dense
         text
-        v-if="eflag"
+        v-if="errorFlag"
         type="error"
     >
       {{msg}}
@@ -51,8 +51,8 @@ export default {
             contestId : '',
             error: '',
             msg : '',
-            sflag : false,
-            eflag : false,
+            successFlag : false,
+            errorFlag : false,
             show : false,
             user : false,
         };
@@ -66,19 +66,19 @@ export default {
             })
                 .then(result=>{
                     if(result.data){
-                        this.sflag = true;
-                        this.eflag = false;
+                        this.successFlag = true;
+                        this.errorFlag = false;
                         this.msg = '회원 탈퇴 완료!!';
                     }
                     else {
-                        this.sflag = false;
-                        this.eflag = true;
+                        this.successFlag = false;
+                        this.errorFlag = true;
                         this.msg = '회원 아이디를 확인해주세요.';
                     }
                 })
                 .catch(()=>{
-                    this.sflag = false;
-                    this.eflag = true;
+                    this.successFlag = false;
+                    this.errorFlag = true;
                     this.msg = '죄송합니다. 서버 에러입니다. 개발자에게 문의해주세요!';
                 });
         },
@@ -90,19 +90,19 @@ export default {
             })
                 .then(result=>{
                     if(result.data){
-                        this.sflag = true;
-                        this.eflag = false;
+                        this.successFlag = true;
+                        this.errorFlag = false;
                         this.msg = '대회 참가자 탈퇴 완료!!';
                     }
                     else {
-                        this.sflag = false;
-                        this.eflag = true;
+                        this.successFlag = false;
+                        this.errorFlag = true;
                         this.msg = '대회 번호를 확인해주세요.';
                     }
                 })
                 .catch(()=>{
-                    this.sflag = false;
-                    this.eflag = true;
+                    this.successFlag = false;
+                    this.errorFlag = true;
                     this.msg = '죄송합니다. 서버 에러입니다. 개발자에게 문의해주세요!';
                 });
         },

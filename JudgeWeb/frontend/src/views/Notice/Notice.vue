@@ -1,45 +1,46 @@
 <template>
-<v-card elevation="0" v-if="(this.chk && this.chk2) || this.isadmin">
-<v-row>
-<v-col style="max-width: 500px;">
-<sidebarComponent style="max-width: 300px;"></sidebarComponent>
-<problemSidebarComponent style="max-width: 300px;"></problemSidebarComponent>
-</v-col>
-<v-col style="max-width: 700px;">
-<v-container>
-  <v-row class="show-text">
-      <div style="width:12%; font-weight:bold;"><v-col>문제</v-col></div>
-      <div style="width:35%; font-weight:bold;"><v-col>시간</v-col></div>
-      <div style="width:50%; font-weight:bold;"><v-col>내용</v-col></div>
-  </v-row>
-  <v-row  v-for="i in notices" :key="i.date">
-    <v-col>
-      <v-row class="show-text">
-        <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
-        <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
-        <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
-      </v-row>
-    </v-col>
-  </v-row>
-</v-container>
-<v-btn class="ma-2" fab dark color="indigo" v-if="isadmin" v-on:click="addNotice.addNoticeFlag=true">
-        <v-icon dark>mdi-plus</v-icon>
-</v-btn>
-<componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
-</v-col>
-</v-row>
-</v-card>
+    <v-card elevation="0" v-if="this.isParticipant || this.isAdmin">
+        <v-row>
+            <v-col style="max-width: 500px;">
+                <sidebarComponent style="max-width: 300px;"></sidebarComponent>
+                <problemSidebarComponent style="max-width: 300px;"></problemSidebarComponent>
+            </v-col>
+
+            <v-col style="max-width: 700px;">
+                <v-container>
+                    <v-row class="show-text">
+                        <div style="width:12%; font-weight:bold;"><v-col>문제</v-col></div>
+                        <div style="width:35%; font-weight:bold;"><v-col>시간</v-col></div>
+                        <div style="width:50%; font-weight:bold;"><v-col>내용</v-col></div>
+                    </v-row>
+                    <v-row  v-for="i in notices" :key="i.date">
+                        <v-col>
+                            <v-row class="show-text">
+                                <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
+                                <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
+                                <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
+                            </v-row>
+                        </v-col>
+                    </v-row>
+                </v-container>
+
+                <v-btn class="ma-2" fab dark color="indigo" v-if="isAdmin" v-on:click="addNotice.addNoticeFlag=true">
+                    <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
+                <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
+            </v-col>
+        </v-row>
+    </v-card>
 </template>
 
 <script>
-import componentNoticeCreate from '../../components/Notice/NoticeCreate';
-import sidebarComponent from '../../components/SideBar';
-import problemSidebarComponent from '../../components/ProblemSideBar';
-import {checklogin} from '../../components/mixins/checklogin.js';
-import {checkuser} from '../../components/mixins/checkuser.js';
+import componentNoticeCreate from '@/components/Notice/NoticeCreate';
+import sidebarComponent from '@/components/SideBar';
+import problemSidebarComponent from '@/components/ProblemSideBar';
+import {check} from '@/components/mixins/check';
 
 export default {
-    mixins:[checklogin, checkuser],
+    mixins:[check],
     components: {
         componentNoticeCreate,
         sidebarComponent,
@@ -47,9 +48,8 @@ export default {
     },
     data: function() {
         return {
-            chk : false,
-            chk2: false,
-            isadmin: false,
+            isParticipant: false,
+            isAdmin: false,
             competitionNum: '',
             notices: [{
                 date: '',
@@ -80,11 +80,8 @@ export default {
         };
     },
     async mounted() {
-        if(this.$store.state.name === 'admin') this.isadmin = true;
-        else {
-            this.chk = await this.check();
-            this.chk2 = await this.checkparticipant(this.$route.params.id);
-        }
+        this.isAdmin = await this.checkAdmin();
+        this.isParticipant = await this.checkParticipant(this.$route.params.id);
     },
     created() {
         this.competitionNum = this.$route.params.id;

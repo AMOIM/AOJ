@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" v-if="this.chk && this.isadmin && this.chk3" id="contest">
+<v-card elevation="0" v-if="this.isAdmin" id="contest">
   <div>
     <div><h2>대회 수정</h2></div>
     <v-form
@@ -96,21 +96,19 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
+import {check} from '@/components/mixins/check';
 
 export default {
     components: {
         DatePicker: () => import('../components/DatePicker'),
     },
-    mixins:[checklogin],
+    mixins:[check],
     data() {
         return {
             valid: true,
             id: '',
             number: '',
-            chk: false,
-            chk3: false,
-            isadmin: false,
+            isAdmin: false,
             contest: {
                 start: '',
                 end: '',
@@ -124,21 +122,15 @@ export default {
                 v => v && v.length <= 40 || '제목을 40글자 이내로 작성해주세요!',
             ],
             startShow: false,
-            endShow: false
+            endShow: false,
         };
     },
-    async mounted() {
-        this.chk = await this.check();
-        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
-        if(this.chk && this.$store.state.name !== 'admin') {
-            this.$router.push('/');
-            alert('관리자만 접근이 가능합니다.');
-        }
+    async created() {
         await this.$http.get(`/api/contest/get/${this.$route.params.id}`)
             .then(
                 async (response) => {
                     const contest = response.data;
-                    let problems = new Array;
+                    let problems = [];
                     for(let num of contest.problemNum) {
                         await this.$http.post('/api/problem', {
                             id: num
@@ -156,38 +148,41 @@ export default {
                     this.contest = contest;
                 }
             )
-            .catch(error => {
-                this.$log.info(error);
+            .catch(() => {
+                this.$router.push('/404');
             });
+    },
+  
+    async mounted() {
+        this.isAdmin = await this.checkAdmin(true);
 
-        this.chk3=true;
+        if(!this.isAdmin) {
+            await this.$router.push('/404');
+        }
     },
     methods: {
         async updateContest() {
             await this.$http.put('/api/contest/update', { contest : this.contest })
                 .then(
-                    (response) => {
+                    () => {
                         alert('대회수정이 완료되었습니다.');
-                        this.$log.info(response.data);
                         this.$router.push('/contest/list');
                     }
                 )
-                .catch(error => {
+                .catch(() => {
                     alert('대회 제목이 중복됩니다!');
-                    this.$log.error(error);
                 });
         },
         deleteContest() {
             this.$http.delete(`/api/contest/delete/${this.contest.number}`)
                 .then(
-                    (response) => {
+                    () => {
                         alert('대회가 삭제되었습니다.');
-                        this.$log.info(response.data);
                         this.$router.push('/contest/list');
                     }
                 )
                 .catch(error => {
-                    this.$log.info(error);
+                    this.$log.error(error);
                 });
         },
         deleteProblem(index) {

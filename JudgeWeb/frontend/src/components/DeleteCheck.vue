@@ -19,7 +19,7 @@
         <v-btn
             color="deep-purple darken-3 white--text"
             text
-            @click="isaccept(true)"
+            @click="isAccept(true)"
         >
           네!!
         </v-btn>
@@ -27,7 +27,7 @@
         <v-btn
             color="deep-purple darken-3 white--text"
             text
-            @click="isaccept(false)"
+            @click="isAccept(false)"
         >
           절대 안돼ㅐㅐ
         </v-btn>
@@ -41,7 +41,7 @@ export default {
     name: 'DeleteCheck',
     props: ['show', 'user'],
     methods : {
-        isaccept(yes){
+        isAccept(yes){
             this.$emit('isAccept', yes);
         }
     }
