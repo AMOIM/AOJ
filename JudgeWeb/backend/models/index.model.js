@@ -83,7 +83,7 @@ export class ProblemModel {
     static findPublic = async (number) => {
         try {
             const result = await ProblemSchema.findOne()
-                .where({'number': number})
+                .where({'number': number, 'open' : true})
                 .lte('openTime', new Date());
 
             return result;

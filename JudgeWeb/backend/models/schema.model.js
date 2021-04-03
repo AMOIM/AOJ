@@ -57,7 +57,8 @@ const problemSchema = new mongoose.Schema({
         required: true
     },
     openTime : {
-        type : Date
+        type : Date,
+        default: Date.now
     },
     open : {
         type : Boolean,

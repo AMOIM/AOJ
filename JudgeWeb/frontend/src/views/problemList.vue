@@ -10,7 +10,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="item in result" :key="item.title">
+    <tr v-for="item in problemList" :key="item.title">
       <td>{{item.number}} </td>
       <td><router-link :to='{path:"/problem/" + item.number}'> {{item.title}} </router-link></td>
       <td v-if="chk && isAdmin"><v-btn color="deep-purple darken-2" class="white--text" @click="update(item.number)">수정<i class="mdi mdi-pencil"></i></v-btn></td>
@@ -27,7 +27,7 @@ export default {
     mixins:[checklogin],
     data: function () {
         return {
-            result : [],
+            problemList : [],
             chk : false,
             isAdmin : false
         };
@@ -35,24 +35,14 @@ export default {
     async mounted() {
         this.chk = await this.check(1);
         if(this.chk && this.$store.state.name === 'admin') this.isAdmin = true;
-      
-        if(this.isAdmin){
-            try {
-                const result = await this.$http.get('/api/problem/list');
-                this.result = result.data;
-            }
-            catch (err) {
-                this.$log.error(err);
-            }
+
+        try {
+            const url = this.isAdmin ? '/api/problem/list' : '/api/problem/list/public';
+            const result = await this.$http.get(url);
+            this.problemList = result.data;
         }
-        else {
-            try {
-                const result = await this.$http.get('/api/problem/list/public');
-                this.result = result.data;
-            }
-            catch (err) {
-                this.$log.error(err);
-            }
+        catch (err) {
+            this.$log.error(err);
         }
     },
     methods: {

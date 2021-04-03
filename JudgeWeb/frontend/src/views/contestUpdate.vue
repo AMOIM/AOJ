@@ -208,7 +208,7 @@ export default {
                 .then(result => {
                     const problem = result.data;
                     if(problem !== null){
-                        this.contest.problems.push({
+                        this.contest.problemList.push({
                             number : number,
                             title : problem.title
                         });
