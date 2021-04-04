@@ -1,4 +1,4 @@
-import { NoticeModel } from '../models/index.model.js';
+import { NoticeModel, ContestModel } from '../models/index.model.js';
 
 export class NoticeService {
     static getNotice = async (req) => {
@@ -10,16 +10,21 @@ export class NoticeService {
     }
     static createPost = async (req) => {
         try {
-            await NoticeModel.createPost({ ...req.body });
-            return;
+            const number = String(req.body.competitionNum);
+            const contestInfo = await ContestModel.get(number);
+            if(contestInfo.end < new Date() === false) 
+                return await NoticeModel.createPost({ ...req.body });
         } catch (err) {
             throw new Error('Service -> createPost error ' + err.message);
         }
     }
     static createReply = async (req) => {
         try {
-            await NoticeModel.createReply({ ...req.body });
-            return;
+            const number = String(req.body.competitionNum);
+            const contestInfo = await ContestModel.get(number);
+            if(contestInfo.end < new Date() === false) 
+                return await NoticeModel.createReply({ ...req.body });
+           
         } catch (err) {
             throw new Error('Service -> createReply error ' + err.message);
         }

@@ -22,7 +22,7 @@
     </v-col>
   </v-row>
 </v-container>
-<v-btn class="ma-2" fab dark color="indigo" v-if="isadmin" v-on:click="addNotice.addNoticeFlag=true">
+<v-btn class="ma-2" fab dark color="indigo" v-if="isadmin&&isValid" v-on:click="addNotice.addNoticeFlag=true">
         <v-icon dark>mdi-plus</v-icon>
 </v-btn>
 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
@@ -65,10 +65,6 @@ export default {
                 select: {value: '전체', ProblemName: '전체'},
                 items: [
                     {value: '전체', ProblemName: '전체'},
-                    {value: 'A', ProblemName: 'A'},
-                    {value: 'B', ProblemName: 'B'},
-                    {value: 'C', ProblemName: 'C'},
-                    {value: 'D', ProblemName: 'D'}
                 ],
                 content: null,
                 contentRules: [
@@ -76,7 +72,9 @@ export default {
                 ],
                 addNoticeFlag: false,
                 type: '공지사항',
-            }
+            },
+            problemList: [],
+            isValid: true,
         };
     },
     async mounted() {
@@ -85,12 +83,30 @@ export default {
             this.chk = await this.check();
             this.chk2 = await this.checkparticipant(this.$route.params.id);
         }
+        try {
+            const result = await this.$http.get(`/api/contest/get/${this.competitionNum}`);
+            if(result.data.end < new Date() === false) this.isValid = false;
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
-    created() {
+    async created() {
         this.competitionNum = this.$route.params.id;
-        this.$http.get(`/api/contest/notice/${this.$store.state.id}/${this.competitionNum}?key=1`).then(res => {
-            this.notices = res.data;
-        });
+        try {
+            let result = await this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=1`);
+            this.notices = result.data;
+            try {
+                result = await this.$http.get(`/api/contest/${this.competitionNum}`);
+                this.problemList = result.data;
+                for(let problem of this.problemList) {
+                    await this.addNotice.items.push({value: problem.alphabet, problemName: problem.alphabet});
+                }
+            } catch (err) {
+                this.$log.error(err);
+            }
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
     methods: {
         async submitNotice(num) {
