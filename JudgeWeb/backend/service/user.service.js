@@ -47,12 +47,12 @@ export class UserService {
         }
     }
     
-    static createtoken = async(req,name) => {
+    static createtoken = async(req, data) => {
         try {
             const user = {
                 ...req.body.user
             };
-            const token = await UserModel.createtoken(user.id, name);
+            const token = await UserModel.createtoken(user.id, data);
             return token;
         } catch(err) {
             err.message = 'Service -> createtoken err';
@@ -89,6 +89,26 @@ export class UserService {
             return await UserModel.deleteContestUser(req.body.id);
         } catch(err) {
             throw new Error('Service -> ' + err.message);
+        }
+    }
+
+    static getAll = async() => {
+        try {
+            const result = UserModel.getAll();
+            return result;
+        } catch(err) {
+            err.message = 'Service -> ' + err.message;
+            throw err;
+        }
+    }
+
+    static approve = async(req) => {
+        try {
+            const result = UserModel.approve(req.body.id);
+            return result;
+        } catch(err) {
+            err.message = 'Service -> ' + err.message;
+            throw err;
         }
     }
 }

@@ -53,8 +53,8 @@
             홈&채점환경 편집
           </router-link></div>
 
-          <div v-if="$store.state.name === 'admin' " class="link_block" ><router-link to="/user/delete" class="link_white">
-            회원 탈퇴
+          <div v-if="$store.state.name === 'admin' " class="link_block" ><router-link to="/user/manage" class="link_white">
+            회원 관리
           </router-link></div>
         </v-row>
       </template>

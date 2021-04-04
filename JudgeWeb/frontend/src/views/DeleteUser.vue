@@ -1,5 +1,7 @@
 <template>
-  <v-card elevation="0" max-width="30%">
+<v-container fluid v-if="this.chk && this.isadmin">
+    <v-row align="center" justify="center">
+  <v-card elevation="0" style="width:600px;">
     <v-alert
         dense
         text
@@ -37,10 +39,44 @@
       </v-row>
     </v-card-text>
   </v-card>
+    </v-row>
+    <v-row align="center" justify="center">
+  <v-simple-table style="width:600px;" v-if="users.length!==0">
+      <thead>
+        <tr>
+          <th class="text-center">
+            아이디
+          </th>
+          <th class="text-center">
+            닉네임
+          </th>
+          <th class="text-center">
+            승인여부
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="user in users"
+          :key="user.id"
+        >
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td v-if="chk && isadmin">
+              <v-btn color="purple lighten-4" class="white--text" @click="approve(user.id, user)">승인</v-btn>
+              <v-btn color="purple lighten-4" class="white--text" @click="rejection(user.id, user)">거부</v-btn>
+          </td>
+        </tr>
+      </tbody>
+  </v-simple-table>
+    </v-row>
+</v-container>
 </template>
 
 <script>
+import {checklogin} from '../components/mixins/checklogin.js';
 export default {
+    mixins:[checklogin],
     components: {
         DeleteBox: () => import('../components/DeleteCheck'),
     },
@@ -55,7 +91,27 @@ export default {
             eflag : false,
             show : false,
             user : false,
+            users : [],
+            chk : false,
+            isadmin : false,
+            deletedIndex: '',
         };
+    },
+    async mounted() {
+        this.chk = await this.check();
+        if(this.chk && this.$store.state.name === 'admin') this.isadmin = true;
+        if(this.chk && this.$store.state.name !== 'admin') {
+            this.$router.push('/');
+            alert('관리자만 접근이 가능합니다.');
+        }
+    },
+    async created() {
+        try {
+            const result = await this.$http.get('/api/user/check');
+            this.users = result.data;
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
     methods :{
         async remove(){
@@ -111,6 +167,34 @@ export default {
             if(yes) {
                 if (this.user) this.remove();
                 else this.removeContestUser();
+            }
+        },
+        async approve(id, index) {
+            try {
+                const result = await this.$http.patch('/api/user/approve', {
+                    id : id
+                });
+                if(result.data) {
+                    this.deletedIndex = this.users.indexOf(index);
+                    this.users.splice(this.deletedIndex, 1);
+                }
+            } catch (err) {
+                this.$log.error(err);
+            }
+        },
+        async rejection(id, index) {
+            try {
+                const result = await this.$http.delete('/api/user/delete', {
+                    data : {
+                        id : id
+                    }
+                });
+                if(result.data) {
+                    this.deletedIndex = this.users.indexOf(index);
+                    this.users.splice(this.deletedIndex, 1);
+                }
+            } catch (err) {
+                this.$log.error(err);
             }
         }
     }

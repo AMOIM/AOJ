@@ -36,10 +36,15 @@ export default {
             })
                 .then(
                     async(response) => {
-                        if (response.data.token) {
+                        if(response.data.token === 1) {
+                            this.msg = '가입이 승인되지 않았습니다.';
+                            this.flag = true;
+                        }
+                        else if (response.data.token) {
                             await this.$store.dispatch('login', response.data.token);
                             this.$router.push('/');
-                        } else {
+                        }
+                        else {
                             this.msg = '존재하지 않거나 계정의 정보가 일치하지 않습니다.';
                             this.flag = true;
                         }
