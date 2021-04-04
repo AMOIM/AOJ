@@ -500,11 +500,13 @@ export class UserModel {
             const contest = await ContestSchema.findOne()
                 .where({'number' : id});
 
+            if(contest === null) return false;
             for(let user of contest.userList) {
                 await UserSchema.remove()
+                    .ne('name', 'admin')
                     .where({'id': user});
             }
-            return contest !== null;
+            return true;
         } catch(err) {
             throw new Error('Model -> deleteContest err');
         }
