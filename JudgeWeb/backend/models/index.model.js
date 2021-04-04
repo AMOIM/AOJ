@@ -515,7 +515,7 @@ export class UserModel {
             const users = await UserSchema.find().ne('name', 'admin').select({id : 1, name : 1, isApprove : 1});
             return users;
         } catch (err) {
-            throw new Error('Model -> ');
+            throw new Error('Model -> getAll err');
         }
     }
 
@@ -533,7 +533,7 @@ export class UserModel {
             );
             return result.n;
         } catch (err) {
-            throw new Error('Model -> ');
+            throw new Error('Model -> approve err');
         }
     }
 }
