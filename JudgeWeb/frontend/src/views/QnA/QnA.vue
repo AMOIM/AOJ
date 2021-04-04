@@ -19,7 +19,7 @@
         <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
         <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
         <div style="width:8%" v-if="i.child.content==null"><v-col>
-            <v-btn class="ma-2" fab dark small color="purple darken-2" v-if="isadmin&&isWrite" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
+            <v-btn class="ma-2" fab dark small color="purple darken-2" v-if="isadmin&&isValid" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn></v-col>
         </div>
@@ -32,7 +32,7 @@
     </v-col>
   </v-row>
 </v-container>
-<v-btn class="ma-2" fab dark color="indigo" v-if="isWrite" v-on:click="addNotice.addNoticeFlag=true">
+<v-btn class="ma-2" fab dark color="indigo" v-if="isValid" v-on:click="addNotice.addNoticeFlag=true">
         <v-icon dark>mdi-plus</v-icon>
 </v-btn>
 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
@@ -95,7 +95,7 @@ export default {
                 ],
             },
             problemList: [],
-            isWrite: true,
+            isValid: true,
         };
     },
     async mounted() {
@@ -104,18 +104,29 @@ export default {
             this.chk = await this.check();
             this.chk2 = await this.checkparticipant(this.$route.params.id);
         }
-        const result = await this.$http.get(`/api/contest/get/${this.competitionNum}`);
-        if(result.data.end < new Date() === false) this.isWrite = false;
+        try {
+            const result = await this.$http.get(`/api/contest/get/${this.competitionNum}`);
+            if(result.data.end < new Date() === false) this.isValid = false;
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
     async created() {
         this.competitionNum = this.$route.params.id;
-        this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=0`).then(res => {
-            this.notices = res.data;
-        });
-        const result = await this.$http.get(`/api/contest/${this.competitionNum}`);
-        this.problemList = result.data;
-        for(let problem of this.problemList) {
-            await this.addNotice.items.push({value: problem.alphabet, problemName: problem.alphabet});
+        try {
+            let result = await this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=0`);
+            this.notices = result.data;
+            try {
+                result = await this.$http.get(`/api/contest/${this.competitionNum}`);
+                this.problemList = result.data;
+                for(let problem of this.problemList) {
+                    await this.addNotice.items.push({value: problem.alphabet, problemName: problem.alphabet});
+                }
+            } catch (err) {
+                this.$log.error(err);
+            } 
+        } catch (err) {
+            this.$log.error(err);
         }
     },
     methods: {

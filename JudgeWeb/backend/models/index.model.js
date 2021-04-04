@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import { logger } from '../config/winston.js';
 
 export class NoticeModel {
     static getNotice = async (req) => {
