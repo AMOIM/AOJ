@@ -28,6 +28,7 @@
               :value="contest.end | moment('YYYY-MM-DD HH:mm:ss')"
               label="대회 종료 시간"
               required
+              :rules="timeRules"
               @click="endShow=true;"
           ></v-text-field>
 
@@ -117,11 +118,14 @@ export default {
                 title: '',
                 userList: [],
                 idList: [],
-                problemList: []
+                problemList: [],
             },
             titleRules: [
                 v => !!v || '제목을 입력해주세요!',
                 v => v && v.length <= 40 || '제목을 40글자 이내로 작성해주세요!',
+            ],
+            timeRules: [
+                v => v && this.contest.end >= this.contest.start || '종료 시간은 시작보다 앞설 수 없습니다',
             ],
             startShow: false,
             endShow: false
@@ -202,13 +206,18 @@ export default {
                 alert('입력 후 등록해주십시오.');
                 return;
             }
+            if(this.contest.start >= this.contest.end){
+                alert('대회 시간을 확인해주세요.');
+                return;
+            }
+
             await this.$http.post('/api/problem', {
                 id: number
             })
                 .then(result => {
                     const problem = result.data;
                     if(problem !== null){
-                        this.contest.problems.push({
+                        this.contest.problemList.push({
                             number : number,
                             title : problem.title
                         });
