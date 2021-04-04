@@ -78,10 +78,6 @@ export default {
                 select: {value: '전체', ProblemName: '전체'},
                 items: [
                     {value: '전체', ProblemName: '전체'},
-                    {value: 'A', ProblemName: 'A'},
-                    {value: 'B', ProblemName: 'B'},
-                    {value: 'C', ProblemName: 'C'},
-                    {value: 'D', ProblemName: 'D'}
                 ],
                 content: null,
                 contentRules: [
@@ -97,7 +93,8 @@ export default {
                 contentRules: [
                     v => !!v || '답글내용 입력 부탁드립니다!'
                 ],
-            }
+            },
+            problemList: [],
         };
     },
     async mounted() {
@@ -107,11 +104,16 @@ export default {
             this.chk2 = await this.checkparticipant(this.$route.params.id);
         }
     },
-    created() {
+    async created() {
         this.competitionNum = this.$route.params.id;
         this.$http.get(`/api/contest/notice/${this.$store.state.id}/${this.competitionNum}?key=0`).then(res => {
             this.notices = res.data;
         });
+        const result = await this.$http.get(`/api/contest/${this.competitionNum}`);
+        this.problemList = result.data;
+        for(let problem of this.problemList) {
+            await this.addNotice.items.push({value: problem.alphabet, problemName: problem.alphabet});
+        }
     },
     methods: {
         async submitNotice(num) {
