@@ -3,16 +3,17 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import { logger } from '../config/winston.js';
 
 export class NoticeModel {
     static getNotice = async (req) => {
         try{
             if(req.query.key === '0'){
-                const result =  await NoticeSchema.find({competitionNum : req.params.competitionNum, isQnA : true});
+                const result =  await NoticeSchema.find({competitionNum : req.query.competitionNum, isQnA : true});
                 return result;
             }
             else{
-                const result = await NoticeSchema.find({competitionNum: req.params.competitionNum, isQnA : false});
+                const result = await NoticeSchema.find({competitionNum: req.query.competitionNum, isQnA : false});
                 return result;
             }
         } catch (err) {
