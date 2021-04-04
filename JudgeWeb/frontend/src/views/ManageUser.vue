@@ -196,10 +196,16 @@ export default {
                     this.snackbar.text = '대회 참가자들이 삭제되었습니다.';
                     this.snackbar.show = true;
                 }
+                else {
+                    this.contestDelete = false;
+                    this.snackbar.color = 'error';
+                    this.snackbar.text = '대회 번호를 다시 한번 확인해주세요.';
+                    this.snackbar.show = true;
+                }
             } catch(err) {
                 this.contestDelete = false;
                 this.snackbar.color = 'error';
-                this.snackbar.text = '대회 번호를 다시 한번 확인해주세요.';
+                this.snackbar.text = '서버 에러입니다. 개발자에게 문의해주세요.';
                 this.snackbar.show = true;
                 this.$log.error(err);
             }
