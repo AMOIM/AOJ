@@ -12,7 +12,7 @@
           <v-text-field
               v-model="contest.title"
               :counter="40"
-              :rules="contest.titleRules"
+              :rules="titleRules"
               label="대회 제목"
               required
           ></v-text-field>
@@ -29,6 +29,7 @@
               label="대회 종료 시간"
               required
               @click="endShow=true;"
+              :rules="timeRules"
           ></v-text-field>
 
           <v-row
@@ -112,14 +113,17 @@ export default {
                 start: '',
                 end: '',
                 title: '',
-                titleRules: [
-                    v => !!v || '제목을 입력해주세요!',
-                    v => v && v.length <= 40 || '제목을 40글자 이내로 작성해주세요!',
-                ],
                 problems: [],
                 idList: [],
-                users: []
+                users: [],
             },
+            timeRules: [
+                v => v && this.contest.end >= this.contest.start || '종료 시간은 시작보다 앞설 수 없습니다',
+            ],
+            titleRules: [
+                v => !!v || '제목을 입력해주세요!',
+                v => v && v.length <= 40 || '제목을 40글자 이내로 작성해주세요!',
+            ],
             startShow: false,
             endShow: false
         };
@@ -190,6 +194,10 @@ export default {
         createContest() {
             if(this.contest.problems.length === 0 || this.contest.users.length === 0 || this.contest.title === ''){
                 alert('정보를 모두 입력하세요.');
+                return;
+            }
+            if(this.contest.start >= this.contest.end){
+                alert('대회 시간을 확인해주세요.');
                 return;
             }
 
