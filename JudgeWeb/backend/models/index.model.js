@@ -412,7 +412,7 @@ export class UserModel {
     static get = async (data) => {
         try {
             const result = await UserSchema.findOne()
-                .where({'id' : data });
+                .where({'id' : data});
             if(result !== null)
                 result.password = 0;
             return result;
@@ -440,7 +440,7 @@ export class UserModel {
         try {
             const user = await UserSchema.findOne({id: id, password: pw});
             if(user === null) return false;
-            else return user.name;
+            else return user;
         } catch(err) {
             err.message = 'Model -> login err';
             throw err;
@@ -451,7 +451,8 @@ export class UserModel {
         const newUser = new UserSchema({
             id : id,
             name : name,
-            password : pw    
+            password : pw,
+            isApprove : false
         });
         try {
             const result = await UserSchema.findOne({id: id});
@@ -469,10 +470,11 @@ export class UserModel {
         }
     };
   
-    static createtoken = async(id,name) => {
+    static createtoken = async(id, user) => {
         try {
             const token = jwt.sign({
-                id, name
+                'id' : id, 
+                'name' : user.name
             }, process.env.SECRET_KEY, {
                 expiresIn: '5h'
             });
@@ -499,13 +501,39 @@ export class UserModel {
                 .where({'number' : id});
 
             for(let user of contest.userList) {
-                logger.info(user);
                 await UserSchema.remove()
                     .where({'id': user});
             }
             return contest !== null;
         } catch(err) {
             throw new Error('Model -> deleteContest err');
+        }
+    }
+
+    static getAll = async() => {
+        try {
+            const users = await UserSchema.find().ne('name', 'admin').select({id : 1, name : 1, isApprove : 1});
+            return users;
+        } catch (err) {
+            throw new Error('Model -> getAll err');
+        }
+    }
+
+    static approve = async(id) => {
+        try {
+            const result = await UserSchema.updateOne(
+                {
+                    id : id
+                },
+                {
+                    $set : {
+                        isApprove : true
+                    }
+                }
+            );
+            return result.n;
+        } catch (err) {
+            throw new Error('Model -> approve err');
         }
     }
 }

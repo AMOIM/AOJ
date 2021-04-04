@@ -232,7 +232,10 @@ export default {
                         return;
                     }
                     const name = result.data.name;
-                    if(name !== null){
+                    const isApprove = result.data.isApprove;
+                    
+                    if(!isApprove) alert('승인이 필요한 아이디입니다.');
+                    else if(name !== null){
                         this.contest.userList.push(name);
                         this.contest.idList.push(id);
                     }

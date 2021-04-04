@@ -100,10 +100,10 @@ const routes = [
         component: () => import('../views/Markdown/MarkdownJudge.vue')
     },
     {
-        path: '/user/delete',
-        name: 'Delete User',
-        component: () => import('../views/DeleteUser.vue')
-    }
+        path: '/user/manage',
+        name: 'manage User',
+        component: () => import('../views/ManageUser.vue')
+    },
 ];
 
 const router = new VueRouter({

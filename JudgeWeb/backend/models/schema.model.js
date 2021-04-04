@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
         unique : true,
         required : true
     },
-    password: String
+    password: String,
+    isApprove : Boolean
 });
 
 const noticeSchema = new mongoose.Schema({
