@@ -1,7 +1,7 @@
 <template>
     <v-container fluid v-if="this.chk && this.isadmin">
         <v-row align="center" justify="center">
-            <v-card elevation="0" style="width: 600px;">
+            <v-card elevation="0" style="width: 1000px;">
                 <v-card-title class="mb-0 pb-0">대회 참가자 관리
                     <v-spacer></v-spacer>
                     <v-text-field
@@ -21,7 +21,7 @@
             </v-card>
         </v-row>
         <v-row align="center" justify="center">
-            <v-card elevation="0" style="width: 600px;">
+            <v-card elevation="0" class="ma-4" style="width: 1000px;">
                 <v-card-title>
                     회원 관리
                 <v-spacer></v-spacer>
