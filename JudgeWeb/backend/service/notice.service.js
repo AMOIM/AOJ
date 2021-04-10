@@ -15,7 +15,9 @@ export class NoticeService {
             const currentTime = Date.now();
             const contestStart = Date.parse(contestInfo.start);
             const contestEnd = Date.parse(contestInfo.end);
-            if(contestStart <= currentTime && currentTime <= contestEnd)
+            if(req.body.isQnA === false && currentTime <= contestStart)
+                return await NoticeModel.createPost({ ...req.body });
+            else if(contestStart <= currentTime && currentTime <= contestEnd)
                 return await NoticeModel.createPost({ ...req.body });
         } catch (err) {
             throw new Error('Service -> createPost error ' + err.message);

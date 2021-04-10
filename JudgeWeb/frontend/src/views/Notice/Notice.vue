@@ -86,9 +86,8 @@ export default {
         try {
             const result = await this.$http.get(`/api/contest/get/${this.competitionNum}`);
             const currentTime = Date.now();
-            const contestStart = Date.parse(result.data.start);
             const contestEnd = Date.parse(result.data.end);
-            if(contestEnd < currentTime || currentTime < contestStart) this.isValid = false;
+            if(contestEnd < currentTime) this.isValid = false;
         } catch (err) {
             this.$log.error(err);
         }
