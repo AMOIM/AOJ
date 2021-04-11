@@ -36,8 +36,11 @@ export default {
             })
                 .then(
                     async(response) => {
-                        const token = response.data.token;
-                        if (token) {
+                        if(response.data.token === 1) {
+                            this.msg = '가입이 승인되지 않았습니다.';
+                            this.flag = true;
+                        }
+                        else if (response.data.token) {
                             await this.$store.dispatch('login', response.data.token);
                             await this.$router.push('/');
                         } else {

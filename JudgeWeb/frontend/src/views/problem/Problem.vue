@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" >
+<v-card elevation="0" v-if="this.isLogin">
 <v-container>
     <v-container>
     <v-list-item three-line style="padding: 0px;">
@@ -173,36 +173,22 @@ export default {
 
         this.userName = this.$store.state.name;
 
-        const problem = {};
-        if(this.isAdmin) {
-            try {
-                const result = await this.$http.post('/api/problem/public', {
-                    id: id
-                });
-                this.$log.info(result.data);
-                problem.data = {
-                    ...result.data
-                };
-            }
-            catch(err){
-                this.$log.error(err);
-            }
+        try {
+            const url = this.isAdmin ? '/api/problem' : '/api/problem/public';
+
+            const problem = await this.$http.post(url, {
+                id: id
+            });
+
+            if(problem.data === null)
+                this.$router.go(-1);
+
+            this.problem = problem.data;
         }
-        else {
-            try {
-                const result = await this.$http.post('/api/problem/public', {
-                    id: id
-                });
-                problem.data = {
-                    ...result.data
-                };
-            }
-            catch(err){
-                this.$log.error(err);
-            }
+        catch(err) {
+            this.$log.error(err);
         }
 
-        this.problem = problem.data;
         if (this.problem === null) {
             alert('존재하지 않는 문제입니다.');
             this.$router.go(-1);

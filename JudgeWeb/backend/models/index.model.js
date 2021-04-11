@@ -8,11 +8,11 @@ export class NoticeModel {
     static getNotice = async (req) => {
         try{
             if(req.query.key === '0'){
-                const result =  await NoticeSchema.find({competitionNum : req.params.competitionNum, isQnA : true});
+                const result =  await NoticeSchema.find({competitionNum : req.query.competitionNum, isQnA : true});
                 return result;
             }
             else{
-                const result = await NoticeSchema.find({competitionNum: req.params.competitionNum, isQnA : false});
+                const result = await NoticeSchema.find({competitionNum: req.query.competitionNum, isQnA : false});
                 return result;
             }
         } catch (err) {
@@ -75,7 +75,7 @@ export class ProblemModel {
                 .where({'number': number});
             return result;
         } catch (err) {
-            err.message = 'Model -> Find Problem Error';
+            err.message = 'Model -> Find problem Error';
             throw err;
         }
     };
@@ -83,12 +83,12 @@ export class ProblemModel {
     static findPublic = async (number) => {
         try {
             const result = await ProblemSchema.findOne()
-                .where({'number': number})
+                .where({'number': number, 'open' : true})
                 .lte('openTime', new Date());
 
             return result;
         } catch (err) {
-            err.message = 'Model -> Find Problem Error';
+            err.message = 'Model -> Find problem Error';
             throw err;
         }
     };
@@ -99,7 +99,7 @@ export class ProblemModel {
                 .sort('-number');
             return result;
         } catch (err) {
-            throw new Error('Model -> All Find Problem Error');
+            throw new Error('Model -> All Find problem Error');
         }
     };
 
@@ -112,7 +112,7 @@ export class ProblemModel {
             logger.info(result);
             return result;
         } catch (err) {
-            throw new Error('Model -> All Find Public Problem Error');
+            throw new Error('Model -> All Find Public problem Error');
         }
     };
 
@@ -412,7 +412,7 @@ export class UserModel {
     static get = async (data) => {
         try {
             const result = await UserSchema.findOne()
-                .where({'id' : data });
+                .where({'id' : data});
             if(result !== null)
                 result.password = 0;
             return result;
@@ -440,7 +440,7 @@ export class UserModel {
         try {
             const user = await UserSchema.findOne({id: id, password: pw});
             if(user === null) return false;
-            else return user.name;
+            else return user;
         } catch(err) {
             err.message = 'Model -> login err';
             throw err;
@@ -451,7 +451,8 @@ export class UserModel {
         const newUser = new UserSchema({
             id : id,
             name : name,
-            password : pw    
+            password : pw,
+            isApprove : false
         });
         try {
             const result = await UserSchema.findOne({id: id});
@@ -469,10 +470,11 @@ export class UserModel {
         }
     };
   
-    static createtoken = async(id,name) => {
+    static createtoken = async(id, user) => {
         try {
             const token = jwt.sign({
-                id, name
+                'id' : id, 
+                'name' : user.name
             }, process.env.SECRET_KEY, {
                 expiresIn: '5h'
             });
@@ -498,14 +500,42 @@ export class UserModel {
             const contest = await ContestSchema.findOne()
                 .where({'number' : id});
 
-            for(let user of contest.userList) {
-                logger.info(user);
+            if(contest === null) return false;
+            for(let userID of contest.idList) {
                 await UserSchema.remove()
-                    .where({'id': user});
+                    .ne('name', 'admin')
+                    .where({'id': userID});
             }
-            return contest !== null;
+            return true;
         } catch(err) {
             throw new Error('Model -> deleteContest err');
+        }
+    }
+
+    static getAll = async() => {
+        try {
+            const users = await UserSchema.find().ne('name', 'admin').select({id : 1, name : 1, isApprove : 1});
+            return users;
+        } catch (err) {
+            throw new Error('Model -> getAll err');
+        }
+    }
+
+    static approve = async(id) => {
+        try {
+            const result = await UserSchema.updateOne(
+                {
+                    id : id
+                },
+                {
+                    $set : {
+                        isApprove : true
+                    }
+                }
+            );
+            return result.n;
+        } catch (err) {
+            throw new Error('Model -> approve err');
         }
     }
 }

@@ -9,7 +9,7 @@
 
       <v-spacer></v-spacer>
 
-      <router-link to="#" class="link_white">About A-MOIM</router-link>
+      <a href="https://amoim.github.io/about/">About A-MOIM</a>
     </v-app-bar>
   </v-card>
 </template>

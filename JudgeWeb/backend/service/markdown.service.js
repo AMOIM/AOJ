@@ -5,14 +5,14 @@ export default class MarkdownService {
         try {
             await MarkdownModel.create(data);
         } catch(err) {
-            throw new Error('Service -> Markdown create' + err.message);
+            throw new Error('Service -> markdown create' + err.message);
         }
     }
     static get = async () => {
         try {
             return await MarkdownModel.get();
         } catch(err) {
-            throw new Error('Service -> Markdown get' + err.message);
+            throw new Error('Service -> markdown get' + err.message);
         }
     }
 }

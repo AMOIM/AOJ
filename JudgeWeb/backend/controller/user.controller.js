@@ -33,6 +33,9 @@ export class UserController {
             if(result === false) {
                 return res.status(200).json({token : 0});
             }
+            else if(result.isApprove === false){
+                return res.status(200).json({token : 1});
+            }
             else {
                 try {
                     const token = await UserService.createtoken(req,result);
@@ -75,6 +78,28 @@ export class UserController {
             return res.status(200).json(result);
         } catch(err) {
             err.message = 'POST /user/delete\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
+    static getAll = async(req, res, next) => {
+        try {
+            const result = await UserService.getAll();
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'GET /user/check\nController -> ' + err.message;
+            err.status = 400;
+            next(err);
+        }
+    }
+
+    static approve = async(req, res, next) => {
+        try {
+            const result = await UserService.approve(req);
+            return res.status(200).json(result);
+        } catch (err) {
+            err.message = 'PATCH /user/approve\nController -> ' + err.message;
             err.status = 400;
             next(err);
         }

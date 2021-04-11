@@ -66,9 +66,9 @@ export default {
     mixins:[check],
     name: 'status.vue',
     components: {
-        CodeView: () => import('../components/CodeView'),
-        sidebarComponent: () => import('@/components/SideBar'),
-        problemSidebarComponent: () => import('@/components/ProblemSideBar')
+        CodeView: () => import('../../components/CodeView'),
+        sidebarComponent: () => import('@/components/sidebar/SideBar'),
+        problemSidebarComponent: () => import('@/components/sidebar/ProblemSideBar')
     },
     data() {
         return {
@@ -141,7 +141,8 @@ export default {
     },
     async mounted() {
         this.isAdmin = await this.checkAdmin();
-        this.isParticipant = await this.checkParticipant(this.$route.params.id);
+        if(this.isAdmin === false)
+            this.isParticipant = await this.checkParticipant(this.$route.params.id);
     }
 };
 </script>

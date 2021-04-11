@@ -1,5 +1,5 @@
 <template>
-<v-card elevation="0" v-if="(this.chk && this.isParticipant) || this.isAdmin">
+<v-card elevation="0" v-if="this.isParticipant || this.isAdmin">
 <v-row>
 <v-col style="max-width: 500px;">
     <sidebarComponent style="max-width: 300px;"></sidebarComponent>
@@ -19,7 +19,7 @@
         <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
         <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
         <div style="width:8%" v-if="i.child.content==null"><v-col>
-            <v-btn class="ma-2" fab dark small color="purple darken-2" v-if="isAdmin" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
+            <v-btn class="ma-2" fab dark small color="purple darken-2" v-if="isAdmin && isValid" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn></v-col>
         </div>
@@ -32,7 +32,7 @@
     </v-col>
   </v-row>
 </v-container>
-<v-btn class="ma-2" fab dark color="indigo" v-on:click="addNotice.addNoticeFlag=true">
+<v-btn class="ma-2" fab dark color="indigo" v-if="isValid" v-on:click="addNotice.addNoticeFlag=true">
         <v-icon dark>mdi-plus</v-icon>
 </v-btn>
 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
@@ -43,10 +43,10 @@
 </template>
 
 <script>
-import componentNoticeCreate from '@/components/Notice/NoticeCreate';
-import componentReplyCreate from '@/components/Notice/ReplyCreate';
-import sidebarComponent from '@/components/SideBar';
-import problemSidebarComponent from '@/components/ProblemSideBar';
+import componentNoticeCreate from '@/components/notice/NoticeCreate';
+import componentReplyCreate from '@/components/notice/ReplyCreate';
+import sidebarComponent from '@/components/sidebar/SideBar';
+import problemSidebarComponent from '@/components/sidebar/ProblemSideBar';
 import {check} from '@/components/mixins/check';
 
 export default {
@@ -76,10 +76,6 @@ export default {
                 select: {value: '전체', ProblemName: '전체'},
                 items: [
                     {value: '전체', ProblemName: '전체'},
-                    {value: 'A', ProblemName: 'A'},
-                    {value: 'B', ProblemName: 'B'},
-                    {value: 'C', ProblemName: 'C'},
-                    {value: 'D', ProblemName: 'D'}
                 ],
                 content: null,
                 contentRules: [
@@ -95,18 +91,43 @@ export default {
                 contentRules: [
                     v => !!v || '답글내용 입력 부탁드립니다!'
                 ],
-            }
+            },
+            problemList: [],
+            isValid: true,
         };
     },
     async mounted() {
         this.isAdmin = await this.checkAdmin();
-        this.isParticipant = await this.checkParticipant(this.$route.params.id);
+        if(this.isAdmin === false)
+            this.isParticipant = await this.checkParticipant(this.$route.params.id);
+
+        try {
+            const result = await this.$http.get(`/api/contest/get/${this.competitionNum}`);
+            const currentTime = Date.now();
+            const contestStart = Date.parse(result.data.start);
+            const contestEnd = Date.parse(result.data.end);
+            if(contestEnd < currentTime || currentTime < contestStart) this.isValid = false;
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
-    created() {
+    async created() {
         this.competitionNum = this.$route.params.id;
-        this.$http.get(`/api/contest/notice/${this.$store.state.id}/${this.competitionNum}?key=0`).then(res => {
-            this.notices = res.data;
-        });
+        try {
+            let result = await this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=0`);
+            this.notices = result.data;
+            try {
+                result = await this.$http.get(`/api/contest/${this.competitionNum}`);
+                this.problemList = result.data;
+                for(let problem of this.problemList) {
+                    await this.addNotice.items.push({value: problem.alphabet, problemName: problem.alphabet});
+                }
+            } catch (err) {
+                this.$log.error(err);
+            }
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
     methods: {
         async submitNotice(num) {
@@ -125,6 +146,7 @@ export default {
         async submitReply(num) {
             await this.$http.post('/api/contest/notice/reply',
                 {
+                    competitionNum : this.competitionNum,
                     _id: num.number,
                     content: num.content
                 });

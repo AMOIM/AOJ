@@ -5,7 +5,7 @@ export default class ScoreboardService {
         try {
             const contest = await ContestModel.get(number);
             const users = contest.userList;
-            if(users === null) throw new Error('User not found');
+            if(users === null) throw new Error('user not found');
 
             const problemList = contest.problemNum;
             const start = contest.start;

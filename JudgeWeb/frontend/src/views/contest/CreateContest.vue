@@ -1,7 +1,7 @@
 <template>
 <v-card elevation="0" v-if="this.isAdmin" id="contest">
   <div>
-    <div><h2>대회 수정</h2></div>
+    <div><h2>대회 생성</h2></div>
     <v-form
         ref="form"
         v-model="valid"
@@ -29,11 +29,12 @@
               label="대회 종료 시간"
               required
               @click="endShow=true;"
+              :rules="timeRules"
           ></v-text-field>
 
           <v-row
               :key="problem.id"
-              v-for="(problem, index) in contest.problemList"
+              v-for="(problem, index) in contest.problems"
           >
             <v-col cols="3">
               {{ problem.number }}
@@ -58,9 +59,9 @@
         <v-col>
           <v-row
               :key="user"
-              v-for="(user, index) in contest.userList"
+              v-for="(user, index) in contest.users"
           >
-             <v-col cols="4">
+              <v-col cols="4">
                 {{ contest.idList[index] }}
               </v-col>
               <v-col cols="4">
@@ -81,11 +82,9 @@
         </v-col>
       </v-row>
 
-      <v-btn style="margin-top : 200px; margin-right : 10px;" color="deep-purple darken-2" dark @click="updateContest()">
-        대회 수정<i class="mdi mdi-pencil"></i>
-      </v-btn>
-      <v-btn style="margin-top : 200px; margin-left : 10px;" color="red accent-3" dark @click="deleteContest()">
-        대회 삭제<i class="mdi mdi-delete"></i>
+      <v-btn style="margin-top : 200px;" color="deep-purple darken-2" dark @click="createContest()">
+        대회 생성
+        <v-icon right>mdi-cloud-upload</v-icon>
       </v-btn>
     </v-form>
 
@@ -100,7 +99,7 @@ import {check} from '@/components/mixins/check';
 
 export default {
     components: {
-        DatePicker: () => import('../components/DatePicker'),
+        DatePicker: () => import('../../components/time/DatePicker'),
     },
     mixins:[check],
     data() {
@@ -113,83 +112,40 @@ export default {
                 start: '',
                 end: '',
                 title: '',
-                userList: [],
+                problems: [],
                 idList: [],
-                problemList: []
+                users: [],
             },
+            timeRules: [
+                v => v && this.contest.end >= this.contest.start || '종료 시간은 시작보다 앞설 수 없습니다',
+            ],
             titleRules: [
                 v => !!v || '제목을 입력해주세요!',
                 v => v && v.length <= 40 || '제목을 40글자 이내로 작성해주세요!',
             ],
             startShow: false,
-            endShow: false,
+            endShow: false
         };
     },
-    async created() {
-        await this.$http.get(`/api/contest/get/${this.$route.params.id}`)
-            .then(
-                async (response) => {
-                    const contest = response.data;
-                    let problems = [];
-                    for(let num of contest.problemNum) {
-                        await this.$http.post('/api/problem', {
-                            id: num
-                        })
-                            .then(result => {
-                                const problem = result.data;
-                                problems.push({
-                                    number : num,
-                                    title : problem.title
-                                });
-                            })
-                            .catch(err => this.$log.error(err));
-                    }
-                    contest.problemList = problems;
-                    this.contest = contest;
-                }
-            )
-            .catch(() => {
-                this.$router.push('/404');
-            });
-    },
-  
     async mounted() {
         this.isAdmin = await this.checkAdmin(true);
 
         if(!this.isAdmin) {
             await this.$router.push('/404');
+            return;
         }
+      
+        this.contest.start = new Date();
+        this.contest.start.setSeconds(0);
+        this.contest.end = new Date(new Date().setHours(new Date().getHours() + 3));
+        this.contest.end.setSeconds(0);
     },
     methods: {
-        async updateContest() {
-            await this.$http.put('/api/contest/update', { contest : this.contest })
-                .then(
-                    () => {
-                        alert('대회수정이 완료되었습니다.');
-                        this.$router.push('/contest/list');
-                    }
-                )
-                .catch(() => {
-                    alert('대회 제목이 중복됩니다!');
-                });
-        },
-        deleteContest() {
-            this.$http.delete(`/api/contest/delete/${this.contest.number}`)
-                .then(
-                    () => {
-                        alert('대회가 삭제되었습니다.');
-                        this.$router.push('/contest/list');
-                    }
-                )
-                .catch(error => {
-                    this.$log.error(error);
-                });
-        },
         deleteProblem(index) {
-            this.contest.problemList.splice(index, 1);
+            this.contest.problems.splice(index, 1);
         },
         deleteUser(index) {
-            this.contest.userList.splice(index, 1);
+            this.contest.users.splice(index, 1);
             this.contest.idList.splice(index, 1);
         },
         async createProblem(number) {
@@ -222,13 +178,12 @@ export default {
                 id: id
             })
                 .then(result => {
-                    if(result.data === null){
-                        alert('존재하지 않는 아이디입니다.');
-                        return;
-                    }
                     const name = result.data.name;
-                    if(name !== null){
-                        this.contest.userList.push(name);
+                    const isApprove = result.data.isApprove;
+                    
+                    if(!isApprove) alert('승인이 필요한 아이디입니다.');
+                    else if(name !== null){
+                        this.contest.users.push(name);
                         this.contest.idList.push(id);
                     }
                     else alert('존재하지 않는 아이디입니다.');
@@ -236,7 +191,28 @@ export default {
                 .catch(err => this.$log.error(err));
             this.id = '';
         },
+        createContest() {
+            if(this.contest.problems.length === 0 || this.contest.users.length === 0 || this.contest.title === ''){
+                alert('정보를 모두 입력하세요.');
+                return;
+            }
+            if(this.contest.start >= this.contest.end){
+                alert('대회 시간을 확인해주세요.');
+                return;
+            }
 
+            this.$http.post('/api/contest/create', {
+                contest: this.contest
+            })
+                .then(
+                    async () => {
+                        alert('대회가 개최되었습니다.');
+                        this.$router.push('/');
+                    })
+                .catch(() => {
+                    alert('대회 제목이 중복되거나 실패하였습니다.');
+                });
+        },
         save(date, time, mod) {
             const timeStamp = time.split(':');
             if (mod === 0) {

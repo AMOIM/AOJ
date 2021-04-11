@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import componentNoticeCreate from '@/components/Notice/NoticeCreate';
-import sidebarComponent from '@/components/SideBar';
-import problemSidebarComponent from '@/components/ProblemSideBar';
+import componentNoticeCreate from '@/components/notice/NoticeCreate';
+import sidebarComponent from '@/components/sidebar/SideBar';
+import problemSidebarComponent from '@/components/sidebar/ProblemSideBar';
 import {check} from '@/components/mixins/check';
 
 export default {
@@ -65,10 +65,6 @@ export default {
                 select: {value: '전체', ProblemName: '전체'},
                 items: [
                     {value: '전체', ProblemName: '전체'},
-                    {value: 'A', ProblemName: 'A'},
-                    {value: 'B', ProblemName: 'B'},
-                    {value: 'C', ProblemName: 'C'},
-                    {value: 'D', ProblemName: 'D'}
                 ],
                 content: null,
                 contentRules: [
@@ -76,18 +72,42 @@ export default {
                 ],
                 addNoticeFlag: false,
                 type: '공지사항',
-            }
+            },
+            problemList: [],
+            isValid: true,
         };
     },
     async mounted() {
         this.isAdmin = await this.checkAdmin();
-        this.isParticipant = await this.checkParticipant(this.$route.params.id);
+        if(this.isAdmin === false)
+            this.isParticipant = await this.checkParticipant(this.$route.params.id);
+
+        try {
+            const result = await this.$http.get(`/api/contest/get/${this.competitionNum}`);
+            const currentTime = Date.now();
+            const contestEnd = Date.parse(result.data.end);
+            if(contestEnd < currentTime) this.isValid = false;
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
-    created() {
+    async created() {
         this.competitionNum = this.$route.params.id;
-        this.$http.get(`/api/contest/notice/${this.$store.state.id}/${this.competitionNum}?key=1`).then(res => {
-            this.notices = res.data;
-        });
+        try {
+            let result = await this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=1`);
+            this.notices = result.data;
+            try {
+                result = await this.$http.get(`/api/contest/${this.competitionNum}`);
+                this.problemList = result.data;
+                for(let problem of this.problemList) {
+                    await this.addNotice.items.push({value: problem.alphabet, problemName: problem.alphabet});
+                }
+            } catch (err) {
+                this.$log.error(err);
+            }
+        } catch (err) {
+            this.$log.error(err);
+        }
     },
     methods: {
         async submitNotice(num) {

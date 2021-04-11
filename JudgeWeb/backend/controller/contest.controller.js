@@ -39,7 +39,7 @@ export default class Contest {
         try {
             if(req.body.isQnA === false && req.decoded.name !== 'admin'){
                 const err = new Error();
-                err.message = 'Unauthorized User';
+                err.message = 'Unauthorized user';
                 err.status = 403;
                 next(err);
             }

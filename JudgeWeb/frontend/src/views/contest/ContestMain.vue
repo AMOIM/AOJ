@@ -59,8 +59,8 @@
 </template>
 
 <script>
-import sidebarComponent from '@/components/SideBar';
-import problemSidebarComponent from '@/components/ProblemSideBar';
+import sidebarComponent from '@/components/sidebar/SideBar';
+import problemSidebarComponent from '@/components/sidebar/ProblemSideBar';
 import {check} from '@/components/mixins/check';
 
 export default {

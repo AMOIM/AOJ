@@ -32,13 +32,13 @@
 </template>
 
 <script>
-import sidebarComponent from '@/components/SideBar';
-import problemSidebarComponent from '@/components/ProblemSideBar';
+import sidebarComponent from '@/components/sidebar/SideBar';
+import problemSidebarComponent from '@/components/sidebar/ProblemSideBar';
 import {check} from '@/components/mixins/check';
 
 export default {
     mixins:[check],
-    name: 'scoreboard.vue',
+    name: 'Scoreboard.vue',
     components: {
         sidebarComponent,
         problemSidebarComponent
@@ -89,7 +89,6 @@ export default {
 
                     for(let j = 0;j < list[i].problemList.length ; j++) {
                         const problem = list[i].problemList[j];
-                        this.$log.info(problem.accept);
                         const penalty = problem.accept === false ? '-' : problem.penalty;
                         obj.problem.push(`${problem.submitCnt} / ${penalty}`);
                     }
@@ -102,7 +101,8 @@ export default {
     },
     async mounted() {
         this.isAdmin = await this.checkAdmin();
-        this.isParticipant = await this.checkParticipant(this.$route.params.id);
+        if(this.isAdmin === false)
+            this.isParticipant = await this.checkParticipant(this.$route.params.id);
     }
 };
 </script>
