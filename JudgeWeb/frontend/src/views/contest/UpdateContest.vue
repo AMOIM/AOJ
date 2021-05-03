@@ -136,9 +136,7 @@ export default {
                     const contest = response.data;
                     let problems = [];
                     for(let num of contest.problemNum) {
-                        await this.$http.post('/api/problem', {
-                            id: num
-                        })
+                        await this.$http.get('/api/problem/' + num)
                             .then(result => {
                                 const problem = result.data;
                                 problems.push({
@@ -206,9 +204,7 @@ export default {
                 return;
             }
 
-            await this.$http.post('/api/problem', {
-                id: number
-            })
+            await this.$http.get('/api/problem/' + number)
                 .then(result => {
                     const problem = result.data;
                     if(problem !== null){
@@ -227,9 +223,7 @@ export default {
                 alert('입력 후 등록해주십시오.');
                 return;
             }
-            await this.$http.post('/api/user', {
-                id: id
-            })
+            await this.$http.get('/api/user/' + this.id)
                 .then(result => {
                     if(result.data === null){
                         alert('존재하지 않는 아이디입니다.');

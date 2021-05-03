@@ -60,9 +60,7 @@ export default {
         };
     },
     async created(){
-        await this.$http.post('/api/user', {
-            id : this.$store.state.id
-        })
+        await this.$http.get('/api/user/' + this.$store.state.id)
             .then(result => {
                 this.user = result.data;
             })

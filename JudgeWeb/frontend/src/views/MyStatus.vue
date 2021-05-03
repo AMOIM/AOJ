@@ -97,9 +97,7 @@ export default {
     async created() {
         this.userName = this.$store.state.name;
 
-        this.$http.post('/api/contest/status/0', {
-            user: this.userName
-        })
+        this.$http.get('/api/contest/status/0/' + this.userName)
             .then(result => {
                 for (let item of result.data) {
                     if (item.memory === undefined || item.memory < 0) item.memory = '';

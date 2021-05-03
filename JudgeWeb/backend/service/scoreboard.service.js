@@ -1,4 +1,5 @@
-import { ContestModel, StatusModel } from '../models/index.model.js';
+import {ContestModel} from '../models/contest.model.js';
+import {StatusModel} from '../models/status.model.js';
 
 export default class ScoreboardService {
     static get = async (number) => {
@@ -11,7 +12,7 @@ export default class ScoreboardService {
             const start = contest.start;
             const end = contest.end;
 
-            const result = new Array;
+            const result = [];
 
             for(let i = 0; i < users.length; i++){
                 const obj = {

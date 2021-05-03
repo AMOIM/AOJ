@@ -1,7 +1,9 @@
-import { ContestModel, ProblemModel, UserModel } from '../models/index.model.js';
+import {ContestModel} from '../models/contest.model.js';
+import {ProblemModel} from '../models/problem.model.js';
+import {UserModel} from '../models/user.model.js';
 
 export default class ContestService {
-    static Save = async(req) => {
+    static save = async(req) => {
         try {
             for(let id of req.body.contest.idList){
                 await UserModel.get(id);
@@ -11,37 +13,34 @@ export default class ContestService {
                 ...req.body.contest
             };
 
-            await ContestModel.Save(req);
+            await ContestModel.save(req);
             await ProblemModel.updateOpenTime(contest.problems, contest.start);
 
         } catch(err) {
-            err.message = 'Service -> contestsave err';
+            err.message = 'Service -> ' + err.message;
             throw err;
         }
     } 
 
-    static Get = async() => {
+    static get = async() => {
         try{
-            const result = await ContestModel.GetContest();
-            return result;
+            return await ContestModel.getContest();
         } catch(err) {
-            err.message = 'Service -> contestget err';
+            err.message = 'Service -> ' + err.message;
             throw err;
         }
     }
     static getOne = async(number) => {
         try{
-            const result = await ContestModel.get(number);
-            return result;
+            return await ContestModel.get(number);
         } catch(err) {
-            err.message = 'Service -> contestfindone err';
+            err.message = 'Service -> ' + err.message;
             throw err;
         }
     }
     static getUserList = async(number) => {
         try{
-            const result = await ContestModel.getUserList(number);
-            return result;
+            return await ContestModel.getUserList(number);
         } catch(err) {
             err.message = 'Service -> ' + err.message;
             throw err;
@@ -49,8 +48,7 @@ export default class ContestService {
     }
     static getTime = async(number) => {
         try{
-            const result = await ContestModel.getTime(number);
-            return result;
+            return await ContestModel.getTime(number);
         } catch(err) {
             err.message = 'Service -> ' + err.message;
             throw err;
@@ -77,8 +75,7 @@ export default class ContestService {
     }
     static delete = async(number) => {
         try{
-            const result = await ContestModel.delete(number);
-            return result;
+            return await ContestModel.delete(number);
         } catch(err) {
             err.message = 'Service -> ' + err.message;
             throw err;

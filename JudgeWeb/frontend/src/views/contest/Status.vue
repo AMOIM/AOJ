@@ -118,9 +118,7 @@ export default {
         const apiProblem = await this.$http.get(`/api/contest/${id}`);
         const problemList = apiProblem.data;
 
-        this.$http.post(`/api/contest/status/${id}`, {
-            user: this.userName
-        })
+        this.$http.get(`/api/contest/status/${id}/${this.userName}`)
             .then(result => {
                 for (let item of result.data) {
                     if (item.memory === undefined || item.memory < 0) item.memory = '';

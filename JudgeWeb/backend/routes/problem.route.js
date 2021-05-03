@@ -4,8 +4,8 @@ import { authMiddlewareBackend } from '../middlewares/auth';
 
 const router = Router();
 
-router.post('/', authMiddlewareBackend('admin'), Problem.get);
-router.post('/public', authMiddlewareBackend(), Problem.getPublic);
+router.get('/:id', authMiddlewareBackend('admin'), Problem.get);
+router.get('/public/:id', authMiddlewareBackend(), Problem.getPublic);
 
 router.get('/list', authMiddlewareBackend('admin'), Problem.getAll);
 router.get('/list/public', Problem.getAllPublic);

@@ -1,11 +1,11 @@
-import { UserModel } from '../models/index.model.js';
+import {UserModel} from '../models/user.model.js';
 import crypto from 'crypto';
 
 
 export class UserService {
     static get = async (req) => {
         try {
-            return UserModel.get(req.body.id);
+            return UserModel.get(req.params.id);
         } catch(err) {
             throw new Error('Service -> ' + err.message);
         }
@@ -42,21 +42,18 @@ export class UserService {
             if(result===false) return false;
             else return result;
         } catch(err) {
-            err.message = 'Service -> login err';
-            throw err;
+            throw new Error('Service -> + ' + err.message);
         }
     }
     
-    static createtoken = async(req, data) => {
+    static createToken = async(req, data) => {
         try {
             const user = {
                 ...req.body.user
             };
-            const token = await UserModel.createtoken(user.id, data);
-            return token;
+            return await UserModel.createToken(user.id, data);
         } catch(err) {
-            err.message = 'Service -> createtoken err';
-            throw err;
+            throw new Error('Service -> + ' + err.message);
         }
     }
 
@@ -68,11 +65,9 @@ export class UserService {
         cipher.update(user.password, 'utf8', 'base64');
         const cipherPW = cipher.final('base64');
         try {
-            const result = await UserModel.signup(user.id, user.name, cipherPW);
-            return result;
+            return await UserModel.signUp(user.id, user.name, cipherPW);
         } catch(err) {
-            err.message = 'Service -> signup err';
-            throw err;
+            throw new Error('Service -> + ' + err.message);
         }
     }
 
@@ -94,8 +89,7 @@ export class UserService {
 
     static getAll = async() => {
         try {
-            const result = UserModel.getAll();
-            return result;
+            return UserModel.getAll();
         } catch(err) {
             err.message = 'Service -> ' + err.message;
             throw err;
@@ -104,8 +98,7 @@ export class UserService {
 
     static approve = async(req) => {
         try {
-            const result = UserModel.approve(req.body.id);
-            return result;
+            return UserModel.approve(req.body.id);
         } catch(err) {
             err.message = 'Service -> ' + err.message;
             throw err;

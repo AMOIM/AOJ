@@ -153,9 +153,7 @@ export default {
                 alert('입력 후 등록해주십시오.');
                 return;
             }
-            await this.$http.post('/api/problem', {
-                id: number
-            })
+            await this.$http.get('/api/problem/' + number)
                 .then(result => {
                     const problem = result.data;
                     if(problem !== null){
@@ -174,9 +172,7 @@ export default {
                 alert('입력 후 등록해주십시오.');
                 return;
             }
-            await this.$http.post('/api/user', {
-                id: id
-            })
+            await this.$http.get('/api/user/' + this.id)
                 .then(result => {
                     const name = result.data.name;
                     const isApprove = result.data.isApprove;
