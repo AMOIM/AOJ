@@ -54,6 +54,13 @@ export default class ContestService {
             throw err;
         }
     }
+    static getProblemList = async (competitionNum) => {
+        try {
+            return await ContestModel.getProblemList(competitionNum);
+        } catch (err) {
+            throw new Error('Service -> ' + err.message);
+        }
+    }
     static update = async(req) => {
         try{
             for(let id of req.body.contest.idList){

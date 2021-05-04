@@ -1,7 +1,6 @@
 import {PendingModel} from '../models/pending.model.js';
 import {ProblemModel} from '../models/problem.model.js';
 import {StatusModel} from '../models/status.model.js';
-import {ContestModel} from '../models/contest.model.js';
 
 export default class ProblemService {
     static get = async (id) => {
@@ -31,13 +30,6 @@ export default class ProblemService {
     static create = async (data) => {
         try {
             return await ProblemModel.create(data);
-        } catch (err) {
-            throw new Error('Service -> ' + err.message);
-        }
-    }
-    static getProblemList = async (competitionNum) => {
-        try {
-            return await ContestModel.getProblemList(competitionNum);
         } catch (err) {
             throw new Error('Service -> ' + err.message);
         }

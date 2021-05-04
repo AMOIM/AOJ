@@ -153,7 +153,7 @@ export default {
                 alert('입력 후 등록해주십시오.');
                 return;
             }
-            await this.$http.get('/api/problem/id/' + number)
+            await this.$http.get('/api/problem/' + number)
                 .then(result => {
                     const problem = result.data;
                     if(problem !== null){
@@ -203,7 +203,7 @@ export default {
                 .then(
                     async () => {
                         alert('대회가 개최되었습니다.');
-                        this.$router.push('/');
+                        await this.$router.push('/');
                     })
                 .catch(() => {
                     alert('대회 제목이 중복되거나 실패하였습니다.');

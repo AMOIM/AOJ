@@ -183,7 +183,7 @@ export default {
         }
     },
     async created() {
-        await this.$http.get(`/api/problem/id/${this.$route.params.id}`).
+        await this.$http.get(`/api/problem/${this.$route.params.id}`).
             then(res => {
                 const problem = res.data;
                 this.problemTitle = problem.title;

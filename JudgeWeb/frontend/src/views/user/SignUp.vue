@@ -10,8 +10,18 @@
     </v-alert>
     <v-card-title class="text-h4 justify-center">회원 가입</v-card-title>
     <v-card-text class="margin-top-100">
-      <v-text-field v-model="user.id" type="text" label="아이디" />
-      <v-text-field v-model="user.name" type="text" label="닉네임"/>
+      <v-text-field
+          v-model="user.id"
+          type="text"
+          label="아이디"
+          :rules="idRules"
+      />
+      <v-text-field
+          v-model="user.name"
+          type="text"
+          label="닉네임"
+          :rules="nameRules"
+      />
       <v-text-field
           v-model="user.password"
           type="password"
@@ -39,11 +49,21 @@ export default {
                 id: '',
                 password: '',
                 confirmPassword: '',
-                name: ''
+                name: '',
             },
             error: '',
             msg : '',
             flag : false,
+            idRules:[
+                v => !!v || '아이디를 입력해주세요!',
+                v => /^[a-zA-Z0-9]*$/.test(v) || '영문과 숫자만 입력 가능합니다.',
+                v => v && v.length <= 20 || '아이디를 30자 이내로 입력하세요!',
+            ],
+            nameRules:[
+                v => !!v || '닉네임을 입력해주세요!',
+                v => /^[a-zA-Z0-9]*$/.test(v) || '영문과 숫자만 입력 가능합니다.',
+                v => v && v.length <= 20 || '닉네임을 128자 이내로 입력하세요!',
+            ],
             pwRules: [
                 v => !!v || '비밀번호를 입력해주세요!',
                 v => v && v.length <= 20 || '비밀번호를 20자 이내로 입력하세요!',

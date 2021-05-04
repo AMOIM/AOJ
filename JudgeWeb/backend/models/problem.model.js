@@ -37,7 +37,6 @@ export class ProblemModel {
                 .where('open', true)
                 .lte('openTime', new Date())
                 .sort('-number');
-            logger.info(result);
             return result;
         } catch (err) {
             throw new Error('Model -> All Find Public problem Error');
@@ -140,7 +139,6 @@ export class ProblemModel {
     static updateOpenTime = async (problems, openTime) => {
         try {
             for(let problem of problems){
-                logger.info(problem);
                 await ProblemSchema.updateOne(
                     {
                         number : problem.number
