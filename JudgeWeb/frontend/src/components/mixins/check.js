@@ -63,9 +63,9 @@ export const check = {
             await this.$http.get(`/api/contest/gettime/${num}`)
                 .then(
                     async (res) => {
-                        const dif = new Date(res.data) - new Date();
+                        const dif = new Date(res.data.start) - new Date();
                         const now = await this.TimeFormat(new Date());
-                        const start = await this.TimeFormat(new Date(res.data));
+                        const start = await this.TimeFormat(new Date(res.data.start));
                         if(now >= start) openProblems = true;
                         if(dif > 0) setTimeout('location.reload()', dif);
                     })
