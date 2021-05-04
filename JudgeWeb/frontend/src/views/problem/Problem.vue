@@ -174,7 +174,7 @@ export default {
         this.userName = this.$store.state.name;
 
         try {
-            const url = this.isAdmin ? '/api/problem/id/' : '/api/problem/public/';
+            const url = this.isAdmin ? '/api/problem/' : '/api/problem/public/';
             const problem = await this.$http.get(url + id);
 
             if(problem.data === null)

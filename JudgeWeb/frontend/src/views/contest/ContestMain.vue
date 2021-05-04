@@ -90,7 +90,7 @@ export default {
                 this.$router.push('/404');
             });
 
-        if(typeof this.problem === 'undefined') return;
+        if(typeof this.problems === 'undefined') return;
 
         this.openProblems = await this.checkTime(this.competitionNum);
         await this.$http.get('/api/contest/userlist/'+this.competitionNum)

@@ -9,7 +9,7 @@
 
       <v-spacer></v-spacer>
 
-      <a href="https://amoim.github.io/about/">About A-MOIM</a>
+      <a href="https://amoim.github.io/about/" style="color : white">About A-MOIM</a>
     </v-app-bar>
   </v-card>
 </template>
