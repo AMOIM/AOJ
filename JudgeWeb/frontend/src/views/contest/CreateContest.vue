@@ -153,7 +153,7 @@ export default {
                 alert('입력 후 등록해주십시오.');
                 return;
             }
-            await this.$http.get('/api/problem/' + number)
+            await this.$http.get('/api/problem/id/' + number)
                 .then(result => {
                     const problem = result.data;
                     if(problem !== null){
@@ -174,15 +174,15 @@ export default {
             }
             await this.$http.get('/api/user/' + this.id)
                 .then(result => {
+                    if(result.data === null) alert('존재하지 않는 아이디입니다.');
                     const name = result.data.name;
                     const isApprove = result.data.isApprove;
                     
                     if(!isApprove) alert('승인이 필요한 아이디입니다.');
-                    else if(name !== null){
+                    else {
                         this.contest.users.push(name);
                         this.contest.idList.push(id);
                     }
-                    else alert('존재하지 않는 아이디입니다.');
                 })
                 .catch(err => this.$log.error(err));
             this.id = '';

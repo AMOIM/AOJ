@@ -170,7 +170,7 @@ export default {
     },
     async created() {
         try {
-            const result = await this.$http.get('/api/user/all');
+            const result = await this.$http.get('/api/user');
             this.users = result.data;
         } catch (err) {
             this.$log.error(err);

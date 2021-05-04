@@ -183,18 +183,17 @@ export default {
         }
     },
     async created() {
-        await this.$http.post('/api/problem', {
-            id : this.$route.params.id
-        }).then(res => {
-            const problem = res.data;
-            this.problemTitle = problem.title;
-            this.problemTime = problem.timeLimit;
-            this.problemMemory = problem.memoryLimit;
-            this.problemContent = problem.description;
-            this.inputDescription = problem.inputDescription;
-            this.outputDescription = problem.outputDescription;
-            this.open = problem.open;
-        });
+        await this.$http.get(`/api/problem/id/${this.$route.params.id}`).
+            then(res => {
+                const problem = res.data;
+                this.problemTitle = problem.title;
+                this.problemTime = problem.timeLimit;
+                this.problemMemory = problem.memoryLimit;
+                this.problemContent = problem.description;
+                this.inputDescription = problem.inputDescription;
+                this.outputDescription = problem.outputDescription;
+                this.open = problem.open;
+            });
         this.problemTime /= 1000;
         this.problemMemory /= 1000000;
     },
