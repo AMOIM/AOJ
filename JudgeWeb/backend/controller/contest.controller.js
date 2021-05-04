@@ -39,7 +39,7 @@ export default class Contest {
         try {
             if(req.body.isQnA === false && req.decoded.name !== 'admin'){
                 const err = new Error();
-                err.message = 'Unauthorized User';
+                err.message = 'Unauthorized user';
                 err.status = 403;
                 next(err);
             }
@@ -75,7 +75,7 @@ export default class Contest {
     static getStatus = async (req, res, next) => {
         try {
             const number = req.params.id;
-            const user = req.body.user;
+            const user = req.params.user;
             const result = await StatusService.get(number, user);
             return res.status(200).json(result);
         } catch (err) {
@@ -86,7 +86,7 @@ export default class Contest {
     }
     static createContest = async (req, res, next) => {
         try {
-            await ContestService.Save(req);
+            await ContestService.save(req);
             return res.status(200).send(true);
         } catch(err) {
             err.message = 'POST /contest/create\nController -> ' + err.message;
@@ -96,7 +96,7 @@ export default class Contest {
     }
     static getContest = async(req, res, next) => {
         try {
-            const result = await ContestService.Get();
+            const result = await ContestService.get();
             return res.status(200).json(result);
         } catch(err) {
             err.message = 'GET /contest/list\nController -> ' + err.message;

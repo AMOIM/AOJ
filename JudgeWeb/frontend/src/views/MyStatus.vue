@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="0" v-if="this.chk">
+  <v-card elevation="0" v-if="this.isLogin">
         <v-simple-table>
           <template v-slot:default>
             <thead>
@@ -52,18 +52,17 @@
 </template>
 
 <script>
-import {checklogin} from '../components/mixins/checklogin.js';
-import {checkuser} from '../components/mixins/checkuser.js';
+import {check} from '@/components/mixins/check';
 
 export default {
-    mixins:[checklogin, checkuser],
+    mixins:[check],
     name: 'MyStatus.vue',
     components: {
-        CodeView: () => import('../components/CodeView')
+        CodeView: () => import('@/components/CodeView')
     },
     data() {
         return {
-            chk: false,
+            isLogin: false,
             list: [],
             userName: '',
             myCode: {
@@ -95,13 +94,10 @@ export default {
             return this.list.slice(this.startOffset, this.endOffset);
         },
     },
-    async mounted() {
-        this.chk = await this.check();
+    async created() {
         this.userName = this.$store.state.name;
 
-        this.$http.post('/api/contest/status/0', {
-            user: this.userName
-        })
+        this.$http.get('/api/contest/status/0/' + this.userName)
             .then(result => {
                 for (let item of result.data) {
                     if (item.memory === undefined || item.memory < 0) item.memory = '';
@@ -114,6 +110,9 @@ export default {
             .catch(err => {
                 this.$log.error(err);
             });
+    },
+    async mounted() {
+        this.isLogin = await this.checkLogin();
     }
 };
 </script>

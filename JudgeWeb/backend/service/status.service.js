@@ -1,4 +1,5 @@
-import { ContestModel, StatusModel } from '../models/index.model.js';
+import {ContestModel} from '../models/contest.model.js';
+import {StatusModel} from '../models/status.model.js';
 
 export default class StatusService {
     static get = async (number, user) => {
@@ -13,7 +14,7 @@ export default class StatusService {
                 const problemList = contest.problemNum;
                 const start = contest.start;
                 const end = contest.end;
-                result = new Array;
+                result = [];
 
                 for (let i = 0; i < problemList.length; i++) {
                     const status = await StatusModel.get(user, problemList[i], start, end);

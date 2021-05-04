@@ -32,7 +32,7 @@ export class ProblemModel {
             return result;
         } catch (err) {
             if(err.message !== 'Not exist problem')
-                err.message = 'Find Problem Error';
+                err.message = 'Find problem Error';
             err.message = 'Model -> ' + err.message;
             throw err;
         }

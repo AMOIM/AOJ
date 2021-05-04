@@ -9,7 +9,7 @@ router.post('/notice/post', authMiddlewareBackend(), Contest.createPost);
 router.post('/notice/reply', authMiddlewareBackend('admin'), Contest.createReply);
 
 router.get('/scoreboard/:id', authMiddlewareBackend(), Contest.getScoreboard);
-router.post('/status/:id', authMiddlewareBackend(), Contest.getStatus);
+router.get('/status/:id/:user', authMiddlewareBackend(), Contest.getStatus);
 
 router.post('/create', authMiddlewareBackend('admin'), Contest.createContest);
 router.get('/list', Contest.getContest);

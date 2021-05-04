@@ -38,25 +38,28 @@ export class UserController {
             }
             else {
                 try {
-                    const token = await UserService.createtoken(req,result);
+                    const token = await UserService.createToken(req,result);
                     return res.status(200).json({token : token});
                 } catch(err) {
                     err.message = 'Controller -> login(token) err';
-                    next(err);
+                    err.status = 400;
+                    throw err;
                 }
             }
         } catch(err) {
-            err.message = 'Controller -> login err';
+            err.message = 'POST /user/login\nController -> ' + err.message;
+            err.status = 400;
             next(err);
         }
     }
     
-    static signup = async (req, res, next) => {
+    static signUp = async (req, res, next) => {
         try {
             const result = await UserService.signup(req);
             return res.status(200).json({result : result});
         } catch(err) {
-            err.message = 'Controller -> signup err';
+            err.message = 'POST /user/signup\nController -> ' + err.message;
+            err.status = 400;
             next(err);
         }
     }

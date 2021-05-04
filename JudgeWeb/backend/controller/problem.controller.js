@@ -3,7 +3,7 @@ import ProblemService from '../service/problem.service.js';
 export default class Problem {
     static get = async (req, res, next) => {
         try {
-            const result = await ProblemService.get(req.body.id);
+            const result = await ProblemService.get(req.params.id);
             return res.status(200).json(result);
         } catch (err) {
             err.message = 'POST /problem\nController -> ' + err.message;
@@ -14,7 +14,7 @@ export default class Problem {
 
     static getPublic = async (req, res, next) => {
         try {
-            const result = await ProblemService.getPublic(req.body.id);
+            const result = await ProblemService.getPublic(req.params.id);
             return res.status(200).json(result);
         } catch (err) {
             err.message = 'POST /problem/public\nController -> ' + err.message;

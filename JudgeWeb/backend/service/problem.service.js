@@ -1,4 +1,7 @@
-import { PendingModel, ProblemModel, StatusModel, ContestModel } from '../models/index.model.js';
+import {PendingModel} from '../models/pending.model.js';
+import {ProblemModel} from '../models/problem.model.js';
+import {StatusModel} from '../models/status.model.js';
+import {ContestModel} from '../models/contest.model.js';
 
 export default class ProblemService {
     static get = async (id) => {
@@ -55,8 +58,7 @@ export default class ProblemService {
     }
     static delete = async(number) => {
         try{
-            const result = await ProblemModel.delete(number);
-            return result;
+            return await ProblemModel.delete(number);
         } catch(err) {
             throw new Error('Service -> ' + err.message);
         }
@@ -70,16 +72,14 @@ export default class ProblemService {
     }
     static getTestcase = async (number) => {
         try {
-            const result = await ProblemModel.getTestcase(number);
-            return result;
+            return await ProblemModel.getTestcase(number);
         } catch (err) {
             throw new Error('Service -> ' + err.message);
         }
     }
     static getTestcaseExample = async (number) => {
         try {
-            const result = await ProblemModel.getTestcaseExample(number);
-            return result;
+            return await ProblemModel.getTestcaseExample(number);
         } catch (err) {
             throw new Error('Service -> ' + err.message);
         }
@@ -103,8 +103,7 @@ export default class ProblemService {
     }
     static deleteTestcase = async (number) => {
         try {
-            const result = ProblemModel.deleteTestcase(number);
-            return result;
+            return ProblemModel.deleteTestcase(number);
         } catch(err) {
             throw new Error('Service -> ' + err.message);
         }

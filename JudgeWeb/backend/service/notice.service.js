@@ -1,11 +1,12 @@
-import { NoticeModel, ContestModel } from '../models/index.model.js';
+import {NoticeModel} from '../models/notice.model.js';
+import {ContestModel} from '../models/contest.model.js';
 
 export class NoticeService {
     static getNotice = async (req) => {
         try {
             return await NoticeModel.getNotice(req);
         } catch (err) {
-            throw new Error('Service -> getNotice error ' + err.message);
+            throw new Error('Service -> getNotice error -> ' + err.message);
         }
     }
     static createPost = async (req) => {
@@ -20,7 +21,7 @@ export class NoticeService {
             else if(contestStart <= currentTime && currentTime <= contestEnd)
                 return await NoticeModel.createPost({ ...req.body });
         } catch (err) {
-            throw new Error('Service -> createPost error ' + err.message);
+            throw new Error('Service -> createPost error -> ' + err.message);
         }
     }
     static createReply = async (req) => {
@@ -33,7 +34,7 @@ export class NoticeService {
             if(contestStart <= currentTime && currentTime <= contestEnd)
                 return await NoticeModel.createReply({ ...req.body });
         } catch (err) {
-            throw new Error('Service -> createReply error ' + err.message);
+            throw new Error('Service -> createReply error -> ' + err.message);
         }
     }
 }
