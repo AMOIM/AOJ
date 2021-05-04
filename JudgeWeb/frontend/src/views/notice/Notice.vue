@@ -24,7 +24,7 @@
                     </v-row>
                 </v-container>
 
-                <v-btn class="ma-2" fab dark color="indigo" v-if="isAdmin" v-on:click="addNotice.addNoticeFlag=true">
+                <v-btn class="ma-2" fab dark color="indigo" v-if="isAdmin && isValid" v-on:click="addNotice.addNoticeFlag=true">
                     <v-icon dark>mdi-plus</v-icon>
                 </v-btn>
                 <componentNoticeCreate :addNotice="addNotice" @submitNotice="submitNotice"></componentNoticeCreate>
