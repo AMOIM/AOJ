@@ -21,9 +21,9 @@ export class ContestModel {
     }
     static getTime = async (number) => {
         try {
-            const result = await ContestSchema.findOne().select({start : 1})
+            const result = await ContestSchema.findOne().select({start : 1, end : 1})
                 .where({'number': number});
-            return result.start;
+            return result;
         } catch (err) {
             throw new Error('Model -> getTime error');
         }
