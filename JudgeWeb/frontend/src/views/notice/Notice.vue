@@ -83,7 +83,7 @@ export default {
             this.isParticipant = await this.checkParticipant(this.$route.params.id);
 
         try {
-            const result = await this.$http.get(`/api/contest/get/${this.competitionNum}`);
+            const result = await this.$http.get(`/api/contest/gettime/${this.competitionNum}`);
             const currentTime = Date.now();
             const contestEnd = Date.parse(result.data.end);
             if(contestEnd < currentTime) this.isValid = false;
