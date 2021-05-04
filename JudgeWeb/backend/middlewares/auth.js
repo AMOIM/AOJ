@@ -10,7 +10,7 @@ function authMiddlewareBackend(role) {
                 token = req.headers.authorization.split('Bearer ')[1];
                 try {
                     req.decoded = await jwt.verify(token, process.env.SECRET_KEY);
-                    const user = await UserService.get({'body' : {'id' : req.decoded.id}});
+                    const user = await UserService.get({'params' : {'id' : req.decoded.id}});
                     if (!user) {
                         const err = new Error();
                         err.status = 403;
