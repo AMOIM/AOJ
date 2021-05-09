@@ -105,8 +105,13 @@ const routes = [
         component: () => import('../views/user/ManageUser.vue')
     },
     {
+        path: '/404',
+        name: '404',
+        component: () => import('../views/404.vue')
+    },
+    {
         path: '*',
-        redirect: '/'
+        redirect: '/404'
     }
 ];
 
