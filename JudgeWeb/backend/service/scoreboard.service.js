@@ -38,7 +38,7 @@ export default class ScoreboardService {
                             break;
                         }
                     }
-                    obj.problemList[j].penalty = Math.max(0, time + (obj.problemList[j].submitCnt - 1) * 20);
+                    obj.problemList[j].penalty = Math.max(0, time + (obj.problemList[j].submitCnt - 1) * 15);
                     obj.penaltySum += obj.problemList[j].penalty;
                     if(obj.problemList[j].accept === true) obj.acceptCnt++;
                 }
