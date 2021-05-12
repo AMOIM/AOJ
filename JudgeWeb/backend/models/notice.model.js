@@ -27,7 +27,7 @@ export class NoticeModel {
                     content: null,
                     date: null
                 },
-                date: moment().format('YYYY-MM-DD HH:mm:ss')
+                date: new Date(Date.now())
             });
             await newNotice.save();
         } catch (err) {
@@ -42,7 +42,7 @@ export class NoticeModel {
             }
             Notice._id = _id;
             Notice.child.content = content;
-            Notice.child.date = moment().format('YYYY-MM-DD HH:mm:ss');
+            Notice.child.date = new Date(Date.now());
             await Notice.save();
         }catch (err) {
             err.message = 'Model -> createReply error ' + err.message;
