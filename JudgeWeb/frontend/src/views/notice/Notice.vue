@@ -98,7 +98,7 @@ export default {
             let result = await this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=1`);
             this.notices = result.data;
             for(let notice of this.notices) {
-                notice.date = moment().format('YYYY-MM-DD HH:mm:ss');
+                notice.date = moment(notice.date).format('YYYY-MM-DD HH:mm:ss');
             }
             try {
                 result = await this.$http.get(`/api/contest/${this.competitionNum}`);
