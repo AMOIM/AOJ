@@ -1,21 +1,27 @@
-import { ContestModel, StatusModel } from '../models/index.model.js';
+import {ContestModel} from '../models/contest.model.js';
+import {StatusModel} from '../models/status.model.js';
 
 export default class StatusService {
     static get = async (number, user) => {
         try {
-            const contest = await ContestModel.get(number);
+            let result;
+            if(parseInt(number) === 0){
+                result = await StatusModel.get(user);
+            }
+            else {
+                const contest = await ContestModel.get(number);
 
-            const problemList = contest.problemNum;
-            const start = contest.start;
-            const end = contest.end;
+                const problemList = contest.problemNum;
+                const start = contest.start;
+                const end = contest.end;
+                result = [];
 
-            const result = new Array;
-
-            for (let i = 0; i < problemList.length; i++) {
-                const status = await StatusModel.get(user, problemList[i], start, end);
-                if (status === null) continue;
-                for (let j = 0; j < status.length; j++) {
-                    result.push(status[j]);
+                for (let i = 0; i < problemList.length; i++) {
+                    const status = await StatusModel.get(user, problemList[i], start, end);
+                    if (status === null) continue;
+                    for (let j = 0; j < status.length; j++) {
+                        result.push(status[j]);
+                    }
                 }
             }
             await result.sort(  (a, b) => {

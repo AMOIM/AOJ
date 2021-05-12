@@ -1,4 +1,4 @@
-import { StatusSchema, ProblemSchema, PendingSchema } from './schema.model.js';
+import { StatusSchema, ProblemSchema, PendingSchema, TestCaseSchema } from './schema.model.js';
 
 export class PendingModel {
     static front = async () => {
@@ -32,7 +32,7 @@ export class ProblemModel {
             return result;
         } catch (err) {
             if(err.message !== 'Not exist problem')
-                err.message = 'Find Problem Error';
+                err.message = 'Find problem Error';
             err.message = 'Model -> ' + err.message;
             throw err;
         }
@@ -63,4 +63,18 @@ export class StatusModel {
             throw new Error('Model -> ' + err.message);
         }
     }
+}
+
+export class TestCaseModel {
+    static find = async (number) => {
+        try {
+            const result = await TestCaseSchema.find()
+                .where({'number': number});
+            if(result.length === 0) throw new Error('Find TestCase error');
+            return result;
+        } catch (err) {
+            err.message = 'Model -> ' + err.message;
+            throw err;
+        }
+    };
 }

@@ -1,5 +1,32 @@
 import mongoose from 'mongoose';
 
+const userSchema = new mongoose.Schema({
+    name: {
+        type : String,
+        unique : true,
+        required : true
+    },
+    id: {
+        type : String,
+        unique : true,
+        required : true
+    },
+    password: String,
+    isApprove : Boolean
+});
+
+const noticeSchema = new mongoose.Schema({
+    isQnA: {type: Boolean, required: true},
+    problemNum: {type: String, required: true},
+    competitionNum: {type: Number, required: true},
+    content: {type: String, required: true},
+    child: {
+        content: {type: String, default: null},
+        date: {type: String}
+    },
+    date: {type: String}
+});
+
 const problemSchema = new mongoose.Schema({
     number: {
         type: Number,
@@ -7,7 +34,7 @@ const problemSchema = new mongoose.Schema({
         unique: true
     },
     title: {
-        type: Number,
+        type: String,
         required: true
     },
     description: {
@@ -22,18 +49,38 @@ const problemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    inputList: [
-        {
-            _id: Number,
-            txt: String
-        },
-    ],
-    outputList: [
-        {
-            _id: Number,
-            txt: String
-        }
-    ],
+    inputDescription: {
+        type: String,
+        required: true
+    },
+    outputDescription: {
+        type: String,
+        required: true
+    },
+    openTime : {
+        type : Date,
+        default: Date.now
+    },
+    open : {
+        type : Boolean,
+        required : true
+    }
+});
+
+const testcaseSchema = new mongoose.Schema({
+    number: {
+        type: Number,
+        required: true,
+    },
+    index: {
+        type: Number
+    },
+    in: {
+        txt: String
+    },
+    out: {
+        txt: String
+    }
 });
 
 const statusSchema = new mongoose.Schema({
@@ -81,7 +128,12 @@ const pendingSchema = new mongoose.Schema({
     }
 });
 
-const contestSchema = new mongoose.Schema({
+const contestSchema = new mongoose.Schema({ 
+    title : { 
+        type : String,
+        required : true,
+        unique : true
+    },
     number : {
         type : Number,
         required : true,
@@ -89,6 +141,7 @@ const contestSchema = new mongoose.Schema({
     },
     problemNum : [ Number ],
     userList : [ String ],
+    idList : [ String ],
     start : {
         type : Date,
         required : true
@@ -99,14 +152,21 @@ const contestSchema = new mongoose.Schema({
     }
 });
 
+
+const NoticeSchema = new mongoose.model('NoticeSchema', noticeSchema);
 const ProblemSchema = new mongoose.model('ProblemSchema', problemSchema);
 const StatusSchema = new mongoose.model('StatusSchema', statusSchema);
 const PendingSchema = new mongoose.model('PendingSchema', pendingSchema);
 const ContestSchema = new mongoose.model('ContestSchema', contestSchema);
+const UserSchema = new mongoose.model('UserSchema', userSchema);
+const TestCaseSchema = new mongoose.model('TestCaseSchema', testcaseSchema);
 
 export {
+    NoticeSchema,
+    ContestSchema,
     ProblemSchema,
     StatusSchema,
     PendingSchema,
-    ContestSchema
+    UserSchema,
+    TestCaseSchema
 };
