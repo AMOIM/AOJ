@@ -17,7 +17,7 @@
                         <v-col>
                             <v-row class="show-text">
                                 <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
-                                <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
+                                <div style="width:35%"><v-col>{{ i.date | moment('YYYY-MM-DD HH:mm:ss')}}</v-col></div>
                                 <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
                             </v-row>
                         </v-col>
@@ -38,7 +38,6 @@ import componentNoticeCreate from '@/components/notice/NoticeCreate';
 import sidebarComponent from '@/components/sidebar/SideBar';
 import problemSidebarComponent from '@/components/sidebar/ProblemSideBar';
 import {check} from '@/components/mixins/check';
-import moment from 'moment';
 
 export default {
     mixins:[check],
@@ -86,7 +85,7 @@ export default {
         try {
             const result = await this.$http.get(`/api/contest/gettime/${this.competitionNum}`);
             const currentTime = Date.now();
-            const contestEnd = Date.parse(result.data.end);
+            const contestEnd = result.data.end;
             if(contestEnd < currentTime) this.isValid = false;
         } catch (err) {
             this.$log.error(err);
@@ -97,9 +96,6 @@ export default {
         try {
             let result = await this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=1`);
             this.notices = result.data;
-            for(let notice of this.notices) {
-                notice.date = moment(notice.date).format('YYYY-MM-DD HH:mm:ss');
-            }
             try {
                 result = await this.$http.get(`/api/contest/${this.competitionNum}`);
                 this.problemList = result.data;

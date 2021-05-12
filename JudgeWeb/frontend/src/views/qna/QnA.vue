@@ -16,7 +16,7 @@
     <v-col>
       <v-row class="show-text">
         <div style="width:12%"><v-col>{{ i.problemNum }}</v-col></div>
-        <div style="width:35%"><v-col>{{ i.date }}</v-col></div>
+        <div style="width:35%"><v-col>{{ i.date | moment('YYYY-MM-DD HH:mm:ss')}}</v-col></div>
         <div style="width:50%; white-space:pre-line;"><v-col>{{ i.content }}</v-col></div>
         <div style="width:8%" v-if="i.child.content==null"><v-col>
             <v-btn class="ma-2" fab dark small color="purple darken-2" v-if="isAdmin && isValid" v-on:click="addReply.addReplyFlag=true, addReply.number=i._id">
@@ -26,7 +26,7 @@
       </v-row>
       <v-row class="show-text" v-if="i.child.content !== null">
         <div style="width:12%"><v-col><v-icon class="fa fa-reply fa-rotate-180" aria-hidden="true"></v-icon></v-col></div>
-        <div style="width:35%"><v-col>{{ i.child.date }}</v-col></div>
+        <div style="width:35%"><v-col>{{ i.child.date | moment('YYYY-MM-DD HH:mm:ss')}}</v-col></div>
         <div style="width:50%; white-space:pre-line;"><v-col>{{ i.child.content }}</v-col></div>
       </v-row>
     </v-col>
@@ -48,7 +48,6 @@ import componentReplyCreate from '@/components/notice/ReplyCreate';
 import sidebarComponent from '@/components/sidebar/SideBar';
 import problemSidebarComponent from '@/components/sidebar/ProblemSideBar';
 import {check} from '@/components/mixins/check';
-import moment from 'moment';
 
 export default {
     mixins:[check],
@@ -105,8 +104,8 @@ export default {
         try {
             const result = await this.$http.get(`/api/contest/gettime/${this.competitionNum}`);
             const currentTime = Date.now();
-            const contestStart = Date.parse(result.data.start);
-            const contestEnd = Date.parse(result.data.end);
+            const contestStart = result.data.start;
+            const contestEnd = result.data.end;
             if(contestEnd < currentTime || currentTime < contestStart) this.isValid = false;
         } catch (err) {
             this.$log.error(err);
@@ -117,9 +116,6 @@ export default {
         try {
             let result = await this.$http.get(`/api/contest/notice?competitionNum=${this.competitionNum}&key=0`);
             this.notices = result.data;
-            for(let notice of this.notices) {
-                notice.date = moment(notice.date).format('YYYY-MM-DD HH:mm:ss');
-            }
             try {
                 result = await this.$http.get(`/api/contest/${this.competitionNum}`);
                 this.problemList = result.data;
